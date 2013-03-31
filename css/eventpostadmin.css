@@ -1,0 +1,6 @@
+#event_post input[type=date],#event_post input[type=datetime],#event_post input[type=datetime-local]{
+	display:block;
+}
+.human_date{
+	color:#21759B;
+}
