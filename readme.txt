@@ -1,7 +1,7 @@
 === Event post ===
 Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
-Tags: newsletter, email
+Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap
 Requires at least: 3.1
 Tested up to: 3.5.1
 Stable tag: /trunk
