@@ -90,6 +90,14 @@ class EventPost{
 		wp_enqueue_script('jquery-ui-datepicker');
 		wp_enqueue_script('datetimepicker', plugins_url('/js/datetimepicker.js', __FILE__),false,false,true);
 		wp_enqueue_script('osm-admin', plugins_url('/js/osm-admin.js', __FILE__),false,false,true);
+		wp_localize_script('osm-admin', 'eventpost', array(
+			'imgpath' => plugins_url('/img/', __FILE__),
+			'META_START'=>self::META_START,
+			'META_END'=>self::META_END,
+			'META_ADD'=>self::META_ADD,
+			'META_LAT'=>self::META_LAT,
+			'META_LONG'=>self::META_LONG,
+		));
 	}
 	function single_header(){
 		if(is_single()){
@@ -284,7 +292,8 @@ class EventPost{
 		      'past' => false,
 		      'geo' => 0,
 		      'width'=>'100%',
-		      'height'=>'auto'
+		      'height'=>'auto',
+		      'cat'=>''
 	     ), $atts);
 		 return EventPost::list_events($atts);
 	}
@@ -295,7 +304,8 @@ class EventPost{
 		      'future' => true,
 		      'past' => false,
 		      'width'=>'100%',
-		      'height'=>'400px'
+		      'height'=>'400px',
+		      'cat'=>''
 	     ), $atts);
 		 $atts['geo']=1;
 		 $atts['type']='div';
@@ -310,13 +320,12 @@ class EventPost{
 		      'past' => false,
 		      'geo' => 0,
 		      'width'=>'100%',
-		      'height'=>'auto'
+		      'height'=>'auto',
+		      'cat'=>'',
+		      'events'=>''
 	     ), $atts));
-		if(is_array($nb)){
-			$events=$nb;
-		}
-		else{			
-			$events = self::get_events($nb,$future,$past,$geo);
+		if(!is_array($events)){		
+			$events = self::get_events($nb,$future,$past,$geo,$cat);
 		}
 		$ret='';
 		self::$list_id++;
@@ -338,7 +347,7 @@ class EventPost{
 	}
 
 	// Returns an array of post_ids wich are events
-	function get_events($nb=5,$future=1,$past=0,$geo=0){
+	function get_events($nb=5,$future=1,$past=0,$geo=0,$cat=''){
 		wp_reset_query();
 		
 		$arg=array(
@@ -349,7 +358,10 @@ class EventPost{
 			'order'=>'ASC'
 		);
 		
-		
+		// CAT
+		if($cat!=''){
+			$arg['category_name'] = $cat;
+		}
 		// DATES
 		$meta_query=array(
 			  array(
@@ -406,7 +418,8 @@ class EventPost{
 		$arg['meta_query']=$meta_query;
 		$query = new WP_Query($arg);
 		global $wpdb;
-		$events =  $wpdb->get_col($query->request);		
+		$events =  $wpdb->get_col($query->request);	
+			
 		wp_reset_query();
 		return $events;
 	}
@@ -414,7 +427,7 @@ class EventPost{
 /** ADMIN ISSUES **/
 	
 	function add_custom_box() {
-	    add_meta_box('event_post', __( 'Event datas', 'eventpost' ), array('EventPost','inner_custom_box'),'post', 'side', 'high');
+	    add_meta_box('event_post', __( 'Event datas', 'eventpost' ), array('EventPost','inner_custom_box'),'post', 'side', 'core');
 	}
 	function inner_custom_box() {
 
@@ -437,14 +450,14 @@ class EventPost{
 			<label for="<?php echo self::META_START; ?>">
 				<?php _e( 'Begin:', 'eventpost' ) ?>
 				<span class="human_date"></span>
-				<input type="datetime-local" data-language="<?php echo $language; ?>" value ="<?php echo $start_date_to_print ?>" name="<?php echo self::META_START; ?>" id="<?php echo self::META_START; ?>"/>
+				<input id="<?php echo self::META_START; ?>" type="datetime-local" data-language="<?php echo $language; ?>" value ="<?php echo $start_date_to_print ?>" name="<?php echo self::META_START; ?>" id="<?php echo self::META_START; ?>"/>
 			</label>  
 		</div>
 		<div class="misc-pub-section">
 			<label for="<?php echo self::META_END; ?>">
 				<?php _e( 'End:', 'eventpost' ) ?>
 				<span class="human_date"></span>
-				<input type="datetime-local" data-language="<?php echo $language; ?>"  value ="<?php echo $end_date_to_print ?>" name="<?php echo self::META_END; ?>" id="<?php echo self::META_END; ?>"/>        
+				<input id="<?php echo self::META_END; ?>" type="datetime-local" data-language="<?php echo $language; ?>"  value ="<?php echo $end_date_to_print ?>" name="<?php echo self::META_END; ?>" id="<?php echo self::META_END; ?>"/>        
 			</label> 
 		</div>
 		<?php $colors = self::get_colors(); if(sizeof($colors)>0): ?>
@@ -465,7 +478,7 @@ class EventPost{
 		<div class="misc-pub-section">
 			<label for="<?php echo self::META_ADD; ?>">
 				<?php _e( 'Address:', 'eventpost' ) ?>
-				<input type="text" value ="<?php echo get_post_meta($post_id, self::META_ADD, true) ?>" name="<?php echo self::META_ADD; ?>" id="<?php echo self::META_ADD; ?>"/>
+				<textarea name="<?php echo self::META_ADD; ?>" id="<?php echo self::META_ADD; ?>"><?php echo get_post_meta($post_id, self::META_ADD, true) ?></textarea>
 			</label> 
 			<a id="event_address_search">?</a>
 			<div id="eventaddress_result"></div> 

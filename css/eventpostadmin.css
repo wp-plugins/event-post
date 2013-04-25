@@ -4,3 +4,21 @@
 .human_date{
 	color:#21759B;
 }
+#event_post label input[type=datetime-local]{
+	opacity:0;
+	transition:opacity 0.5s ease;
+	-o-transition:opacity 0.5s ease;
+	-moz-transition:opacity 0.5s ease;
+	-webkit-transition:opacity 0.5s ease;
+}
+#event_post label:hover input[type=datetime-local]{
+	opacity:1;
+}
+#event_post label input[type=text]{
+	background:transparent;
+	border:none;
+}
+#event_post label:hover input[type=text]{
+	background:#ffffff;
+	border:#CCC 1px inset;
+}

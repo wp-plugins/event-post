@@ -61,6 +61,13 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.0.0 =
+* Add: Category option for widgets and shortcodes
+* Add: Force end date to be greater than begin date
+* Add: Separate search field for GPS and address
+* Fix: Wrong parameter for widget options
+* Fix: Load jquery datetimepicker only if not supported by the browser
+
 = 1.1.0 =
 * Add: Width & height properties in the '[events_map]' shortcode
 * Add: Allow multiple maps on the same page
