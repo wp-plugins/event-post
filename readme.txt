@@ -37,6 +37,7 @@ some options are available, such as :
 <li>past=$past <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
 <li>type=$type <i>(string, possible values are : div, ul, ol default=div | only for [events_list])</i></li>
 <li>geo=$geo <i>(boolean, retreives or not, only events wich have geolocation informations, default=0 | only for [events_map])</i></li>
+<li>cat=$category_slug <i>(string, select posts only from the appropriate category, default=null, for all categories)</i></li>
 </ul>
 
 == Installation ==
