@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.0.0
+Version: 2.1.0
 Author: bastho, n4thaniel // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: CC BY-NC
@@ -25,6 +25,9 @@ add_shortcode('events_list',array( 'EventPost', 'shortcode_list'));
 add_shortcode('events_map',array( 'EventPost', 'shortcode_map'));
 add_action('wp_ajax_EventPostGetLatLong', array( 'EventPost', 'EventPostGetLatLong'));
 add_action('wp_ajax_EventPostHumanDate', array( 'EventPost', 'EventPostHumanDate'));
+
+add_filter('manage_posts_columns', array( 'EventPost', 'columns_head'),2);  
+add_action('manage_posts_custom_column', array( 'EventPost', 'columns_content'), 10, 2); 
 
 
 include_once (plugin_dir_path(__FILE__).'widget.php');
@@ -79,7 +82,7 @@ class EventPost{
 		// JS
 		wp_enqueue_script('jquery',false,false,false,true);
 		wp_enqueue_script('OpenLayers', plugins_url('/js/OpenLayers.js', __FILE__),false,false,true);
-		wp_enqueue_script('eventpost', plugins_url('/js/eventpost.js', __FILE__), array('jquery'),false,true);
+		wp_enqueue_script('eventpost', plugins_url('/js/eventpost.js', __FILE__), false,false,true);
 		wp_localize_script('eventpost', 'eventpost_params', array('imgpath' => plugins_url('/img/', __FILE__)));
 	}
 	function admin_head() {
@@ -89,8 +92,8 @@ class EventPost{
 	function admin_scripts() {
 		wp_enqueue_script('jquery-ui-datepicker');
 		wp_enqueue_script('datetimepicker', plugins_url('/js/datetimepicker.js', __FILE__),false,false,true);
-		wp_enqueue_script('osm-admin', plugins_url('/js/osm-admin.js', __FILE__),false,false,true);
-		wp_localize_script('osm-admin', 'eventpost', array(
+		wp_enqueue_script('osmadmin', plugins_url('/js/osm-admin.js', __FILE__),false,false,true);
+		wp_localize_script('osmadmin', 'eventpost', array(
 			'imgpath' => plugins_url('/img/', __FILE__),
 			'META_START'=>self::META_START,
 			'META_END'=>self::META_END,
@@ -139,7 +142,7 @@ class EventPost{
 		}
 		return date_i18n($format ,$date);
 	}
-	function print_date($post_id=null){
+	function print_date($post_id=null,$links=true){
 		$dates='';
 		if($post_id==null) $post_id=get_the_ID();
 		if(is_numeric($post_id)){
@@ -165,43 +168,51 @@ class EventPost{
 				if(date('d/m/Y',$dd)==date('d/m/Y',$df)){
 					$dates.= '<span class="date">'.self::human_date($df)."</span>";
 					if(date('H:i',$dd) != date('H:i',$df) && date('H:i',$dd)!='00:00' && date('H:i',$df)!='00:00'){
-						$dates.=', '.__('from:','eventpost').' <time class="time" itemprop="dtstart" datetime="'.date('c',$dd).'">'.date('H:i',$dd).'</time> '.__('to:','eventpost').' <time class="time" itemprop="dtend" datetime="'.date('c',$df).'">'.date('H:i',$df).'</time>';	
+						$dates.='<span class="linking_word">, '.__('from:','eventpost').'</span> 
+						<time class="time" itemprop="dtstart" datetime="'.date('c',$dd).'">'.date('H:i',$dd).'</time> 
+						<span class="linking_word">'.__('to:','eventpost').'</span> 
+						<time class="time" itemprop="dtend" datetime="'.date('c',$df).'">'.date('H:i',$df).'</time>';	
 					}
 					elseif( date('H:i',$dd)!='00:00'){
-						$dates.=', '.__('at:','eventpost').'<time class="time" itemprop="dtstart" datetime="'.date('c',$dd).'">'.date('H:i',$dd).'</time>';	
+						$dates.='<span class="linking_word">,'.__('at:','eventpost').'</span>
+						<time class="time" itemprop="dtstart" datetime="'.date('c',$dd).'">'.date('H:i',$dd).'</time>';	
 					}
 				  }
 				  else{
-					$dates.= ''.__('from:','eventpost').' <time class="date" itemprop="dtstart" datetime="'.date('c',$dd).'">'.self::human_date($dd,get_option('date_format')).'</time> '.__('to:','eventpost').' <time class="date" itemprop="dtend" datetime="'.date('c',$df).'">'.self::human_date($df,get_option('date_format')).'</time>';
+					$dates.= '
+					<span class="linking_word">'.__('from:','eventpost').'</span> 
+					<time class="date" itemprop="dtstart" datetime="'.date('c',$dd).'">'.self::human_date($dd,get_option('date_format')).'</time> 
+					<span class="linking_word">'.__('to:','eventpost').'</span> 
+					<time class="date" itemprop="dtend" datetime="'.date('c',$df).'">'.self::human_date($df,get_option('date_format')).'</time>';
 				  }	
 				  
-				  if($df > time()){
-				  // Export event
-				  $title=urlencode($post->post_title);
-				  $address = urlencode(get_post_meta($post_id,'geo_address',true));
-				  $url = urlencode($post->guid);
+				  if($links==true && $df > time()){
+					  // Export event
+					  $title=urlencode($post->post_title);
+					  $address = urlencode(get_post_meta($post_id,'geo_address',true));
+					  $url = urlencode($post->guid);
+					  
+					  $mt = strtotime($codegmt.' Hours',$dd);
+					  $d_s = date("Ymd",$mt).'T'.date("His",$mt);
+					  $mte = strtotime($codegmt.' Hours',$df);
+					  $d_e = date("Ymd",$mte).'T'.date("His",$mte);
+					  $uid = $post_id.'-'.get_current_blog_id();
+					  
+					  // format de date ICS
+					  $ics_url = plugins_url('export/ics.php',__FILE__).'?t='.$title.'&amp;u='.$uid.'&amp;sd='.$d_s.'&amp;ed='.$d_e.'&amp;a='.$address.'&amp;d='.$url.'&amp;tz=%3BTZID%3D'.urlencode($timezone_string);
+					  
+					  // format de date Google cal				  
+					  $google_url='https://www.google.com/calendar/event?action=TEMPLATE&amp;text='.$title.'&amp;dates='.$d_s.'Z/'.$d_e.'Z&amp;details='.$url.'&amp;location='.$address.'&amp;trp=false&amp;sprop=&amp;sprop=name';
+					  
+					  // format de date VCS
+					  $vcs_url = plugins_url('export/vcs.php',__FILE__).'?t='.$title.'&amp;u='.$uid.'&amp;sd='.$d_s.'&amp;ed='.$d_e.'&amp;a='.$address.'&amp;d='.$url.'&amp;tz=%3BTZID%3D'.urlencode($timezone_string);
+		  
+					  $dates.='
+					  <a href="'.$ics_url.'" class="event_link ics" target="_blank" title="'.__('Download ICS file','eventpost').'">ical</a>
+					  <a href="'.$google_url.'" class="event_link gcal" target="_blank" title="'.__('Add to Google calendar','eventpost').'">Google</a>
+					  <a href="'.$vcs_url.'" class="event_link vcs" target="_blank" title="'.__('Add to Outlook','eventpost').'">outlook</a>
 				  
-				  $mt = strtotime($codegmt.' Hours',$dd);
-				  $d_s = date("Ymd",$mt).'T'.date("His",$mt);
-				  $mte = strtotime($codegmt.' Hours',$df);
-				  $d_e = date("Ymd",$mte).'T'.date("His",$mte);
-				  $uid = $post_id.'-'.get_current_blog_id();
-				  
-				  // format de date ICS
-				  $ics_url = plugins_url('export/ics.php',__FILE__).'?t='.$title.'&amp;u='.$uid.'&amp;sd='.$d_s.'&amp;ed='.$d_e.'&amp;a='.$address.'&amp;d='.$url.'&amp;tz=%3BTZID%3D'.urlencode($timezone_string);
-				  
-				  // format de date Google cal				  
-				  $google_url='https://www.google.com/calendar/event?action=TEMPLATE&amp;text='.$title.'&amp;dates='.$d_s.'Z/'.$d_e.'Z&amp;details='.$url.'&amp;location='.$address.'&amp;trp=false&amp;sprop=&amp;sprop=name';
-				  
-				  // format de date VCS
-				  $vcs_url = plugins_url('export/vcs.php',__FILE__).'?t='.$title.'&amp;u='.$uid.'&amp;sd='.$d_s.'&amp;ed='.$d_e.'&amp;a='.$address.'&amp;d='.$url.'&amp;tz=%3BTZID%3D'.urlencode($timezone_string);
-	  
-				  $dates.='
-				  <a href="'.$ics_url.'" class="event_link ics" target="_blank" title="'.__('Download ICS file','eventpost').'">ical</a>
-				  <a href="'.$google_url.'" class="event_link gcal" target="_blank" title="'.__('Add to Google calendar','eventpost').'">Google</a>
-				  <a href="'.$vcs_url.'" class="event_link vcs" target="_blank" title="'.__('Add to Outlook','eventpost').'">outlook</a>
-			  
-				  ';
+					  ';
 				  }
 				$dates.='</div>';
 			}
@@ -545,6 +556,7 @@ class EventPost{
 		if(isset($_REQUEST['q']) && !empty($_REQUEST['q'])){
 			// verifier le cache
 			$q = $_REQUEST['q'];
+			header('Content-Type: application/json');
 			$transient_name = 'eventpost_osquery_'.$q;
 			$val = get_transient($transient_name);
 			if (false === $val || empty($val) ) {
@@ -559,6 +571,28 @@ class EventPost{
 			exit();
 		}
 	}
+	
+	// ADD COLUMNS
+  function columns_head($defaults) {  
+    $defaults['event'] = __('Event','eventpost'); 
+    $defaults['location'] = __('Location','eventpost'); 
+    return $defaults;  
+  }  
+  // COLUMN CONTENT  (ARCHIVES) 
+  function columns_content($column_name, $post_id) {  
+    if ($column_name == 'location') {  
+      $lat = get_post_meta($post_id, self::META_LAT, true);
+      $lon = get_post_meta($post_id, self::META_LONG, true);
+	  
+      if(!empty($lat) && !empty($lon)){
+	  	$color=get_post_meta($post_id,self::META_COLOR,true);
+      	if(!empty($color)) $color='777777';
+		echo'<a href="http://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$long.='&amp;zoom=13" target="_blank"><img src="'.plugins_url('/markers/', __FILE__).$color.'.png" alt="'.get_post_meta($post_id,self::META_ADD,true).'"/></a>';
+      }
+    }
+    if ($column_name == 'event') {  
+       echo self::print_date($post_id,false);
+    }  
+  }
 
 }
-

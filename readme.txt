@@ -62,6 +62,13 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.1.0 =
+* Add : ajaxloader icon for address search
+* Add : Event and location columns in posts list
+* Add : widget description
+* Add : place icon when available for address search
+* Fix : Empty display_name property in address search
+
 = 2.0.0 =
 * Add: Category option for widgets and shortcodes
 * Add: Force end date to be greater than begin date

@@ -22,3 +22,9 @@
 	background:#ffffff;
 	border:#CCC 1px inset;
 }
+#eventaddress_result p a img{
+	float:left;
+}
+#eventaddress_result p a{
+	clear:both;
+}

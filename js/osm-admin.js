@@ -78,15 +78,19 @@ jQuery(document).ready(function(){
 				q: addr
 			};	
 				
-			jQuery('#eventaddress_result').html(addr+'...');
+			jQuery('#eventaddress_result').html(addr+'<br/><img src="'+eventpost.imgpath+'loader.gif" alt="..."/>');
 			
 			jQuery.post(ajaxurl, data, function(data) {
 				var html_ret='';
 				for(var lieu in data){
-					console.log(data[lieu]);
+					//console.log(data[lieu]);
 					lieu = data[lieu];
-					if(lieu.lat!='undefined' && lieu.lon!='undefined' && lieu.display_name!='undefined'){
-						html_ret+='<p><a onclick=\'eventpost_apply("'+lieu.display_name.replace('\'','&apos;').replace('"','&quot;')+'","'+lieu.lat+'","'+lieu.lon+'")\'>'+lieu.display_name+'</a></p>';
+					if(lieu.lat!=undefined && lieu.lon!=undefined && lieu.display_name!=undefined){
+						html_ret+='<p><a onclick=\'eventpost_apply("'+lieu.display_name.replace('\'','&apos;').replace('"','&quot;')+'","'+lieu.lat+'","'+lieu.lon+'")\'>';
+						if(lieu.icon!=undefined){
+							html_ret+='<img src="'+lieu.icon+'" alt="'+lieu.type+'"/>';
+						}
+						html_ret+=lieu.display_name+'</a></p>';
 					}
 				}
 				jQuery('#eventaddress_result').html(html_ret);	
