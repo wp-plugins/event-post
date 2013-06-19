@@ -36,8 +36,9 @@ some options are available, such as :
 <li><b>future=$future</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
 <li><b>past=$past</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
 <li><b>type=$type</b> <i>(string, possible values are : div, ul, ol default=div | only for [events_list])</i></li>
-<li><b>geo=$geo</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0 | only for [events_map])</i></li>
 <li><b>cat=$category_slug</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
+<li><b>geo=$geo</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0 | only for [events_map])</i></li>
+<li><b>tile=$tile</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u), sets the map background, default=default@osm.org | only for [events_map])</i></li>
 </ul>
 
 == Installation ==
@@ -61,6 +62,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 
 == Changelog ==
+
+= 2.2.0 =
+* Add : Admin settings page : choose a date format and a default map background
+* Add : Title option for map shortcode, select a map background for a particular map
 
 = 2.1.0 =
 * Add : ajaxloader icon for address search

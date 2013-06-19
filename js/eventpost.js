@@ -84,6 +84,8 @@ jQuery(document).ready(function(){
 		var mark_id = 'event_markersall'+geo_id;
 		var width = jQuery(this).css('width');
 		var height = jQuery(this).css('height');
+		var maptile = jQuery(this).data('tile');
+		
 		jQuery(this).append('<div id="'+map_id+'" class="event_map"></div>');
 		
 		jQuery('#'+map_id).css({
@@ -93,12 +95,18 @@ jQuery(document).ready(function(){
 			clear:'both'
 		});	
 		var zoom  = 12;	
-    
+   	    
 		OpenLayers.ImgPath = eventpost_params.imgpath;
 	    mapall[map_id] = new OpenLayers.Map(map_id);
 	    mapall[map_id] .addControl(new OpenLayers.Control.PanZoomBar());
-	    var mapnikall = new OpenLayers.Layer.OSM();
-	    mapall[map_id].addLayer(mapnikall);
+	    if(maptile!='' && eventpost_params.maptiles[maptile]){
+	    	console.log(eventpost_params.maptiles[maptile]);
+			var maptile = new OpenLayers.Layer.OSM(maptile,eventpost_params.maptiles[maptile]['urls']);
+		}
+		else{
+			maptile = new OpenLayers.Layer.OSM();
+		}
+	    mapall[map_id].addLayer(maptile);
 	 
 	    markersall[mark_id] = new OpenLayers.Layer.Markers( mark_id );
 	    mapall[map_id].addLayer(markersall[mark_id]);

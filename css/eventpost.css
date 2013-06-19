@@ -52,3 +52,6 @@
 	float:right;
 	margin:0.1em 0.2em;
 }
+.olMap img{
+	max-width:none;
+}

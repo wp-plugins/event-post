@@ -3,12 +3,13 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.1.0
+Version: 2.2.0
 Author: bastho, n4thaniel // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: CC BY-NC
 Text Domain: eventpost
 Domain Path: /languages/
+Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap, EELV
 */
 
 load_plugin_textdomain( 'eventpost', false, 'event-post/languages' );	
@@ -23,6 +24,7 @@ add_action( 'wp_head', array( 'EventPost', 'single_header') );
 add_action('wp_enqueue_scripts', array( 'EventPost', 'load_scripts'));
 add_shortcode('events_list',array( 'EventPost', 'shortcode_list'));
 add_shortcode('events_map',array( 'EventPost', 'shortcode_map'));
+add_action('admin_menu', array( 'EventPost', 'manage_options'));
 add_action('wp_ajax_EventPostGetLatLong', array( 'EventPost', 'EventPostGetLatLong'));
 add_action('wp_ajax_EventPostHumanDate', array( 'EventPost', 'EventPostHumanDate'));
 
@@ -42,13 +44,43 @@ class EventPost{
 	const META_LAT = 'geo_latitude';
 	const META_LONG = 'geo_longitude';
 	static $list_id=0;
-	public function __construct(){			
-       self::$list_id=0;
-    }
+	
+	
 	function no_use(){
 		__('Add calendar and/or geolocation metadata on posts','eventpost');
 		__('Event Post','eventpost');
 	}
+	function get_settings(){
+	  	$ep_settings = get_option( 'ep_settings' ,array());
+		if(!isset($ep_settings['dateformat']) || empty($ep_settings['dateformat'])){
+			$ep_settings['dateformat']=get_option('date_format');
+		}
+		if(!isset($ep_settings['tile']) || empty($ep_settings['tile'])){
+			$maps = self::get_maps();
+			$ep_settings['tile']=$maps[0]['id'];
+		}
+		return $ep_settings;
+	}
+	function get_maps(){
+		$maps=array();			
+       if(is_file(plugin_dir_path(__FILE__).'maps.csv')){
+	   	echo'oui';
+	   	$map_f = fopen(plugin_dir_path(__FILE__).'maps.csv','r');
+		$map_s = explode("\n",fread($map_f,filesize(plugin_dir_path(__FILE__).'maps.csv')));
+		foreach($map_s as $map){
+			$map=explode(';',$map);
+			if(sizeof($map>=5)){
+				$maps[$map[1]]=array(
+					'name'=>$map[0],
+					'id'=>$map[1],
+					'urls'=>array($map[2],$map[3],$map[4]),
+				);
+			}
+		}
+		
+	   }	
+	   return $maps;   
+    }
 	function get_colors(){
 		$colors=array();
 		$markpath = plugin_dir_path(__FILE__).'markers';
@@ -83,7 +115,10 @@ class EventPost{
 		wp_enqueue_script('jquery',false,false,false,true);
 		wp_enqueue_script('OpenLayers', plugins_url('/js/OpenLayers.js', __FILE__),false,false,true);
 		wp_enqueue_script('eventpost', plugins_url('/js/eventpost.js', __FILE__), false,false,true);
-		wp_localize_script('eventpost', 'eventpost_params', array('imgpath' => plugins_url('/img/', __FILE__)));
+		wp_localize_script('eventpost', 'eventpost_params', array(
+			'imgpath' => plugins_url('/img/', __FILE__),
+			'maptiles' => self::get_maps()
+		));
 	}
 	function admin_head() {
 		wp_enqueue_style('jquery-ui',plugins_url('/css/jquery-ui.css', __FILE__), false, null);
@@ -158,7 +193,7 @@ class EventPost{
 					$codegmt=$gmt_offset*-1;
 					$gmt_offset='+'.$gmt_offset;
 				}
-				
+				$ep_settings=self::get_settings(); 
 				//Display dates
 				
 				$dd=strtotime($start_date);
@@ -181,9 +216,9 @@ class EventPost{
 				  else{
 					$dates.= '
 					<span class="linking_word">'.__('from:','eventpost').'</span> 
-					<time class="date" itemprop="dtstart" datetime="'.date('c',$dd).'">'.self::human_date($dd,get_option('date_format')).'</time> 
+					<time class="date" itemprop="dtstart" datetime="'.date('c',$dd).'">'.self::human_date($dd,$ep_settings['dateformat']).'</time> 
 					<span class="linking_word">'.__('to:','eventpost').'</span> 
-					<time class="date" itemprop="dtend" datetime="'.date('c',$df).'">'.self::human_date($df,get_option('date_format')).'</time>';
+					<time class="date" itemprop="dtend" datetime="'.date('c',$df).'">'.self::human_date($df,$ep_settings['dateformat']).'</time>';
 				  }	
 				  
 				  if($links==true && $df > time()){
@@ -310,12 +345,14 @@ class EventPost{
 	}
 	// Shortcode to display a map of events
 	function shortcode_map($atts){
+		$ep_settings = self::get_settings();
 		$atts=shortcode_atts(array(
 		      'nb'=>0,
 		      'future' => true,
 		      'past' => false,
 		      'width'=>'100%',
 		      'height'=>'400px',
+		      'tile'=>$ep_settings['tile'],
 		      'cat'=>''
 	     ), $atts);
 		 $atts['geo']=1;
@@ -324,6 +361,7 @@ class EventPost{
 	}
 	// Return an HTML list of events
 	function list_events($atts,$id='event_list'){//$nb=0,$type='div',$future=1,$past=0,$geo=0,$id='event_list'){
+		$ep_settings = self::get_settings();
 		extract(shortcode_atts(array(
 		      'nb'=>0,
 		      'type'=>'div',
@@ -332,6 +370,7 @@ class EventPost{
 		      'geo' => 0,
 		      'width'=>'100%',
 		      'height'=>'auto',
+		      'tile'=>$ep_settings['tile'],
 		      'cat'=>'',
 		      'events'=>''
 	     ), $atts));
@@ -342,7 +381,7 @@ class EventPost{
 		self::$list_id++;
 		if(sizeof($events)>0){
 			$child=($type=='ol' || $type=='ul') ? 'li' : 'div';
-			$ret.='<'.$type.' class="event_loop '.$id.'" id="'.$id.self::$list_id.'" style="width:'.$width.';height:'.$height.'">';
+			$ret.='<'.$type.' class="event_loop '.$id.'" id="'.$id.self::$list_id.'" style="width:'.$width.';height:'.$height.'" '.($id=='event_geolist' ? 'data-tile="'.$tile.'"' : '').'>';
 			foreach($events as $item_id){ $post=get_post($item_id);
 				$class=(strtotime(get_post_meta($item_id, self::META_END, true))>=time()) ? 'event_future' : 'event_past';
 		 		$ret.='<'.$child.' class="event_item '.$class.'">
@@ -586,13 +625,58 @@ class EventPost{
 	  
       if(!empty($lat) && !empty($lon)){
 	  	$color=get_post_meta($post_id,self::META_COLOR,true);
-      	if(!empty($color)) $color='777777';
+      	if($color=='') $color='777777';
 		echo'<a href="http://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$long.='&amp;zoom=13" target="_blank"><img src="'.plugins_url('/markers/', __FILE__).$color.'.png" alt="'.get_post_meta($post_id,self::META_ADD,true).'"/></a>';
       }
     }
     if ($column_name == 'event') {  
        echo self::print_date($post_id,false);
     }  
+  }
+  
+  
+  /** ADMIN PAGES **/
+  function manage_options(){
+  	add_submenu_page('options-general.php', __('Event settings', 'eventpost' ), __('Event settings', 'eventpost' ), 'manage_options', 'event-settings', array( 'EventPost', 'manage_settings')); 
+  }
+  
+  function manage_settings(){
+  	if( isset($_POST[ 'ep_settings' ])) {
+        update_option( 'ep_settings', $_POST[ 'ep_settings' ]);
+		?>
+		<div class="updated"><p><strong><?php _e('Event settings saved !','eventpost')?></strong></p></div>
+		<?php
+    }
+	$ep_settings=self::get_settings(); 
+  	?>
+  	<div class="wrap">
+  	<div class="icon32" id="icon-options-general"><br></div>
+  	<h2><?php _e('Event settings', 'eventpost' ); ?></h2>
+  	<form name="form1" method="post" action="#">
+	  	<h3><?php _e('Event settings', 'eventpost' ); ?></h3>
+	  	<p>
+			<label for="ep_dateformat">
+				<?php _e('Date format','eventpost')?>
+				<input type="text" name="ep_settings[dateformat]" id="ep_dateformat" value="<?php echo $ep_settings['dateformat'];  ?>" />
+			</label>
+		</p>
+	  	<h3><?php _e('Map settings', 'eventpost' ); ?></h3>  	
+  		<p>
+			<label for="ep_tile">
+				<?php _e('Map background','eventpost')?>
+				<select name="ep_settings[tile]" id="ep_tile">
+					<?php $maps = self::get_maps(); foreach($maps as $id=>$map): ?>
+				    <option value="<?php echo $map['id']; ?>" <?php if($ep_settings['tile']==$map['id']){ echo'selected';} ?>><?php echo $map['name']; ?></option>
+				    <?php endforeach; ?>
+				</select>
+			</label>
+		</p>
+		<p class="submit">
+			<input type="submit" value="<?php _e('Apply settings', 'eventpost' ); ?>" class="button button-primary" id="submit" name="submit">			
+		</p>
+  	</form>
+  	</div>
+  	<?php
   }
 
 }
