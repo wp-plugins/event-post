@@ -64,7 +64,6 @@ class EventPost{
 	function get_maps(){
 		$maps=array();			
        if(is_file(plugin_dir_path(__FILE__).'maps.csv')){
-	   	echo'oui';
 	   	$map_f = fopen(plugin_dir_path(__FILE__).'maps.csv','r');
 		$map_s = explode("\n",fread($map_f,filesize(plugin_dir_path(__FILE__).'maps.csv')));
 		foreach($map_s as $map){

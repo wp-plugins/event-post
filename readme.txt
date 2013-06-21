@@ -63,6 +63,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.2.1 =
+* Fix : bad output
+
 = 2.2.0 =
 * Add : Admin settings page : choose a date format and a default map background
 * Add : Tile option for map shortcode, select a map background for a particular map
