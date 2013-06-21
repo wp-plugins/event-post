@@ -65,7 +65,8 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 = 2.2.0 =
 * Add : Admin settings page : choose a date format and a default map background
-* Add : Title option for map shortcode, select a map background for a particular map
+* Add : Tite option for map shortcode, select a map background for a particular map
+available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 
 = 2.1.0 =
 * Add : ajaxloader icon for address search
