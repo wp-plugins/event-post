@@ -14,7 +14,6 @@ Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap, EELV
 
 load_plugin_textdomain( 'eventpost', false, 'event-post/languages' );	
 	
-add_action( 'add_meta_boxes', array('EventPost','add_custom_box') );
 add_filter('the_content',array('EventPost', 'display_single'));
 add_action('the_event',array('EventPost', 'print_single'));
 add_action( 'save_post', array( 'EventPost', 'save_postdata' ) );
@@ -28,6 +27,7 @@ add_action('admin_menu', array( 'EventPost', 'manage_options'));
 add_action('wp_ajax_EventPostGetLatLong', array( 'EventPost', 'EventPostGetLatLong'));
 add_action('wp_ajax_EventPostHumanDate', array( 'EventPost', 'EventPostHumanDate'));
 
+add_action( 'add_meta_boxes', array('EventPost','add_custom_box') );
 add_filter('manage_posts_columns', array( 'EventPost', 'columns_head'),2);  
 add_action('manage_posts_custom_column', array( 'EventPost', 'columns_content'), 10, 2); 
 
@@ -476,7 +476,7 @@ class EventPost{
 /** ADMIN ISSUES **/
 	
 	function add_custom_box() {
-	    add_meta_box('event_post', __( 'Event datas', 'eventpost' ), array('EventPost','inner_custom_box'),'post', 'side', 'core');
+	    add_meta_box('event_post', __( 'Event datas', 'eventpost' ), array('EventPost','inner_custom_box'),'', 'side', 'core');
 	}
 	function inner_custom_box() {
 

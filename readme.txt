@@ -46,7 +46,7 @@ some options are available, such as :
 1. Upload `event-post` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress admin
 3. Create a new page and insert the short code `[eelv_news_form]`
-4. You can edit defaults settings in Newsletter > Configuration and help
+4. You can edit defaults settings in Settings > Event post
 
 == Frequently asked questions ==
 
@@ -62,6 +62,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 
 == Changelog ==
+
+= 2.2.2 =
+* Add : add custom box to all post-types
 
 = 2.2.1 =
 * Fix : bad output
