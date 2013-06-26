@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap
 Requires at least: 3.1
-Tested up to: 3.5.1
+Tested up to: 3.5.2
 Stable tag: /trunk
 License: CC BY-NC 3.0
 License URI: http://creativecommons.org/licenses/by-nc/3.0/
@@ -32,13 +32,16 @@ The plugin comes with two shortcodes wich allows to :
 
 some options are available, such as : 
 <ul>
-<li><b>nb=$nb</b> <i>(number of post, 0 is all, default: 5)</i></li>
-<li><b>future=$future</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
-<li><b>past=$past</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
-<li><b>type=$type</b> <i>(string, possible values are : div, ul, ol default=div | only for [events_list])</i></li>
-<li><b>cat=$category_slug</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
-<li><b>geo=$geo</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0 | only for [events_map])</i></li>
-<li><b>tile=$tile</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u), sets the map background, default=default@osm.org | only for [events_map])</i></li>
+<li><b>nb=5</b> <i>(number of post, 0 is all, default: 5)</i></li>
+<li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
+<li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
+<li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div | only for [events_list])</i></li>
+<li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
+<li><b>geo=0</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0 | only for [events_map])</i></li>
+<li><b>tile=''</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u), sets the map background, default=default@osm.org | only for [events_map])</i></li>
+<li><b>title=''</b> <i>(string (default )</i></li>
+<li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
+<li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
 </ul>
 
 == Installation ==
@@ -62,6 +65,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 
 == Changelog ==
+
+= 2.2.3 =
+* Add : Title, before_title and after_title attributes to shortcode functions
+* Fix : Do not display empty title in widget
 
 = 2.2.2 =
 * Add : add custom box to all post-types

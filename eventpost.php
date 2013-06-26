@@ -3,8 +3,8 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.2.2
-Author: bastho, n4thaniel // EÉLV
+Version: 2.2.3
+Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: CC BY-NC
 Text Domain: eventpost
@@ -338,6 +338,9 @@ class EventPost{
 		      'geo' => 0,
 		      'width'=>'100%',
 		      'height'=>'auto',
+		      'title'=>'',
+		      'before_title'=>'<h3>',
+		      'after_title'=>'</h3>',
 		      'cat'=>''
 	     ), $atts);
 		 return EventPost::list_events($atts);
@@ -352,6 +355,9 @@ class EventPost{
 		      'width'=>'100%',
 		      'height'=>'400px',
 		      'tile'=>$ep_settings['tile'],
+		      'title'=>'',
+		      'before_title'=>'<h3>',
+		      'after_title'=>'</h3>',
 		      'cat'=>''
 	     ), $atts);
 		 $atts['geo']=1;
@@ -370,6 +376,9 @@ class EventPost{
 		      'width'=>'100%',
 		      'height'=>'auto',
 		      'tile'=>$ep_settings['tile'],
+		      'title'=>'',
+		      'before_title'=>'<h3>',
+		      'after_title'=>'</h3>',
 		      'cat'=>'',
 		      'events'=>''
 	     ), $atts));
@@ -379,6 +388,9 @@ class EventPost{
 		$ret='';
 		self::$list_id++;
 		if(sizeof($events)>0){
+			if(!empty($title)){
+				$ret.= html_entity_decode($before_title).$title.html_entity_decode($after_title);
+			}	
 			$child=($type=='ol' || $type=='ul') ? 'li' : 'div';
 			$ret.='<'.$type.' class="event_loop '.$id.'" id="'.$id.self::$list_id.'" style="width:'.$width.';height:'.$height.'" '.($id=='event_geolist' ? 'data-tile="'.$tile.'"' : '').'>';
 			foreach($events as $item_id){ $post=get_post($item_id);

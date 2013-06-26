@@ -16,9 +16,11 @@ class eventpost_widget extends WP_Widget {
 		
 		if(sizeof($events)>0){
 			echo $args['before_widget'];
-			echo $args['before_title'];
-			echo $eventpost_widgettitle;
-			echo $args['after_title'];
+			if(!empty($eventpost_widgettitle)){
+				echo $args['before_title'];
+				echo $eventpost_widgettitle;
+				echo $args['after_title'];
+			}			
 			echo EventPost::list_events(array('events'=>$events));
 			echo $args['after_widget'];		
 		}		    
