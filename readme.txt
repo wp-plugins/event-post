@@ -66,6 +66,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.2.4 =
+* Fix : Quick edit was removing date and geo datas
+
 = 2.2.3 =
 * Add : Title, before_title and after_title attributes to shortcode functions
 * Fix : Do not display empty title in widget

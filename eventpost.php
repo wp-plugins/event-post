@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.2.3
+Version: 2.2.4
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: CC BY-NC
@@ -573,24 +573,29 @@ class EventPost{
 			update_post_meta($post_id,self::META_COLOR,$_POST[self::META_COLOR]);
 	  }	
 	// Clean date or no date
-		if(isset($_POST[self::META_START]) && isset($_POST[self::META_END]) && !empty($_POST[self::META_START]) && !empty($_POST[self::META_END])){
-			update_post_meta($post_id,self::META_START,$_POST[self::META_START]);
-			update_post_meta($post_id,self::META_END,$_POST[self::META_END]);
+		if(isset($_POST[self::META_START]) && isset($_POST[self::META_END])){
+			if(!empty($_POST[self::META_START]) && !empty($_POST[self::META_END])){
+				update_post_meta($post_id,self::META_START,$_POST[self::META_START]);
+				update_post_meta($post_id,self::META_END,$_POST[self::META_END]);
+			}
+			else{
+				delete_post_meta($post_id,self::META_START);
+				delete_post_meta($post_id,self::META_END);
+			}
 		}
-		else{
-			delete_post_meta($post_id,self::META_START);
-			delete_post_meta($post_id,self::META_END);
-		}
+		
 	// Clean location or no location
-		if(isset($_POST[self::META_LAT]) && isset($_POST[self::META_LONG]) && !empty($_POST[self::META_LAT]) && !empty($_POST[self::META_LONG])){
-			update_post_meta($post_id,self::META_ADD,$_POST[self::META_ADD]);
-			update_post_meta($post_id,self::META_LAT,$_POST[self::META_LAT]);
-			update_post_meta($post_id,self::META_LONG,$_POST[self::META_LONG]);
-		}
-		else{
-			delete_post_meta($post_id,self::META_ADD);
-			delete_post_meta($post_id,self::META_LAT);
-			delete_post_meta($post_id,self::META_LONG);
+		if(isset($_POST[self::META_LAT]) && isset($_POST[self::META_LONG])){		
+			if(!empty($_POST[self::META_LAT]) && !empty($_POST[self::META_LONG])){
+				update_post_meta($post_id,self::META_ADD,$_POST[self::META_ADD]);
+				update_post_meta($post_id,self::META_LAT,$_POST[self::META_LAT]);
+				update_post_meta($post_id,self::META_LONG,$_POST[self::META_LONG]);
+			}
+			else{
+				delete_post_meta($post_id,self::META_ADD);
+				delete_post_meta($post_id,self::META_LAT);
+				delete_post_meta($post_id,self::META_LONG);
+			}
 		}
 	}
 
@@ -637,7 +642,7 @@ class EventPost{
       if(!empty($lat) && !empty($lon)){
 	  	$color=get_post_meta($post_id,self::META_COLOR,true);
       	if($color=='') $color='777777';
-		echo'<a href="http://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$long.='&amp;zoom=13" target="_blank"><img src="'.plugins_url('/markers/', __FILE__).$color.'.png" alt="'.get_post_meta($post_id,self::META_ADD,true).'"/></a>';
+		echo'<a href="http://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$lon.='&amp;zoom=13" target="_blank"><img src="'.plugins_url('/markers/', __FILE__).$color.'.png" alt="'.get_post_meta($post_id,self::META_ADD,true).'"/></a>';
       }
     }
     if ($column_name == 'event') {  
