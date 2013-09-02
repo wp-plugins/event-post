@@ -66,8 +66,15 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.3.0 =
+* Add : update openlayer version to 2.13.1
+$ Add : change Map UI buttons
+* Add : Shortcode editor
+* Fix : Minor JS bug
+
 = 2.2.4 =
 * Fix : Quick edit was removing date and geo datas
+* Fix : PHP Warning
 
 = 2.2.3 =
 * Add : Title, before_title and after_title attributes to shortcode functions

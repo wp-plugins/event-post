@@ -55,3 +55,12 @@
 .olMap img{
 	max-width:none;
 }
+.olControlZoom{
+	display:none;
+}
+
+.olControlAttribution{
+	right:5px;
+	bottom:5px;
+	font-size:0.6em;
+}

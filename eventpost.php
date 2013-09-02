@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.2.4
+Version: 2.3.0
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: CC BY-NC
@@ -489,6 +489,7 @@ class EventPost{
 	
 	function add_custom_box() {
 	    add_meta_box('event_post', __( 'Event datas', 'eventpost' ), array('EventPost','inner_custom_box'),'', 'side', 'core');
+		add_meta_box('event_post_sc_edit', __( 'Events Shortcode editor', 'shortcode_edit' ), array('EventPost','inner_custom_box_edit'));
 	}
 	function inner_custom_box() {
 
@@ -558,6 +559,96 @@ class EventPost{
 		</div>
   <?php
   		wp_nonce_field( plugin_basename( __FILE__ ), 'agenda_noncename' );
+	}
+	function inner_custom_box_edit() { $ep_settings=self::get_settings();  ?>
+		<div class="all">
+		<p>
+	       	<label for="ep_sce_type"><?php _e('Type :','eventpost'); ?>
+		       	<select  id="ep_sce_type">
+		       		<option value='list'><?php _e('List','eventpost') ?></option>
+		       		<option value='map'><?php _e('Map','eventpost') ?></option>
+		        </select>
+	        </label>
+        </p>      
+     
+       <p>
+	       <label for="ep_sce_nb"><?php _e('Number of posts','eventpost'); ?>
+	       		<input id="ep_sce_nb" type="number" value="5" data-att="nb"/>
+	       		<a class="button" id="ep_sce_nball"><?php _e('All','eventpost'); ?></a>
+	       </label>
+       </p>
+       
+       <p>
+	       	<label for="ep_sce_cat"><?php _e('Only in :','eventpost'); ?>
+		       	<select  id="ep_sce_cat" data-att="cat">
+		       		<option value=''><?php _e('All','eventpost') ?></option>
+		       <?php 
+			   	$cats = get_categories();
+				foreach($cats as $cat){ ?>
+		       		<option value="<?=$cat->slug?>" <?php if($cat->slug==$eventpost_cat){ echo'selected';} ?>><?=$cat->cat_name?></option>
+		       <?php  }  ?>
+		        </select>
+	        </label>
+        </p>
+        
+        <p>
+        	<label for="ep_sce_future"><?php _e('Future events:','eventpost'); ?>
+		       	<select  id="ep_sce_future" data-att="future">
+		       		<option value='1'><?php _e('Yes','eventpost') ?></option>
+		       		<option value='0'><?php _e('No','eventpost') ?></option>
+		        </select>
+	        </label>
+        	<label for="ep_sce_past"><?php _e('Past events:','eventpost'); ?>
+		       	<select  id="ep_sce_past" data-att="past">
+		       		<option value='0'><?php _e('No','eventpost') ?></option>
+		       		<option value='1'><?php _e('Yes','eventpost') ?></option>
+		        </select>
+	        </label>
+        </p>
+        
+        <div id="ep_sce_listonly" class="list">
+        	<p>
+	        	<label for="ep_sce_geo"><?php _e('Only geotagged events:','eventpost'); ?>
+			       	<select  id="ep_sce_geo" data-att="geo">
+			       		<option value='0'><?php _e('No','eventpost') ?></option>
+			       		<option value='1'><?php _e('Yes','eventpost') ?></option>
+			        </select>
+		        </label>
+	        </p>
+        </div>
+        <div id="ep_sce_maponly" class="map">
+        	<p>
+		       	<label for="ep_sce_tile"><?php _e('Map background','eventpost'); ?>
+			       	<select id="ep_sce_tile" data-att="tile">
+						<?php $maps = self::get_maps(); foreach($maps as $id=>$map): ?>
+					    <option value="<?php if($ep_settings['tile']!=$map['id']){ echo $map['id'];} ?>" <?php if($ep_settings['tile']==$map['id']){ echo'selected';} ?>>
+					    	<?php echo $map['name']; ?><?php if($ep_settings['tile']==$map['id']){ echo' (default)';} ?>
+					    	</option>
+					    <?php endforeach; ?>
+					</select>
+		        </label>
+	        </p>
+	        <p>
+		       <label for="ep_sce_width"><?php _e('Width','eventpost'); ?>
+		       		<input id="ep_sce_width" type="text" value="500px" data-att="width"/>
+		       </label>
+	       </p>
+	        <p>
+		       <label for="ep_sce_height"><?php _e('Height','eventpost'); ?>
+		       		<input id="ep_sce_height" type="text" value="500px" data-att="height"/>
+		       </label>
+	       </p>
+        </div>
+        <div id="ep_sce_shortcode">[event_list]</div>
+        <a class="button" id="ep_sce_submit"><?php _e('Insert shortcode','eventpost'); ?></a>
+        </div>
+        <script>
+        var IEbof=false;
+      </script>
+        <!--[if lt IE 9]>
+      <script>IEbof=true;</script>
+      <![endif]-->
+  <?php
 	}
 	
 	/* When the post is saved, saves our custom data */

@@ -24,7 +24,7 @@ jQuery(document).ready(function(){
 		    
 				OpenLayers.ImgPath = eventpost_params.imgpath;
 			    map = new OpenLayers.Map('event_map'+id);
-			    map.addControl(new OpenLayers.Control.PanZoomBar());
+			    map.addControl(new OpenLayers.Control.PanZoom());
 			    var mapnik = new OpenLayers.Layer.OSM();
 			    map.addLayer(mapnik);
 			 
