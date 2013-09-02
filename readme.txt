@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap
 Requires at least: 3.1
-Tested up to: 3.5.2
+Tested up to: 3.6.0
 Stable tag: /trunk
 License: CC BY-NC 3.0
 License URI: http://creativecommons.org/licenses/by-nc/3.0/
