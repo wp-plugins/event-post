@@ -68,7 +68,7 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 = 2.3.0 =
 * Add : update openlayer version to 2.13.1
-$ Add : change Map UI buttons
+* Add : change Map UI buttons
 * Add : Shortcode editor
 * Fix : Minor JS bug
 
