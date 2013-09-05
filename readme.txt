@@ -66,6 +66,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.3.1 =
+* Fix : OSM map link error
+
 = 2.3.0 =
 * Add : update openlayer version to 2.13.1
 * Add : change Map UI buttons
