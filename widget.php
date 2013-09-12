@@ -12,7 +12,15 @@ class eventpost_widget extends WP_Widget {
 	   if(isset($instance['eventpost_cat']) && !empty($instance['eventpost_cat'])){$eventpost_cat = $instance['eventpost_cat'];}else {$eventpost_cat = "";}
 		
 		
-		$events = EventPost::get_events($eventpost_numberposts,1,0,0,$eventpost_cat);
+		$events = EventPost::get_events(
+			array(
+				'nb'=>$eventpost_numberposts,
+				'future'=>1,
+				'past'=>0,
+				'geo'=>0,
+				'cat'=>$eventpost_cat
+			)
+		);
 		
 		if(sizeof($events)>0){
 			echo $args['before_widget'];

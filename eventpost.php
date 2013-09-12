@@ -3,10 +3,10 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.3.1
+Version: 2.3.2
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
-License: CC BY-NC
+License: GPLv3
 Text Domain: eventpost
 Domain Path: /languages/
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap, EELV
@@ -268,7 +268,7 @@ class EventPost{
 			}
 			$location.=' itemprop="adr"><span>'.$address.'</span>';
 			if(is_single() && $lat!='' && $long!=''){
-				$location.='<a class="event_link gps" href="http://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$long.='&amp;zoom=13" target="_blank"  itemprop="geo">'.__('Map','eventpost').'</a>';
+				$location.='<a class="event_link gps" href="https://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$long.='&amp;zoom=13" target="_blank"  itemprop="geo">'.__('Map','eventpost').'</a>';
 			}
 			$location.='</address>';
 		}		
@@ -367,7 +367,7 @@ class EventPost{
 	// Return an HTML list of events
 	function list_events($atts,$id='event_list'){//$nb=0,$type='div',$future=1,$past=0,$geo=0,$id='event_list'){
 		$ep_settings = self::get_settings();
-		extract(shortcode_atts(array(
+		$atts=shortcode_atts(array(
 		      'nb'=>0,
 		      'type'=>'div',
 		      'future' => true,
@@ -381,9 +381,10 @@ class EventPost{
 		      'after_title'=>'</h3>',
 		      'cat'=>'',
 		      'events'=>''
-	     ), $atts));
+	     ), $atts);
+		 extract($atts);
 		if(!is_array($events)){		
-			$events = self::get_events($nb,$future,$past,$geo,$cat);
+			$events = self::get_events($atts);
 		}
 		$ret='';
 		self::$list_id++;
@@ -408,7 +409,15 @@ class EventPost{
 	}
 
 	// Returns an array of post_ids wich are events
-	function get_events($nb=5,$future=1,$past=0,$geo=0,$cat=''){
+	function get_events($atts){
+		extract(shortcode_atts(array(
+		      'nb'=>5,
+		      'future' => true,
+		      'past' => false,
+		      'geo' => 0,
+		      'cat'=>'',
+	     ), $atts));
+		 
 		wp_reset_query();
 		
 		$arg=array(
@@ -710,7 +719,7 @@ class EventPost{
 				if(strpos($language,'-')>-1){
 					$language=strtolower(substr($language,0,2));
 				}
-				$val  = file_get_contents('http://nominatim.openstreetmap.org/search?q='.urlencode($q).'&format=json&accept-language='.$language);
+				$val  = file_get_contents('https://nominatim.openstreetmap.org/search?q='.urlencode($q).'&format=json&accept-language='.$language);
 				set_transient($transient_name,$val,30*DAY_IN_SECONDS);
 			}
 			echo $val;
@@ -733,7 +742,7 @@ class EventPost{
       if(!empty($lat) && !empty($lon)){
 	  	$color=get_post_meta($post_id,self::META_COLOR,true);
       	if($color=='') $color='777777';
-		echo'<a href="http://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$lon.='&amp;zoom=13" target="_blank"><img src="'.plugins_url('/markers/', __FILE__).$color.'.png" alt="'.get_post_meta($post_id,self::META_ADD,true).'"/></a>';
+		echo'<a href="https://www.openstreetmap.org/?lat='.$lat.='&amp;lon='.$lon.='&amp;zoom=13" target="_blank"><img src="'.plugins_url('/markers/', __FILE__).$color.'.png" alt="'.get_post_meta($post_id,self::META_ADD,true).'"/></a>';
       }
     }
     if ($column_name == 'event') {  

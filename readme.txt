@@ -5,8 +5,8 @@ Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap
 Requires at least: 3.1
 Tested up to: 3.6.0
 Stable tag: /trunk
-License: CC BY-NC 3.0
-License URI: http://creativecommons.org/licenses/by-nc/3.0/
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Add some meta-datas to posts to convert them into full calendar events :
 begin, end, location, color
@@ -65,6 +65,11 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 
 == Changelog ==
+
+= 2.3.2 =
+* Add : make the function "EventPost::get_events" usable with an array as param
+* Fix : Use of https links
+* Fix : Change licence from CC BY-NC to GPLv3
 
 = 2.3.1 =
 * Fix : OSM map link error
