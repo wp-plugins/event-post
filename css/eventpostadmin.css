@@ -22,13 +22,36 @@
 	background:#ffffff;
 	border:#CCC 1px inset;
 }
+#eventaddress_result p{
+	position:relative;
+	padding:8px 0px 8px 25px;
+	border-bottom:#DDD 1px solid;
+	border-top:#FFF 1px solid;
+	margin:0;
+}
+#eventaddress_result p:first-child{
+	border-top:none;
+}
+#eventaddress_result p:last-child{
+	border-bottom:none;
+}
 #eventaddress_result p a img{
-	float:left;
+	position:absolute;
+	top:8px;
+	left:0;
 }
 #eventaddress_result p a{
 	clear:both;
 }
-
+#event_address_search{
+	display:block;
+	width:20px;
+	height:20px;
+	overflow: hidden;
+	position:relative;
+	background:url('../img/gps.png') no-repeat center center;
+	text-indent:-50px;	
+}
 
 #ep_sce_shortcode{
 	padding:0.5em;

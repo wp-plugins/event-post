@@ -1,7 +1,9 @@
 function eventpost_apply(addr,lat,lon){
-	jQuery('#geo_address').attr('value',addr);
-	jQuery('#geo_latitude').attr('value',lat);
-	jQuery('#geo_longitude').attr('value',lon);
+	if(jQuery('#geo_address').val()==''){
+		jQuery('#geo_address').val(addr);	
+	}	
+	jQuery('#geo_latitude').val(lat);
+	jQuery('#geo_longitude').val(lon);
 	jQuery('#eventaddress_result').html('');
 }
 function eventpost_numdate(str){

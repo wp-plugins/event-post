@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.3.2
+Version: 2.3.3
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv3
@@ -17,7 +17,7 @@ load_plugin_textdomain( 'eventpost', false, 'event-post/languages' );
 add_filter('the_content',array('EventPost', 'display_single'));
 add_action('the_event',array('EventPost', 'print_single'));
 add_action( 'save_post', array( 'EventPost', 'save_postdata' ) );
-add_action( 'admin_enqueue_scripts', array( 'EventPost', 'admin_head') );
+add_action( 'admin_enqueue_scripts', array( 'EventPost', 'admin_head'));
 add_action( 'admin_print_scripts', array( 'EventPost', 'admin_scripts') );
 add_action( 'wp_head', array( 'EventPost', 'single_header') );
 add_action('wp_enqueue_scripts', array( 'EventPost', 'load_scripts'));
@@ -498,7 +498,7 @@ class EventPost{
 	
 	function add_custom_box() {
 	    add_meta_box('event_post', __( 'Event datas', 'eventpost' ), array('EventPost','inner_custom_box'),'', 'side', 'core');
-		add_meta_box('event_post_sc_edit', __( 'Events Shortcode editor', 'shortcode_edit' ), array('EventPost','inner_custom_box_edit'));
+		add_meta_box('event_post_sc_edit', __( 'Events Shortcode editor', 'eventpost' ), array('EventPost','inner_custom_box_edit'));
 	}
 	function inner_custom_box() {
 
@@ -719,7 +719,7 @@ class EventPost{
 				if(strpos($language,'-')>-1){
 					$language=strtolower(substr($language,0,2));
 				}
-				$val  = file_get_contents('https://nominatim.openstreetmap.org/search?q='.urlencode($q).'&format=json&accept-language='.$language);
+				$val  = file_get_contents('http://nominatim.openstreetmap.org/search?q='.urlencode($q).'&format=json&accept-language='.$language);
 				set_transient($transient_name,$val,30*DAY_IN_SECONDS);
 			}
 			echo $val;

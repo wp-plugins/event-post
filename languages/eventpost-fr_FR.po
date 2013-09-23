@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Event post\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-02 12:43+0100\n"
-"PO-Revision-Date: 2013-09-02 12:44+0100\n"
-"Last-Translator: Bastien Ho <bastienho@eelv.fr>\n"
+"POT-Creation-Date: 2013-09-23 14:42+0100\n"
+"PO-Revision-Date: 2013-09-23 14:42+0100\n"
+"Last-Translator: Bastien Ho <bastienho@urbancube.fr>\n"
 "Language-Team: bastho <bastienho@eelv.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,19 +25,19 @@ msgstr "&Eacute;v&eacute;nements"
 msgid "List of future events posts"
 msgstr "Liste des futurs articles &eacute;v&eacute;nements"
 
-#: ../widget.php:53
+#: ../widget.php:61
 msgid "Title"
 msgstr "Titre"
 
-#: ../widget.php:59 ../eventpost.php:575
+#: ../widget.php:67 ../eventpost.php:584
 msgid "Number of posts"
 msgstr "Nombre d'articles"
 
-#: ../widget.php:65 ../eventpost.php:582
+#: ../widget.php:73 ../eventpost.php:591
 msgid "Only in :"
 msgstr "Uniquement dans :"
 
-#: ../widget.php:67 ../eventpost.php:577 ../eventpost.php:584
+#: ../widget.php:75 ../eventpost.php:586 ../eventpost.php:593
 msgid "All"
 msgstr "Toutes"
 
@@ -87,118 +87,118 @@ msgstr "Ajouter &agrave; Google agenda"
 msgid "Add to Outlook"
 msgstr "Ajouter &agrave; Outlook"
 
-#: ../eventpost.php:271 ../eventpost.php:569
+#: ../eventpost.php:271 ../eventpost.php:578
 msgid "Map"
 msgstr "Carte"
 
-#: ../eventpost.php:491
+#: ../eventpost.php:500
 msgid "Event datas"
 msgstr "Donn&eacute;es d'&eacute;v&eacute;nement"
 
-#: ../eventpost.php:492
+#: ../eventpost.php:501
 msgid "Events Shortcode editor"
 msgstr "Editeur de shortcodes événements"
 
-#: ../eventpost.php:510
+#: ../eventpost.php:519
 msgid "Date:"
 msgstr "Date :"
 
-#: ../eventpost.php:513
+#: ../eventpost.php:522
 msgid "Begin:"
 msgstr "D&eacute;but : "
 
-#: ../eventpost.php:520
+#: ../eventpost.php:529
 msgid "End:"
 msgstr "Fin :"
 
-#: ../eventpost.php:527
+#: ../eventpost.php:536
 msgid "Color:"
 msgstr "Couleur : "
 
-#: ../eventpost.php:539
+#: ../eventpost.php:548
 msgid "Location:"
 msgstr "Localisation : "
 
-#: ../eventpost.php:542
+#: ../eventpost.php:551
 msgid "Address:"
 msgstr "Adresse : "
 
-#: ../eventpost.php:550
+#: ../eventpost.php:559
 msgid "Latitude:"
 msgstr "Latitude : "
 
-#: ../eventpost.php:556
+#: ../eventpost.php:565
 msgid "Longitude:"
 msgstr "Longitude : "
 
-#: ../eventpost.php:566
+#: ../eventpost.php:575
 msgid "Type :"
 msgstr "Type :"
 
-#: ../eventpost.php:568
+#: ../eventpost.php:577
 msgid "List"
 msgstr "Liste"
 
-#: ../eventpost.php:595
+#: ../eventpost.php:604
 msgid "Future events:"
 msgstr "Événements futurs"
 
-#: ../eventpost.php:597 ../eventpost.php:604 ../eventpost.php:614
+#: ../eventpost.php:606 ../eventpost.php:613 ../eventpost.php:623
 msgid "Yes"
 msgstr "Oui"
 
-#: ../eventpost.php:598 ../eventpost.php:603 ../eventpost.php:613
+#: ../eventpost.php:607 ../eventpost.php:612 ../eventpost.php:622
 msgid "No"
 msgstr "Non"
 
-#: ../eventpost.php:601
+#: ../eventpost.php:610
 msgid "Past events:"
 msgstr "Événements passés"
 
-#: ../eventpost.php:611
+#: ../eventpost.php:620
 msgid "Only geotagged events:"
 msgstr "Seulement les événements géotagués"
 
-#: ../eventpost.php:621 ../eventpost.php:773
+#: ../eventpost.php:630 ../eventpost.php:782
 msgid "Map background"
 msgstr "Fond de carte"
 
-#: ../eventpost.php:632
+#: ../eventpost.php:641
 msgid "Width"
 msgstr "Largeur"
 
-#: ../eventpost.php:637
+#: ../eventpost.php:646
 msgid "Height"
 msgstr "Hauteur"
 
-#: ../eventpost.php:643
+#: ../eventpost.php:652
 msgid "Insert shortcode"
 msgstr "Insérer le shortcode"
 
-#: ../eventpost.php:723
+#: ../eventpost.php:732
 msgid "Event"
 msgstr "&Eacute;v&eacute;nement"
 
-#: ../eventpost.php:724
+#: ../eventpost.php:733
 msgid "Location"
 msgstr "Localisation"
 
-#: ../eventpost.php:747 ../eventpost.php:761 ../eventpost.php:763
+#: ../eventpost.php:756 ../eventpost.php:770 ../eventpost.php:772
 msgid "Event settings"
 msgstr "R&eacute;glages d'&eacute;v&eacute;nement"
 
-#: ../eventpost.php:754
+#: ../eventpost.php:763
 msgid "Event settings saved !"
 msgstr "R&eacute;glages d'&eacute;v&eacute;nements sauvegard&eacute;s !"
 
-#: ../eventpost.php:766
+#: ../eventpost.php:775
 msgid "Date format"
 msgstr "Format de date"
 
-#: ../eventpost.php:770
+#: ../eventpost.php:779
 msgid "Map settings"
 msgstr "R&eacute;glages de carte"
 
-#: ../eventpost.php:782
+#: ../eventpost.php:791
 msgid "Apply settings"
 msgstr "Appliquer les changements"

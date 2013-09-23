@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap
 Requires at least: 3.1
-Tested up to: 3.6.0
+Tested up to: 3.6.1
 Stable tag: /trunk
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -65,6 +65,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 
 == Changelog ==
+
+= 2.3.3 =
+* Add : Improve address search UI
+* Fix : Address searcg bug fix
 
 = 2.3.2 =
 * Add : make the function "EventPost::get_events" usable with an array as param
