@@ -68,7 +68,7 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 = 2.3.3 =
 * Add : Improve address search UI
-* Fix : Address searcg bug fix
+* Fix : Address search bug fix
 
 = 2.3.2 =
 * Add : make the function "EventPost::get_events" usable with an array as param
