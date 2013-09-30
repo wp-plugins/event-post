@@ -34,7 +34,7 @@ The plugin comes with three shortcodes wich allows to :
 Available options : 
 <h5>[events_list]</h5>
 <ul>
-<li><b>nb=5</b> <i>(number of post, 0 is all, default: 5)</i></li>
+<li><b>nb=5</b> <i>(number of post, -1 is all, default: 5)</i></li>
 <li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
 <li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
 <li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div)</i></li>
@@ -44,10 +44,11 @@ Available options :
 <li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
 <li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
 </ul>
+example : <pre>[events_list future=1 past=1 cat="actuality" nb=10]</pre>
 
 <h5>[events_map]</h5>
 <ul>
-<li><b>nb=5</b> <i>(number of post, 0 is all, default: 5)</i></li>
+<li><b>nb=5</b> <i>(number of post, -1 is all, default: 5)</i></li>
 <li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
 <li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
 <li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
@@ -56,6 +57,7 @@ Available options :
 <li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
 <li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
 </ul>
+example : <pre>[events_map future=1 past=1 cat="actuality" nb="-1"]</pre>
 
 <h5>[events_cal]</h5>
 <ul>
@@ -64,6 +66,7 @@ Available options :
 <li><b>datepicker=1</b> <i>(boolean, displays or not a date picker</i></li>
 <li><b>mondayfirst=0</b> <i>(boolean, weeks start on monday, default is 0 (sunday)</i></li>
 </ul>
+example : <pre>[events_cal cat="actuality" date="-2 months" mondayfirst=1]</pre>
 
 == Installation ==
 
