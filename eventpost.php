@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.3.3
+Version: 2.4.0
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv3
@@ -14,25 +14,40 @@ Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap, EELV
 
 load_plugin_textdomain( 'eventpost', false, 'event-post/languages' );	
 	
-add_filter('the_content',array('EventPost', 'display_single'));
-add_action('the_event',array('EventPost', 'print_single'));
+add_filter('init',array('EventPost', 'init'));
 add_action( 'save_post', array( 'EventPost', 'save_postdata' ) );
+add_action('admin_menu', array( 'EventPost', 'manage_options'));
+
+// Scripts
 add_action( 'admin_enqueue_scripts', array( 'EventPost', 'admin_head'));
 add_action( 'admin_print_scripts', array( 'EventPost', 'admin_scripts') );
-add_action( 'wp_head', array( 'EventPost', 'single_header') );
 add_action('wp_enqueue_scripts', array( 'EventPost', 'load_scripts'));
-add_shortcode('events_list',array( 'EventPost', 'shortcode_list'));
-add_shortcode('events_map',array( 'EventPost', 'shortcode_map'));
-add_action('admin_menu', array( 'EventPost', 'manage_options'));
-add_action('wp_ajax_EventPostGetLatLong', array( 'EventPost', 'EventPostGetLatLong'));
-add_action('wp_ajax_EventPostHumanDate', array( 'EventPost', 'EventPostHumanDate'));
 
+// Single
+add_filter('the_content',array('EventPost', 'display_single'));
+add_action('the_event',array('EventPost', 'print_single'));
+add_action( 'wp_head', array( 'EventPost', 'single_header') );
+
+// Ajax
+add_action('wp_ajax_EventPostGetLatLong', array( 'EventPost', 'GetLatLong'));
+add_action('wp_ajax_EventPostHumanDate', array( 'EventPost', 'HumanDate'));
+add_action('wp_ajax_EventPostCalendar', array( 'EventPost', 'ajaxcal'));
+add_action('wp_ajax_nopriv_EventPostCalendar', array( 'EventPost', 'ajaxcal'));
+add_action('wp_ajax_EventPostCalendarDate', array( 'EventPost', 'ajaxdate'));
+add_action('wp_ajax_nopriv_EventPostCalendarDate', array( 'EventPost', 'ajaxdate'));
+
+// Edit
 add_action( 'add_meta_boxes', array('EventPost','add_custom_box') );
 add_filter('manage_posts_columns', array( 'EventPost', 'columns_head'),2);  
 add_action('manage_posts_custom_column', array( 'EventPost', 'columns_content'), 10, 2); 
 
+//Shortcodes
+add_shortcode('events_list',array( 'EventPost', 'shortcode_list'));
+add_shortcode('events_map',array( 'EventPost', 'shortcode_map'));
+add_shortcode('events_cal',array( 'EventPost', 'shortcode_cal'));
 
 include_once (plugin_dir_path(__FILE__).'widget.php');
+include_once (plugin_dir_path(__FILE__).'widget.cal.php');
 	
 class EventPost{
 		
@@ -44,7 +59,13 @@ class EventPost{
 	const META_LAT = 'geo_latitude';
 	const META_LONG = 'geo_longitude';
 	static $list_id=0;
-	
+	static $NomDuMois=array();
+	static $Week=array();
+		
+	function init(){
+		self::$NomDuMois=array('',__('Jan','eventpost'),__('Feb','eventpost'),__('Mar','eventpost'),__('Apr','eventpost'),__('May','eventpost'),__('Jun','eventpost'),__('Jul','eventpost'),__('Aug','eventpost'),__('Sept','eventpost'),__('Oct','eventpost'),__('Nov','eventpost'),__('Dec','eventpost'));
+		self::$Week=array(__('Sunday','eventpost'),__('Monday','eventpost'),__('Tuesday','eventpost'),__('Wednesday','eventpost'),__('Thursday','eventpost'),__('Friday','eventpost'),__('Saturday','eventpost'));
+	}
 	
 	function no_use(){
 		__('Add calendar and/or geolocation metadata on posts','eventpost');
@@ -116,7 +137,8 @@ class EventPost{
 		wp_enqueue_script('eventpost', plugins_url('/js/eventpost.js', __FILE__), false,false,true);
 		wp_localize_script('eventpost', 'eventpost_params', array(
 			'imgpath' => plugins_url('/img/', __FILE__),
-			'maptiles' => self::get_maps()
+			'maptiles' => self::get_maps(),
+			'ajaxurl'=>get_bloginfo('url').'/wp-admin/admin-ajax.php'
 		));
 	}
 	function admin_head() {
@@ -364,6 +386,19 @@ class EventPost{
 		 $atts['type']='div';
 	     return EventPost::list_events($atts,'event_geolist');//$nb,'div',$future,$past,1,'event_geolist');
 	}
+	// Shortcode to display a calendar of events
+	function shortcode_cal($atts){
+		$ep_settings = self::get_settings();
+		$atts=shortcode_atts(array(
+		      'date'=>date('Y-n'),
+		      'cat'=>'',
+		      'mondayfirst'=>0, //1 : weeks starts on monday
+		      'datepicker'=>1
+	     ), $atts);
+		extract($atts);
+		 return '<div class="eventpost_calendar" data-cat="'.$cat.'" data-date="'.$date.'" data-mf="'.$mondayfirst.'" data-dp="'.$datepicker.'">'.EventPost::calendar($atts).'</div>';
+		
+	}
 	// Return an HTML list of events
 	function list_events($atts,$id='event_list'){//$nb=0,$type='div',$future=1,$past=0,$geo=0,$id='event_list'){
 		$ep_settings = self::get_settings();
@@ -416,6 +451,8 @@ class EventPost{
 		      'past' => false,
 		      'geo' => 0,
 		      'cat'=>'',
+		      'date'=>'',
+		      'retreive'=>false
 	     ), $atts));
 		 
 		wp_reset_query();
@@ -467,6 +504,21 @@ class EventPost{
 		           'type'=>'DATETIME'
 		       );
 		}
+		if($date!=''){
+			$date=date('Y-m-d H:i:s',$date);
+			$meta_query=array(
+				  array(
+			           'key' => EventPost::META_END,
+			           'value' => $date,
+			           'compare' => '>='
+			       ),
+			      array(
+			           'key' => EventPost::META_START,
+			           'value' => $date,
+			           'compare' => '<='
+			       )
+			 );
+		}
 		// GEO
 		if($geo==1){
 			$meta_query[]=array(
@@ -491,7 +543,24 @@ class EventPost{
 		$events =  $wpdb->get_col($query->request);	
 			
 		wp_reset_query();
-		return $events;
+		
+		if($retreive==true){
+			$obj=array();
+			foreach($events as $event){
+				$ob = get_post($event);
+				$ob->start=get_post_meta($event,EventPost::META_START);
+				$ob->end=get_post_meta($event,EventPost::META_END);
+				$ob->address=get_post_meta($event,EventPost::META_ADD);
+				$ob->lat=get_post_meta($event,EventPost::META_LAT);
+				$ob->long=get_post_meta($event,EventPost::META_LONG);
+				$obj[]=$ob;
+			}
+			return $obj;
+		}
+		else{
+			return $events;
+		}
+		
 	}
 
 /** ADMIN ISSUES **/
@@ -698,16 +767,122 @@ class EventPost{
 			}
 		}
 	}
-
-	/** AJAX Get lat long from address */
-	function EventPostHumanDate(){
+	function display_caldate($date,$cat='',$display=false){
+		$events = self::get_events(array('nb'=>-1,'date'=>$date,'cat'=>$cat,'retreive'=>true));
+		$nb = count($events);
+		if($display){
+			if($nb>0){
+				$ret.='<ul>';
+				foreach($events as $event){
+					$ret.='<li>';
+					$ret.='<a href="'.$event->guid.'">';
+					$ret.='<h4>'.$event->post_title.'</h4>';
+					$ret.=self::get_single($event->ID);
+					$ret.='</a></li>';
+				}
+				$ret.='</ul>';
+				return $ret;
+			}
+			return'';
+		}
+		else{
+			return $nb>0?'<a data-date="'.date('Y-m-d',$date).'" class="eventpost_cal_link">'.date('j',$date).'</a>':date('j',$date);	
+		}		
+	}
+	function calendar($atts){
+		extract(shortcode_atts(array(
+		      'date'=>date('Y-n'),
+		      'cat'=>'',
+		      'mondayfirst'=>0, //1 : weeks starts on monday
+		      'datepicker'=>1
+	     ), $atts));
+		 
+		 $annee =substr($date,0,4);
+		 $mois=substr($date,5);
+		 
+		 $time = mktime(0,0,0,$mois,1,$annee);
+		 
+		 		
+		$JourMax =date("t",$time);
+		$NoJour = -date("w",$time);     
+		if ($mondayfirst == 0 ) {
+			$NoJour +=1;
+		}
+		else{
+			$NoJour +=2 ; 
+			self::$Week[] = array_shift(self::$Week);
+		}          
+		if ($NoJour >0 && $mondayfirst ==1) { 
+			$NoJour -=7;
+		}           
+		$ret='<table>';
+		if($datepicker==1){
+			$ret.='<thead><tr><td colspan="7">';
+			$ret.='<a data-date="'.date('Y-n',strtotime('-1 Year',$time)).'" class="eventpost_cal_bt">&lt;&lt;</a> ';
+			$ret.=$annee;
+			$ret.='<a data-date="'.date('Y-n',strtotime('+1 Year',$time)).'" class="eventpost_cal_bt">&gt;&gt;</a> ';
+			$ret.='<a data-date="'.date('Y-n',strtotime('-1 Month',$time)).'" class="eventpost_cal_bt">&lt;</a> ';
+			$ret.=self::$NomDuMois[$mois];
+			$ret.='<a data-date="'.date('Y-n',strtotime('+1 Month',$time)).'" class="eventpost_cal_bt">&gt;</a> ';
+			$ret.='<a data-date="'.date('Y-n').'" class="eventpost_cal_bt">'.__('Today','eventpost').'</a> </td></tr></thead>';
+		}
+		$ret.='<tbody>';
+		$ret.='<tr class="event_post_cal_days">';
+		for ( $w=0;$w<7;$w++){
+			$ret.='<td>'.strtoupper(substr(self::$Week[$w],0,1)).'</td>';
+		}
+		$ret.='</tr>';
+		
+		
+		$sqldate = date('Y-m',$time);
+		$cejour = date('Y-m-d');
+		for ($semaine=0;$semaine <=5;$semaine++) {   // 6 semaines par mois
+			$ret.='<tr>';
+			for ($journee=0;$journee <=6;$journee++) { // 7 jours par semaine				
+				if ($NoJour >0 && $NoJour <= $JourMax ){ // si le jour est valide a afficher
+				 	$td= '<td class="event_post_day">';		     	
+					if ($sqldate.'-'.$NoJour==$cejour) {   
+						$td= '<td class="event_post_day_now">';
+					}
+					$ret.=$td;	
+									
+					$ret.= self::display_caldate(mktime(0,0,0,$mois,$NoJour,$annee),$cat);					 
+					$ret.='</td>'; 
+				}
+				else{
+					$ret.='<td></td>';
+				}  
+				$NoJour ++; 
+			}
+			$ret.='</tr>'; 
+		}
+		$ret.='</tbody></table>';
+		
+		return $ret;
+	}
+	function ajaxcal(){
+		echo self::calendar(array(
+			'date'=>$_REQUEST['date'],
+			'cat'=>$_REQUEST['cat'],
+			'mondayfirst'=>$_REQUEST['mf'],
+			'datepicker'=>$_REQUEST['dp']
+		));
+		exit();
+	}	
+	function ajaxdate(){
+		echo self::display_caldate(strtotime($_REQUEST['date']),$_REQUEST['cat'],true);
+		exit();
+	}
+	
+	function HumanDate(){
 		if(isset($_REQUEST['date']) && !empty($_REQUEST['date'])){
 			$date = strtotime($_REQUEST['date']);
 			echo self::human_date($date).date(' H:i',$date);
 			exit();
 		}
 	}
-	function EventPostGetLatLong(){
+	/** AJAX Get lat long from address */
+	function GetLatLong(){
 		if(isset($_REQUEST['q']) && !empty($_REQUEST['q'])){
 			// verifier le cache
 			$q = $_REQUEST['q'];

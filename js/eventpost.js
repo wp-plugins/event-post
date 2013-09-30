@@ -157,4 +157,38 @@ jQuery(document).ready(function(){
 		
 	    
 	});
+	// Calendar Widget
+	function eventpost_cal_links(){
+		jQuery('.eventpost_cal_bt').click(function(){
+			var calcont = jQuery(this).parent().parent().parent().parent().parent();
+			jQuery.get(eventpost_params.ajaxurl, {	action: 'EventPostCalendar',date: jQuery(this).data('date'),cat:calcont.data('cat'),mf:calcont.data('mf'),dp:calcont.data('dp')}, function(data) {
+				calcont.html(data);	
+				eventpost_cal_links();
+			});
+		});
+		jQuery('.eventpost_cal_link').click(function(){
+			var calcont = jQuery(this).parent().parent().parent().parent().parent();
+			jQuery.get(eventpost_params.ajaxurl, {	action: 'EventPostCalendarDate',date: jQuery(this).data('date'),cat:calcont.data('cat'),mf:calcont.data('mf'),dp:calcont.data('dp')}, function(data) {
+				calcont.find('.eventpost_cal_list').fadeOut(function(){
+					jQuery(this).remove();
+				});
+				calcont.append('<div class="eventpost_cal_list"><a class="eventpost_cal_close">x</a>'+data+'</div>');
+				jQuery('.eventpost_cal_list').hide().fadeIn().children('.eventpost_cal_close').click(function(){
+					jQuery(this).parent().fadeOut(function(){
+						jQuery(this).remove();
+					});
+				});
+			});
+		});
+		
+	}
+	jQuery('.eventpost_calendar').each(function(){
+		var calcont=jQuery(this);
+		calcont.html('<img src="'+eventpost_params.imgpath+'cal-loader.gif" class="eventpost_cal_loader"/>');
+		jQuery.get(eventpost_params.ajaxurl, {	action: 'EventPostCalendar',date: jQuery(this).data('date'),cat:jQuery(this).data('cat'),mf:jQuery(this).data('mf'),dp:jQuery(this).data('dp')}, function(data) {
+			calcont.html(data);	
+			eventpost_cal_links();
+		});
+	});
+	
 });

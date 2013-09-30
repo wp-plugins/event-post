@@ -1,7 +1,7 @@
 === Event post ===
 Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
-Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap
+Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar
 Requires at least: 3.1
 Tested up to: 3.6.1
 Stable tag: /trunk
@@ -26,22 +26,43 @@ Localization works thanks to openstreetmap.
 * GPS coordinates
 
 = Shortcodes =
-The plugin comes with two shortcodes wich allows to :
+The plugin comes with three shortcodes wich allows to :
 <pre>[events_list]</pre> : display a list of events 
-<pre>[events_map]</pre> : display a map of events 
+<pre>[events_map]</pre> : display a map of events  
+<pre>[events_cal]</pre> : display a calendar of events 
 
-some options are available, such as : 
+Available options : 
+<h5>[events_list]</h5>
 <ul>
 <li><b>nb=5</b> <i>(number of post, 0 is all, default: 5)</i></li>
 <li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
 <li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
-<li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div | only for [events_list])</i></li>
+<li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div)</i></li>
 <li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
-<li><b>geo=0</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0 | only for [events_map])</i></li>
-<li><b>tile=''</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u), sets the map background, default=default@osm.org | only for [events_map])</i></li>
+<li><b>geo=0</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0)</i></li>
 <li><b>title=''</b> <i>(string (default )</i></li>
 <li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
 <li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
+</ul>
+
+<h5>[events_map]</h5>
+<ul>
+<li><b>nb=5</b> <i>(number of post, 0 is all, default: 5)</i></li>
+<li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
+<li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
+<li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
+<li><b>tile=''</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u), sets the map background, default=default@osm.org)</i></li>
+<li><b>title=''</b> <i>(string (default )</i></li>
+<li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
+<li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
+</ul>
+
+<h5>[events_cal]</h5>
+<ul>
+<li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
+<li><b>date=''</b> <i>(string, date for a month. Absolutly : 2013-9 or relatively : -1 month, default is empty, current month</i></li>
+<li><b>datepicker=1</b> <i>(boolean, displays or not a date picker</i></li>
+<li><b>mondayfirst=0</b> <i>(boolean, weeks start on monday, default is 0 (sunday)</i></li>
 </ul>
 
 == Installation ==
@@ -65,6 +86,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 
 == Changelog ==
+
+= 2.4.0 =
+* Add : Calendar widget/shortcode
 
 = 2.3.3 =
 * Add : Improve address search UI
