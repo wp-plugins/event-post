@@ -83,10 +83,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Screenshots ==
 
-<img src="http://ecolosites.eelv.fr/files/2013/03/single.png"/>
-<img src="http://ecolosites.eelv.fr/files/2013/03/admin.png"/>
-<img src="http://ecolosites.eelv.fr/files/2013/03/carte.png"/>
-
+1. Single page
+2. Editor interface
+3. Map
 
 == Changelog ==
 
