@@ -15,7 +15,7 @@ if(isset($_GET['t']) && isset($_GET['sd']) && isset($_GET['ed']) && isset($_GET[
 	$mte = strtotime($_GET['ed']);
 	$vdate = date("Ymd",$mte).'T'.date("His",$mte).'Z';
 	//str_replace('-','',$m_date).'T'.str_replace(':','',$m_heure).'Z';
-	echo"BEGIN:VEVENT\r\nPRODID:agenda_eelv\r\nSUMMARY:".stripslashes($_GET['t'])."\r\nUID:".$get['u']."\r\nLOCATION:".stripslashes($_GET['a'])."\r\nDTEND$vtz:$vdate\r\nDTSTART$vtz:$vdat\r\nDESCRIPTION:".stripslashes($_GET['d'])."\r\nEND:VEVENT\r\n";
+	echo"BEGIN:VEVENT\r\nPRODID:agenda_eelv\r\nSUMMARY:".stripslashes($_GET['t'])."\r\nUID:".$_GET['u']."\r\nLOCATION:".stripslashes($_GET['a'])."\r\nDTEND$vtz:$vdate\r\nDTSTART$vtz:$vdat\r\nDESCRIPTION:".stripslashes($_GET['d'])."\r\nEND:VEVENT\r\n";
 	echo"END:VCALENDAR\r\n";
 }
 ?>

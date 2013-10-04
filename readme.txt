@@ -90,6 +90,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.4.1 =
+* Fix : Parameters bug in export files
+
 = 2.4.0 =
 * Add : Calendar widget/shortcode
 
