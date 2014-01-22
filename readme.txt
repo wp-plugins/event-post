@@ -89,6 +89,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.5.0 =
+* Add : tag and style parameters for shortcode [events_list]
+
 = 2.4.1 =
 * Fix : Parameters bug in export files
 
