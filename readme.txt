@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar
 Requires at least: 3.1
-Tested up to: 3.6.1
+Tested up to: 3.8.1
 Stable tag: /trunk
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -88,6 +88,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 2.6.0 =
+* Add : order and orderby parameters for shortcode [events_list]
 
 = 2.5.0 =
 * Add : tag and style parameters for shortcode [events_list]

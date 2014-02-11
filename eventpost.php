@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.5.0
+Version: 2.6.0
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv3
@@ -365,7 +365,9 @@ class EventPost{
 		      'after_title'=>'</h3>',
 		      'cat'=>'',
 		      'tag'=>'',
-		      'style'=>''
+		      'style'=>'',
+		      'orderby'=>'meta_value',
+		      'order'=>'ASC'
 	     ), $atts);
 		 return EventPost::list_events($atts);
 	}
@@ -384,7 +386,9 @@ class EventPost{
 		      'after_title'=>'</h3>',
 		      'cat'=>'',
 		      'tag'=>'',
-		      'style'=>''
+		      'style'=>'',
+		      'orderby'=>'meta_value',
+		      'order'=>'ASC'
 	     ), $atts);
 		 $atts['geo']=1;
 		 $atts['type']='div';
@@ -421,7 +425,9 @@ class EventPost{
 		      'cat'=>'',
 		      'tag'=>'',
 		      'events'=>'',
-		      'style'=>''
+		      'style'=>'',
+		      'orderby'=>'meta_value',
+		      'order'=>'ASC'
 	     ), $atts);
 		 extract($atts);
 		if(!is_array($events)){		
@@ -459,7 +465,9 @@ class EventPost{
 		      'cat'=>'',
 		      'tag'=>'',
 		      'date'=>'',
-		      'retreive'=>false
+		      'retreive'=>false,
+		      'orderby'=>'meta_value',
+		      'order'=>'ASC'
 	     ), $atts));
 		 
 		wp_reset_query();
@@ -468,8 +476,8 @@ class EventPost{
 	   		'post_type'=>'post',
 			'posts_per_page'=>$nb,
 			'meta_key'=>EventPost::META_START,
-			'orderby'=>'meta_value',
-			'order'=>'ASC'
+			'orderby'=>$orderby,
+			'order'=>$order
 		);
 		
 		// CAT
