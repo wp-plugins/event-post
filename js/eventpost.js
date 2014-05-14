@@ -1,8 +1,39 @@
 jQuery(document).ready(function(){	
+	// Global function to add a marker on a map
+	function addMarker(maplayer,markerslayer,ll, popupClass, popupContentHTML, closeBox, overflow,icon) {
+
+        var feature = new OpenLayers.Feature(markerslayer, ll); 
+        feature.closeBox = closeBox;
+        feature.popupClass = popupClass;
+        feature.data.popupContentHTML = popupContentHTML;
+        feature.data.icon = icon;
+        feature.data.overflow = (overflow) ? "auto" : "hidden";
+                
+        var marker = feature.createMarker();
+
+        var markerClick = function (evt) {
+            if (this.popup == null) {
+                this.popup = this.createPopup(this.closeBox);
+                maplayer.addPopup(this.popup);
+                this.popup.show();
+            } else {
+                this.popup.toggle();
+            }
+            currentPopup = this.popup;
+            OpenLayers.Event.stop(evt);
+        };
+        marker.events.register("mousedown", feature, markerClick);
+
+        markerslayer.addMarker(marker);
+    }
+    
+    
+    
+    
 	// Single Location link 
 	// show it in a tiny map instead of following the link
 	jQuery('a.event_link.gps').click(function(){
-		console.log(jQuery(this).data('latitude'));
+		//console.log(jQuery(this).data('latitude'));
 		if(jQuery(this).parent().data('latitude')!=undefined && jQuery(this).parent().data('longitude')!=undefined){
 			var lat = jQuery(this).parent().data('latitude');
 			var lon = jQuery(this).parent().data('longitude');
@@ -45,35 +76,9 @@ jQuery(document).ready(function(){
 		    return false;
 		}
 	});	
+	
 	// List of events
-	// Making a big map with all available locations	
-	function addMarker(maplayer,markerslayer,ll, popupClass, popupContentHTML, closeBox, overflow,icon) {
-
-        var feature = new OpenLayers.Feature(markerslayer, ll); 
-        feature.closeBox = closeBox;
-        feature.popupClass = popupClass;
-        feature.data.popupContentHTML = popupContentHTML;
-        feature.data.icon = icon;
-        feature.data.overflow = (overflow) ? "auto" : "hidden";
-                
-        var marker = feature.createMarker();
-
-        var markerClick = function (evt) {
-            if (this.popup == null) {
-                this.popup = this.createPopup(this.closeBox);
-                maplayer.addPopup(this.popup);
-                this.popup.show();
-            } else {
-                this.popup.toggle();
-            }
-            currentPopup = this.popup;
-            OpenLayers.Event.stop(evt);
-        };
-        marker.events.register("mousedown", feature, markerClick);
-
-        markerslayer.addMarker(marker);
-    }
-    
+	// Making a big map with all available locations    
     var mapall=new Array();
     var markersall=new Array();
     
@@ -98,9 +103,15 @@ jQuery(document).ready(function(){
    	    
 		OpenLayers.ImgPath = eventpost_params.imgpath;
 	    mapall[map_id] = new OpenLayers.Map(map_id);
-	    mapall[map_id] .addControl(new OpenLayers.Control.PanZoomBar());
+	    
+	    if(jQuery(this).hasClass('eventpost_widget')){
+	    	mapall[map_id] .addControl(new OpenLayers.Control.PanZoom());
+	    }
+	    else{
+	    	mapall[map_id] .addControl(new OpenLayers.Control.PanZoomBar());
+	    }	    
 	    if(maptile!='' && eventpost_params.maptiles[maptile]){
-	    	console.log(eventpost_params.maptiles[maptile]);
+	    	//console.log(eventpost_params.maptiles[maptile]);
 			var maptile = new OpenLayers.Layer.OSM(maptile,eventpost_params.maptiles[maptile]['urls']);
 		}
 		else{

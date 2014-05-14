@@ -13,8 +13,8 @@ class eventpostcal_widget extends WP_Widget {
 		$mf = isset($instance['mf']) && is_numeric($instance['mf'])?esc_attr($instance['mf']):0;
 		$choose = isset($instance['choose']) && is_numeric($instance['choose'])?esc_attr($instance['choose']):1;
 
-		
-		$events = EventPost::get_events(
+		global $EventPost;
+        $events = $EventPost->get_events(
 			array(
 				'nb'=>-1,
 				'future'=>1,

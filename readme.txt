@@ -39,6 +39,7 @@ Available options :
 <li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
 <li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div)</i></li>
 <li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
+<li><b>tag=''</b> <i>(string, select posts only from the selected tag, default=null, for all tags)</i></li>
 <li><b>geo=0</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0)</i></li>
 <li><b>title=''</b> <i>(string (default )</i></li>
 <li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
@@ -52,6 +53,7 @@ example : <pre>[events_list future=1 past=1 cat="actuality" nb=10]</pre>
 <li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
 <li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
 <li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
+<li><b>tag=''</b> <i>(string, select posts only from the selected tag, default=null, for all tags)</i></li>
 <li><b>tile=''</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u), sets the map background, default=default@osm.org)</i></li>
 <li><b>title=''</b> <i>(string (default )</i></li>
 <li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
@@ -67,6 +69,23 @@ example : <pre>[events_map future=1 past=1 cat="actuality" nb="-1"]</pre>
 <li><b>mondayfirst=0</b> <i>(boolean, weeks start on monday, default is 0 (sunday)</i></li>
 </ul>
 example : <pre>[events_cal cat="actuality" date="-2 months" mondayfirst=1]</pre>
+
+= Hooks =
+<h5>Filters</h5>
+eventpost_printdate
+eventpost_printlocation
+eventpost_params
+eventpost_get
+eventpost_retreive
+eventpost_multisite_get
+eventpost_multisite_blogids
+
+<h5>Actions</h5>
+before_eventpost_generator
+after_eventpost_generator
+
+
+
 
 == Installation ==
 
@@ -88,6 +107,15 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 2.7.0 =
+* Add : Multisite event list support
+* Add : Integration of several hooks
+* Add : Map widget
+* Add : Parameters to display or not export buttons
+* Add : Native WP icons for map and calendar items
+* Fix : Event's first day not shown in calendar
+* Fix : Use of minified JS files
 
 = 2.6.0 =
 * Add : order and orderby parameters for shortcode [events_list]
@@ -163,7 +191,9 @@ available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 
 == Upgrade notice ==
 
-No particular informations
+= 2.7.0 =
+* The event meta box is no more displayed for non posts items such as pages or custom post-types
+* Please active the multisite plugin in order to allow your users to browse events from the network
 
 == Languages ==
 

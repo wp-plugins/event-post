@@ -23,7 +23,7 @@
 .event_data{
 	display:block;
 	clear:both;
-	font-size:0.7em;
+	font-size:0.8em;
 	color:#777;
 }
 .event_single{
@@ -42,16 +42,40 @@
 	color:#555;
 }
 .event_data a{
-	color:#FFF;
-	font-size:0.8em;
-	
-	background:#999;
-	display:block;
-	padding:0.2em 0.5em;
-	border-radius:0.2em;
-	float:right;
-	margin:0.1em 0.2em;
+    color:#333;
+    font-size:0.9em;    
+    background:transparent;
+    display:block;
+    padding:0.2em 0.5em;
+    border-radius:0.2em;
+    float:right;
+    margin:0.1em 0.2em;
+    text-decoration:none !important;
+    font-weight:900;
 }
+.event_data a:hover{
+    color:#FFF;
+   background:#666;
+}
+.event_data a:before{
+    font-family:dashicons;
+    font-size:2em;
+    top:4px;
+    position:relative;
+}
+.event_data a.ics:before,.event_data a.gcal:before,.event_data a.vcs:before{
+    content:' ';
+}
+.event_data a.gps:before{
+    content:' ';
+    font-size:2.2em;
+}
+.event_data a.gps{
+    font-size:1.1em;
+}
+
+
+
 .olMap img{
 	max-width:none;
 }
@@ -137,3 +161,14 @@
 	font-weight:900;
 }
 
+/*Widget MAP */
+.widget .eventpost_widget *,
+.widget .eventpost_widget img,
+.widget .eventpost_widget div,
+.widget .eventpost_widget a ,
+.widget .eventpost_widget span {
+    max-height: none !important;
+    max-width: none !important;
+    min-height: none !important;
+    min-width: none !important;
+}

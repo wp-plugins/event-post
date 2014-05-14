@@ -44,11 +44,13 @@ function eventpost_edit(){
 	}
 	var ep_sce='[events_'+sctype;
 	jQuery('#event_post_sc_edit input,#event_post_sc_edit select').each(function(){
-		var pc = jQuery(this).parent().parent().parent().attr('class');
-		var att = jQuery(this).data('att');
-		var val = jQuery(this).val();
-		if(att!=null && val!='' && (pc=='all' || pc==sctype)){
-			ep_sce+=' '+att+'="'+val+'"';
+		if(!jQuery(this).hasClass('event_post_sc_no_use')){
+			var pc = jQuery(this).parent().parent().parent().attr('class');
+			var att = jQuery(this).data('att');
+			var val = jQuery(this).val();
+			if(att!=null && val!='' && (pc=='all' || pc==sctype)){
+				ep_sce+=' '+att+'="'+val+'"';
+			}
 		}
 	});
 	ep_sce+=']';
@@ -97,40 +99,6 @@ function eventpost_insertcontent(str){
   }
 }
 jQuery(document).ready(function(){
-	var is_browser_good=false;
-	var i = document.createElement("input");
-	i.setAttribute("type", "datetime-local");
-	if(i.type !== "text"){
-		is_browser_good=true;
-	}
-	jQuery('#event_post input[type=datetime-local]').each(function(){
-		if(is_browser_good==false){
-			lang = jQuery(this).data('language');
-			jQuery.datepicker.setDefaults(jQuery.datepicker.regional[lang]);
-			jQuery(this).datetimepicker({
-				dateFormat:'yy-mm-dd',
-				formatTime:'HH:mm:ss',
-				separator:'T',
-				minuteGrid:15
-			});
-		}
-		
-		var hd = jQuery(this).parent().find('.human_date');
-		if(jQuery(this).val()!=''){
-			jQuery.post(ajaxurl, {	action: 'EventPostHumanDate',date: jQuery(this).val()}, function(data) {
-				hd.html(data);	
-			});
-		}
-		jQuery(this).change(function(){
-			
-			if(jQuery(this).val()!=''){
-				jQuery.post(ajaxurl, {	action: 'EventPostHumanDate',date: jQuery(this).val()}, function(data) {
-					hd.html(data);	
-					eventpost_chkdate();
-				});
-			}
-		});
-	});
 	jQuery('#event_address_search').click(function(){
 		jQuery('#eventaddress_result').html('<input type="search" id="event_address_search_txt"/><input type="button" id="event_address_search_bt" value="ok" class="button"/>');
 		
@@ -178,4 +146,46 @@ jQuery(document).ready(function(){
 	
 	
 	eventpost_edit();
+	
+	/*
+	 * Date picker
+	 */
+	if(jQuery.datepicker){
+		jQuery( ".input-date").datepicker({ 
+			firstDay: 1,
+			changeYear: true,
+			changeMonth: true,
+			showMonthAfterYear: true,
+			yearRange: "c-5:+5",			
+			buttonText: eventpost.date_choose,
+			showOn: "both",			
+			dateFormat: "yy-mm-dd",		
+			autoSize: true
+		}).change(function(){
+			
+			if(jQuery(this).val()!=''){
+				jQuery.post(ajaxurl, {	action: 'EventPostHumanDate',date: jQuery(this).val()}, function(data) {
+					hd.html(data);	
+					eventpost_chkdate();
+				});
+			}
+		});
+	}
+	/*
+	 * Widgets stylish with icons
+	 */	
+	if(jQuery('body').hasClass('widgets-php')){
+		jQuery('.widget').each(function(){
+			wid = jQuery(this).attr('id');
+			if(wid.indexOf('eventpostmap')>-1){
+				jQuery(this).addClass('eventpost_admin_widget eventpost_widget_map');
+			}
+			else if(wid.indexOf('eventpostcal')>-1){
+				jQuery(this).addClass('eventpost_admin_widget eventpost_widget_cal');
+			}
+			else if(wid.indexOf('eventpost')>-1){
+				jQuery(this).addClass('eventpost_admin_widget eventpost_widget_list');
+			}
+		});
+	}
 });

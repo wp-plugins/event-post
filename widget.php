@@ -11,8 +11,8 @@ class eventpost_widget extends WP_Widget {
        if(isset($instance['eventpost_widgettitle']) && !empty($instance['eventpost_widgettitle'])){$eventpost_widgettitle = $instance['eventpost_widgettitle'];}else {$eventpost_widgettitle = "";}
 	   if(isset($instance['eventpost_cat']) && !empty($instance['eventpost_cat'])){$eventpost_cat = $instance['eventpost_cat'];}else {$eventpost_cat = "";}
 		
-		
-		$events = EventPost::get_events(
+		global $EventPost;
+		$events = $EventPost->get_events(
 			array(
 				'nb'=>$eventpost_numberposts,
 				'future'=>1,
@@ -29,7 +29,7 @@ class eventpost_widget extends WP_Widget {
 				echo $eventpost_widgettitle;
 				echo $args['after_title'];
 			}			
-			echo EventPost::list_events(array('events'=>$events));
+			echo $EventPost->list_events(array('events'=>$events));
 			echo $args['after_widget'];		
 		}		    
    }

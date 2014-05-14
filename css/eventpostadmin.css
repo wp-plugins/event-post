@@ -61,3 +61,23 @@
 	border-radius:4px;
 	margin:1em 0;
 }
+
+
+
+body.widgets-php .eventpost_admin_widget h4:before{
+    font-family:dashicons;
+    font-size:1.7em;
+    top:4px;
+    position:relative;
+}
+body.widgets-php .eventpost_widget_cal h4:before{
+    content:' ';
+}
+body.widgets-php .eventpost_widget_map h4:before{
+    content:' ';
+}
+body.widgets-php .eventpost_widget_list h4:before{
+    content:' ';
+}
+
+
