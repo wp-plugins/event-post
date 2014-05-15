@@ -2,8 +2,8 @@
 Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar
-Requires at least: 3.1
-Tested up to: 3.8.1
+Requires at least: 3.8
+Tested up to: 3.9.1
 Stable tag: /trunk
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -114,6 +114,7 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 * Add : Map widget
 * Add : Parameters to display or not export buttons
 * Add : Native WP icons for map and calendar items
+* Add : data-color in list items
 * Fix : Event's first day not shown in calendar
 * Fix : Use of minified JS files
 
