@@ -108,6 +108,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.7.1 =
+* Fix : Really check all blogs when using "blogs=all" in shortcodes. May cause memory limit on big networks
+
 = 2.7.0 =
 * Add : Multisite event list support
 * Add : Integration of several hooks
