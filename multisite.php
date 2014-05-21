@@ -3,7 +3,7 @@
 Plugin Name: Event Post multisite support
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Extends Event post to multisite networks
-Version: 2.6.0
+Version: 2.7.0
 Author: bastho, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv2
@@ -29,6 +29,13 @@ class EventPostMU{
         $param['blogs']='';
         return $param;
     }
+	/*
+	 * function get
+	 * @filter eventpost_multisite_get
+	 * @filter eventpost_multisite_blogids
+	 * @return array of events
+	 * 
+	 */
     function get($empty,$arg,$requete){
     	$is_result=apply_filters('eventpost_multisite_get',$empty,$arg,$requete);
 		if($is_result!=$empty)
