@@ -108,6 +108,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.1 =
+* Fix : content filter bug on home page
+
 = 2.8.0 =
 * Add : attributes to events_list shortcode : 
 * * thumbnail=(true/false) 
