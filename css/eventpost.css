@@ -1,8 +1,18 @@
 .event_item{
-	display:block;
-	clear:both;
-	font-size:0.95em;
-	margin:0.5em 0;
+    display:block;
+    clear:both;
+    font-size:0.95em;
+    margin:1em 0;
+}
+.event_item:after{
+    display:block;
+    clear:both;
+    padding:1px;
+    content:' ';
+}
+.event_item .event_thumbnail{
+    float:left;
+    margin:0 1em 0 0;
 }
 .event_map{
 	background:#CCC;
@@ -18,20 +28,26 @@
 
 .event_item h5{
 	font-size:1em;
+	clear:none;
 	color:#222;
+}
+.event_item address{ /* Bootstrap patch */
+    line-height:inherit;
+    margin-bottom:0;
 }
 .event_data{
 	display:block;
-	clear:both;
 	font-size:0.8em;
 	color:#777;
+	line-height:1.1em;
 }
 .event_single{
-	padding:0.5em;
+	padding:0.5em 0.5em 0.5em 1.5em;
 	margin:0.5em 0;
-	background: rgba(255,255,0,0.2);
-	border:rgba(255,200,0,0.6) 1px solid;
-	border-radius:0.4em;
+    background: #FFF;
+    background: rgba(255,255,255,0.9);
+    border:none;
+    border-left:#FFF 10px solid;
 }
 .event_data .date{
 	font-size:1.2em;

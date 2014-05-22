@@ -5,15 +5,9 @@
 	color:#21759B;
 }
 #event_post label input[type=datetime-local]{
-	opacity:0;
-	transition:opacity 0.5s ease;
-	-o-transition:opacity 0.5s ease;
-	-moz-transition:opacity 0.5s ease;
-	-webkit-transition:opacity 0.5s ease;
+	
 }
-#event_post label:hover input[type=datetime-local]{
-	opacity:1;
-}
+
 #event_post label input[type=text]{
 	background:transparent;
 	border:none;
@@ -44,13 +38,7 @@
 	clear:both;
 }
 #event_address_search{
-	display:block;
-	width:20px;
-	height:20px;
-	overflow: hidden;
-	position:relative;
-	background:url('../img/gps.png') no-repeat center center;
-	text-indent:-50px;	
+	
 }
 
 #ep_sce_shortcode{
@@ -71,13 +59,13 @@ body.widgets-php .eventpost_admin_widget h4:before{
     position:relative;
 }
 body.widgets-php .eventpost_widget_cal h4:before{
-    content:' ';
+    content:'\f145 ';
 }
 body.widgets-php .eventpost_widget_map h4:before{
-    content:' ';
+    content:'\f231 ';
 }
 body.widgets-php .eventpost_widget_list h4:before{
-    content:' ';
+    content:'\f163 ';
 }
 
 

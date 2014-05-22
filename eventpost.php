@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.7.1
+Version: 2.8.0
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv2
@@ -83,10 +83,36 @@ class EventPost{
         $this->settings=$this->get_settings();
         
         $this->dateformat=str_replace(array('yy','mm','dd'),array('Y','m','d'),__('yy-mm-dd','eventpost'));
+		
+		$this->list_shema=array(
+			'container'=>'
+		      <%type% class="event_loop %id% %class%" id="%listid%" style="%style%" %attributes%>
+		      	%list%
+		      </%type%>',
+			'item'=>'
+		      <%child% class="event_item %class%" data-color="%color%">
+			      	<a href="%event_link%">
+			      		%event_thumbnail%
+			      		<h5>%event_title%</h5>
+			      	</a>
+		      		%event_date%
+		      		%event_cat%
+		      		%event_location%
+		      		%event_excerpt%
+		      </%child%>'
+		);
         
     }
-		
-
+	//Usefull hexadecimal to decimal converter	
+	function hex2dec($color = '000000'){
+		$tbl_color = array();
+		if(!ereg('#',$color)) $color='#'.$color;
+		$tbl_color['R']=hexdec(substr($color, 1, 2));
+		$tbl_color['G']=hexdec(substr($color, 3, 2));
+		$tbl_color['B']=hexdec(substr($color, 5, 2));
+		return $tbl_color;
+	}
+	
 	
 	function no_use(){
 		__('Add calendar and/or geolocation metadata on posts','eventpost');
@@ -368,11 +394,15 @@ class EventPost{
 	
 	// Generate, return or output date event datas
 	function get_single($post=null,$class=''){
+		if($post==null){
+			$post=$this->retreive();
+		}
 		$datas_date = $this->print_date($post);
 		$datas_cat = $this->print_categories($post);
 		$datas_loc = $this->print_location($post);
 		if($datas_date!='' || $datas_loc!=''){
-			return '<div class="event_data '.$class.'" itemscope itemtype="http://microformats.org/profile/hcard">'.$datas_date.$datas_cat.$datas_loc.'</div>';
+			$rgb=$this->hex2dec($post->color);
+			return '<div class="event_data '.$class.'" style="border-left-color:#'.$post->color.';background:rgba('.$rgb['R'].','.$rgb['G'].','.$rgb['B'].',0.1)" itemscope itemtype="http://microformats.org/profile/hcard">'.$datas_date.$datas_cat.$datas_loc.'</div>';
 		}
 		return '';
 	}
@@ -387,10 +417,16 @@ class EventPost{
 		return '<div class="event_data event_location '.$class.'" itemscope itemtype="http://microformats.org/profile/hcard">'.$this->print_location($post).'</div>';
 	}
 	function display_single($content){
-		if(is_single()){
+		if(is_page()) return $content;
+		global $post;		
+		//Prevent from filters applying "the_content" on another thing than the current post content
+		remove_filter('the_content',array( &$this, 'display_single'));
+		$current_content = apply_filters('the_content',$post->post_content);		
+		if(is_single() && $current_content==$content){
 		    $post=$this->retreive();
 		    $content.=$this->get_single($post,'event_single');			
 		}
+		add_filter('the_content',array( &$this, 'display_single'));
 		return $content;
 	}
 	function print_single($post=null){
@@ -405,17 +441,25 @@ class EventPost{
 		      'future' => true,
 		      'past' => false,
 		      'geo' => 0,
-		      'width'=>'100%',
+		      'width'=>'',
 		      'height'=>'auto',
 		      'title'=>'',
 		      'before_title'=>'<h3>',
 		      'after_title'=>'</h3>',
 		      'cat'=>'',
 		      'tag'=>'',
+		      'thumbnail'=>'',
+		      'thumbnail_size'=>'',
+		      'excerpt'=>'',
 		      'style'=>'',
 		      'orderby'=>'meta_value',
-		      'order'=>'ASC'
+		      'order'=>'ASC',		      
+		      'container_schema'=>$this->list_shema['container'],
+		      'item_schema'=>$this->list_shema['item'],
 	     ),'shortcode_list'), $atts);
+		 
+		 if($atts['container_schema']!=$this->list_shema['container']) $atts['container_schema']=html_entity_decode($atts['container_schema']);
+		 if($atts['item_schema']!=$this->list_shema['item']) $atts['item_schema']=html_entity_decode($atts['item_schema']);
 		 return $this->list_events($atts);
 	}
 	// Shortcode to display a map of events
@@ -435,6 +479,8 @@ class EventPost{
 		      'cat'=>'',
 		      'tag'=>'',
 		      'style'=>'',
+		      'thumbnail'=>'',
+		      'excerpt'=>'',
 		      'orderby'=>'meta_value',
 		      'order'=>'ASC'
 	     ),'shortcode_map'), $atts);
@@ -466,8 +512,8 @@ class EventPost{
 		      'future' => true,
 		      'past' => false,
 		      'geo' => 0,
-		      'width'=>'100%',
-		      'height'=>'auto',
+		      'width'=>'',
+		      'height'=>'',
 		      'tile'=>$ep_settings['tile'],
 		      'title'=>'',
 		      'before_title'=>'<h3>',
@@ -476,9 +522,14 @@ class EventPost{
 		      'tag'=>'',
 		      'events'=>'',
 		      'style'=>'',
+		      'thumbnail'=>'',
+		      'thumbnail_size'=>'',
+		      'excerpt'=>'',
 		      'orderby'=>'meta_value',
 		      'order'=>'ASC',
-		      'class'=>''
+		      'class'=>'',
+		      'container_schema'=>$this->list_shema['container'],
+		      'item_schema'=>$this->list_shema['item'],
 	     ),'list_events'), $atts);
 		 extract($atts);
 		if(!is_array($events)){		
@@ -490,20 +541,66 @@ class EventPost{
 			if(!empty($title)){
 				$ret.= html_entity_decode($before_title).$title.html_entity_decode($after_title);
 			}	
+			
 			$child=($type=='ol' || $type=='ul') ? 'li' : 'div';
-			$ret.='<'.$type.' class="event_loop '.$id.' '.$class.'" id="'.$id.$this->list_id.'" style="width:'.$width.';height:'.$height.';'.(!empty($style)?$style:'').'" '.($id=='event_geolist' ? 'data-tile="'.$tile.'"' : '').'>';
+			
+			$list='';
+			
 			foreach($events as $post){ //$post=get_post($item_id);
 			    $item_id=$post->ID;
                 $meta_end = $this->META_END;
 				$class=(strtotime($post->$meta_end)>=time()) ? 'event_future' : 'event_past';
-		 		$ret.='<'.$child.' class="event_item '.$class.'" data-color="'.$post->color.'">
-		 			<a href="'.$post->permalink.'"><h5>'.$post->post_title.'</h5></a>		 			
-		 			'.$this->get_singledate($post).'
-		 			'.$this->get_singlecat($post).'
-		 			'.$this->get_singleloc($post).'
-		 			</'.$child.'>';
+		 		$list.=str_replace(
+					array(
+						'%child%',
+						'%class%',
+						'%color%',
+						'%event_link%',
+						'%event_thumbnail%',
+						'%event_title%',
+						'%event_date%',
+						'%event_cat%',
+						'%event_location%',
+						'%event_excerpt%'
+					),
+					array(
+						$child,
+						$class,
+						$post->color,
+						$post->permalink,
+						$thumbnail==true?'<span class="event_thumbnail_wrap">'.get_the_post_thumbnail($post->ID,!empty($thumbnail_size)?$thumbnail_size:'thumbnail',array('class'=>'attachment-thumbnail wp-post-image event_thumbnail')).'</span>':'',
+						$post->post_title,
+						$this->get_singledate($post),
+						$this->get_singlecat($post),
+						$this->get_singleloc($post),
+						$excerpt==true?$post->excerpt:'',
+					),
+					$item_schema
+				);
+		 		
 			} 
-			$ret.='</'.$type.'>';		
+			$ret.=str_replace(
+				array(
+					'%type%',
+					'%id%',
+					'%class%',
+					'%listid%',
+					'%style%',
+					'%attributes%',
+					'%list%'
+				),
+				array(
+					$type,
+					$id,
+					$class,
+					$id.$this->list_id,
+					(!empty($width)?'width:'.$width.';':'').(!empty($height)?'height:'.$height.';':'').$style,
+					$id=='event_geolist' ? 'data-tile="'.$tile.'"' : '',
+					$list
+				),
+				$container_schema
+			);		
+			
 		}
 		return $ret;
 	}
@@ -645,6 +742,8 @@ class EventPost{
         $ob = get_post($event);
 		$ob->start=get_post_meta($ob->ID,$this->META_START,true);
 		$ob->end=get_post_meta($ob->ID,$this->META_END,true);
+		$ob->time_start=!empty($ob->start)?strtotime($ob->start):'';
+		$ob->time_end=!empty($ob->end)?strtotime($ob->end):'';
 		$ob->address=get_post_meta($ob->ID,$this->META_ADD,true);
 		$ob->lat=get_post_meta($ob->ID,$this->META_LAT,true);
 		$ob->long=get_post_meta($ob->ID,$this->META_LONG,true);
@@ -652,32 +751,34 @@ class EventPost{
         $ob->categories= get_the_category($ob->ID);
         $ob->permalink=get_permalink($ob->ID);
         $ob->blog_id=get_current_blog_id();
+		if($ob->color=='') $ob->color='000000';
         return apply_filters('eventpost_retreive',$ob);
     }
 
 /** ADMIN ISSUES **/
 	
 	function add_custom_box() {
-	    add_meta_box('event_post', __( 'Event datas', 'eventpost' ), array( &$this, 'inner_custom_box'),'post', 'side', 'core');
+	    add_meta_box('event_post', __( 'Event informations', 'eventpost' ), array( &$this, 'inner_custom_box'),'post', 'side', 'core');
 		add_meta_box('event_post_sc_edit', __( 'Events Shortcode editor', 'eventpost' ), array( &$this, 'inner_custom_box_edit'),'page');
 	}
 	function inner_custom_box() {
 		$post_id=get_the_ID();
-		$start_date = get_post_meta($post_id, $this->META_START, true);
-		$end_date = get_post_meta($post_id, $this->META_END, true);
+		$event=$this->retreive($post_id);
+		$start_date = $event->start;
+		$end_date = $event->end;
 		
-		$start_date_date=!empty($start_date)?substr($start_date,0,10):date('Y-m-d');
-        $start_date_hour=abs(!empty($start_date)?substr($start_date,11,2):date('H'));
-        $start_date_minutes=abs(!empty($start_date)?substr($start_date,14,2):'00');
+		$start_date_date=!empty($start_date)?substr($start_date,0,10):'';
+        $start_date_hour=!empty($start_date)?abs(substr($start_date,11,2)):'';
+        $start_date_minutes=!empty($start_date)?abs(substr($start_date,14,2)):'';
         
-        $end_date_date=!empty($end_date)?substr($end_date,0,10):date('Y-m-d');
-        $end_date_hour=abs(!empty($end_date)?substr($end_date,11,2):date('H'));
-        $end_date_minutes=abs(!empty($end_date)?substr($end_date,14,2):strtotime(''));
+        $end_date_date=!empty($end_date)?substr($end_date,0,10):'';
+        $end_date_hour=!empty($end_date)?abs(substr($end_date,11,2)):'';
+        $end_date_minutes=!empty($end_date)?abs(substr($end_date,14,2)):'';
         //$end_date_to_print=$this->parsedate($end_date,'T');	
         
         
         
-		$eventcolor = get_post_meta($post_id,$this->META_COLOR,true);
+		$eventcolor = $event->color;
 		
 		$language = get_bloginfo('language');
 		if(strpos($language,'-')>-1){
@@ -688,20 +789,22 @@ class EventPost{
 		<div class="misc-pub-section">
 		    <label for="<?php echo $this->META_START; ?>_date">  
     		    <p><?php _e( 'Begin:', 'eventpost' ) ?>
-                <span id="<?php echo $this->META_START; ?>_date_human" class="human_date"></span>   
+                <span id="<?php echo $this->META_START; ?>_date_human" class="human_date">
+                	<?php echo $this->human_date($event->time_start).date(' H:i',$event->time_start)?>
+                </span>   
                  </p>      
                 <input type="text" class="input-date" data-language="<?php echo $language; ?>" value ="<?php echo $start_date_date ?>" name="<?php echo $this->META_START; ?>[date]" id="<?php echo $this->META_START; ?>_date"/>
             </label> 
             
             <p><label for="<?php echo $this->META_START; ?>_hour">             
-                <select name="<?php echo $this->META_START; ?>[hour]" id="<?php echo $this->META_START; ?>_hour">
+                <select name="<?php echo $this->META_START; ?>[hour]" id="<?php echo $this->META_START; ?>_hour" class="select-date">
                     <?php for($h=0 ; $h<24 ; $h++): ?>
                        <option value="<?=$h?>" <?=($start_date_hour==$h?'selected':'')?>><?=$h?></option>
                     <?php endfor; ?>
                 </select>:
             </label> 
              <label for="<?php echo $this->META_START; ?>_minute">             
-                <select name="<?php echo $this->META_START; ?>[minute]" id="<?php echo $this->META_START; ?>_minute">
+                <select name="<?php echo $this->META_START; ?>[minute]" id="<?php echo $this->META_START; ?>_minute" class="select-date">
                     <?php for($m=0 ; $m<60 ; $m+=15): ?>
                        <option value="<?=$m?>" <?=($start_date_minutes==$m?'selected':'')?>><?=$m?></option>
                     <?php endfor; ?>
@@ -712,19 +815,21 @@ class EventPost{
 		<div class="misc-pub-section">
 		    <label for="<?php echo $this->META_END; ?>_date">
     		    <p><?php _e( 'End:', 'eventpost' ) ?>
-                <span id="<?php echo $this->META_END; ?>_date_human" class="human_date"></span> 
+                <span id="<?php echo $this->META_END; ?>_date_human" class="human_date">
+                	<?php echo $this->human_date($event->time_end).date(' H:i',$event->time_end)?>
+                </span> 
                 </p>
 				<input type="text" class="input-date" data-language="<?php echo $language; ?>"  value ="<?php echo $end_date_date ?>" name="<?php echo $this->META_END; ?>[date]" id="<?php echo $this->META_END; ?>_date"/>        
 			</label> 
 			<p><label for="<?php echo $this->META_END; ?>_hour">             
-                <select name="<?php echo $this->META_END; ?>[hour]" id="<?php echo $this->META_END; ?>_hour">
+                <select name="<?php echo $this->META_END; ?>[hour]" id="<?php echo $this->META_END; ?>_hour" class="select-date">
                     <?php for($h=0 ; $h<24 ; $h++): ?>
                        <option value="<?=$h?>" <?=($end_date_hour==$h?'selected':'')?>><?=$h?></option>
                     <?php endfor; ?>
                 </select>:
             </label> 
              <label for="<?php echo $this->META_END; ?>_minute">             
-                <select name="<?php echo $this->META_END; ?>[minute]" id="<?php echo $this->META_END; ?>_minute">
+                <select name="<?php echo $this->META_END; ?>[minute]" id="<?php echo $this->META_END; ?>_minute" class="select-date">
                     <?php for($m=0 ; $m<60 ; $m+=15): ?>
                        <option value="<?=$m?>" <?=($end_date_minutes==$m?'selected':'')?>><?=$m?></option>
                     <?php endfor; ?>
@@ -748,23 +853,28 @@ class EventPost{
 		
 		<b><?php _e( 'Location:', 'eventpost' ) ?></b>
 		<div class="misc-pub-section">
+			<p><a href="#event_address_search" id="event_address_search">
+				<span class="dashicons dashicons-search"></span> 
+				<?php _e( 'Look for event\'s GPS coordinates:', 'eventpost' ) ?>				
+			</a>
+			<span id="eventaddress_result"></span> 
+			</p>
 			<label for="<?php echo $this->META_ADD; ?>">
-				<?php _e( 'Address:', 'eventpost' ) ?>
-				<textarea name="<?php echo $this->META_ADD; ?>" id="<?php echo $this->META_ADD; ?>"><?php echo get_post_meta($post_id, $this->META_ADD, true) ?></textarea>
+				<?php _e( 'Event address, as it will be displayed:', 'eventpost' ) ?>
+				<textarea name="<?php echo $this->META_ADD; ?>" id="<?php echo $this->META_ADD; ?>"><?php echo $event->address ?></textarea>
 			</label> 
-			<a id="event_address_search">?</a>
-			<div id="eventaddress_result"></div> 
+			
 		</div>
 		<div class="misc-pub-section">
 			<label for="<?php echo $this->META_LAT; ?>">
 				<?php _e( 'Latitude:', 'eventpost' ) ?>
-				<input type="text" value ="<?php echo get_post_meta($post_id, $this->META_LAT, true) ?>" name="<?php echo $this->META_LAT; ?>" id="<?php echo $this->META_LAT; ?>"/>
+				<input type="text" value ="<?php echo $event->lat ?>" name="<?php echo $this->META_LAT; ?>" id="<?php echo $this->META_LAT; ?>"/>
 			</label>  
 		</div>
 		<div class="misc-pub-section">
 			<label for="<?php echo $this->META_LONG; ?>">
 				<?php _e( 'Longitude:', 'eventpost' ) ?>
-				<input type="text" value ="<?php echo get_post_meta($post_id, $this->META_LONG, true) ?>" name="<?php echo $this->META_LONG; ?>" id="<?php echo $this->META_LONG; ?>"/>
+				<input type="text" value ="<?php echo $event->long ?>" name="<?php echo $this->META_LONG; ?>" id="<?php echo $this->META_LONG; ?>"/>
 			</label>  
 		</div>
   <?php

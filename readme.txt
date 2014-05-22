@@ -108,6 +108,21 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.0 =
+* Add : attributes to events_list shortcode : 
+* * thumbnail=(true/false) 
+* * thumbnail_size=thumbnail 
+* * excertp=(true/false)
+* * container_schema (documentation comming soon)
+* * item_schema (documentation comming soon)
+* Add : Usage of the event color for single details
+* Enhance : Event information form UI
+* Fix : Re-check if end date is after begin date
+* Fix : CSS adjustments
+* Fix : CSS adjustments
+* Fix : Prevent from filters applying "the_content" on another thing than the current post content
+
+
 = 2.7.1 =
 * Fix : Really check all blogs when using "blogs=all" in shortcodes. May cause memory limit on big networks
 
