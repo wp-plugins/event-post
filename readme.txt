@@ -108,6 +108,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.3 =
+* Fix : bug fix
+
 = 2.8.2 =
 * Fix : apply content filter most later
 
