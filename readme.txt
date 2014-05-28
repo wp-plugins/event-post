@@ -108,6 +108,11 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.4 =
+* Fix : Optimize JS in admi  side
+* Add : French and chinese localisation for date-picker
+* Add : Minify CSS
+
 = 2.8.3 =
 * Fix : bug fix
 

@@ -7,21 +7,8 @@ function eventpost_apply(addr,lat,lon){
     jQuery('#eventaddress_result').html('');
 }
 function eventpost_numdate(str){
-    while(str.indexOf('-')>-1){
-        str=str.replace('-','');
-    }
-    while(str.indexOf(':')>-1){
-        str=str.replace(':','');
-    }
-    while(str.indexOf(' ')>-1){
-        str=str.replace(' ','');
-    }
-    while(str.indexOf('T')>-1){
-        str=str.replace('T','');
-    }
-    while(str.indexOf('/')>-1){
-        str=str.replace('/','');
-    }
+    var r=new RegExp("[-: T/]", "g");
+    str=str.replace(r,'');
     return parseInt(str);
 }
 function eventpost_getdate(field){

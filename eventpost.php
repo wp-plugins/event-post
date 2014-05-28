@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.8.3
+Version: 2.8.4
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv2
@@ -180,11 +180,11 @@ class EventPost{
 		//CSS
 		wp_register_style(
 	        'eventpost',
-	        plugins_url('/css/eventpost.css', __FILE__),
+	        plugins_url('/css/eventpost.min.css', __FILE__),
 	        false,
 	        1.0
 	    );
-		wp_enqueue_style('eventpost', plugins_url('/css/eventpost.css', __FILE__), false, null);        
+		wp_enqueue_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false, null);        
         wp_enqueue_style('dashicons-css', includes_url('/css/dashicons.min.css'));
 		
 		// JS
@@ -203,8 +203,9 @@ class EventPost{
 	}
 	function admin_scripts() {
 		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_script('osmadmin', plugins_url('/js/osm-admin.min.js', __FILE__),false,false,true);
-		wp_localize_script('osmadmin', 'eventpost', array(
+		wp_enqueue_script('eventpost-admin', plugins_url('/js/osm-admin.min.js', __FILE__),false,false,true);
+		
+		wp_localize_script('eventpost-admin', 'eventpost', array(
             'imgpath' => plugins_url('/img/', __FILE__),
             'date_choose' => __('Choose','eventpost'),
             'date_format' => __('yy-mm-dd','eventpost'),
@@ -214,6 +215,12 @@ class EventPost{
 			'META_LAT'=>$this->META_LAT,
 			'META_LONG'=>$this->META_LONG,
 		));
+		
+		$lang=substr(get_bloginfo('language'),0,2);
+		if(is_file(plugin_dir_path(__FILE__).'js/jquery.ui.datepicker-'.$lang.'.js')){
+			wp_enqueue_script('jquery-ui-datepicker-'.$lang, plugins_url('/js/jquery.ui.datepicker-'.$lang.'.js', __FILE__),false,false,true);
+		}
+		
 	}
 	function single_header(){
 		if(is_single()){
