@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.8.4
+Version: 2.8.5
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv2
@@ -133,6 +133,10 @@ class EventPost{
         if(!isset($ep_settings['export']) || empty($ep_settings['export'])){
             $ep_settings['export']='both';
         }
+		if(!isset($ep_settings['emptylink'])){
+            $ep_settings['emptylink']=1;
+        }
+
 
 
 		return $ep_settings;
@@ -425,7 +429,7 @@ class EventPost{
 	}
 	function display_single($content){
 		if(is_page() || !is_single() || is_home()) return $content;
-		global $post;		
+		$post=get_queried_object();		
 		//Prevent from filters applying "the_content" on another thing than the current post content
 		remove_filter('the_content',array( &$this, 'display_single'),9999);
 		$current_content = apply_filters('the_content',$post->post_content);		
@@ -557,6 +561,9 @@ class EventPost{
 			    $item_id=$post->ID;
                 $meta_end = $this->META_END;
 				$class=(strtotime($post->$meta_end)>=time()) ? 'event_future' : 'event_past';
+				if($ep_settings['emptylink']==0 && empty($post->post_content)){
+					$post->permalink='#'.$id.$this->list_id;
+				}
 		 		$list.=str_replace(
 					array(
 						'%child%',
@@ -1023,6 +1030,9 @@ class EventPost{
 	}
 	function display_caldate($date,$cat='',$display=false){
 		$events = $this->get_events(array('nb'=>-1,'date'=>$date,'cat'=>$cat,'retreive'=>true));
+		if($this->settings['emptylink']==0 && empty($event->post_content)){
+			$event->guid='#';
+		}
 		$nb = count($events);
 		if($display){
 			if($nb>0){
@@ -1226,6 +1236,16 @@ class EventPost{
                     <?php $maps = $this->get_maps(); foreach($maps as $id=>$map): ?>
                     <option value="<?php echo $map['id']; ?>" <?php if($ep_settings['tile']==$map['id']){ echo'selected';} ?>><?php echo $map['name']; ?></option>
                     <?php endforeach; ?>
+                </select>
+            </label>
+        </p>
+        <h3><?php _e('Global settings', 'eventpost' ); ?></h3>     
+        <p>
+            <label for="ep_emptylink">
+                <?php _e('Print link for empty posts','eventpost')?>
+                <select name="ep_settings[emptylink]" id="ep_emptylink">
+                   <option value="1" <?php if($ep_settings['emptylink']==1){ echo'selected';} ?>><?php _e('Link all posts', 'eventpost' ); ?></option>
+                   <option value="0" <?php if($ep_settings['emptylink']==0){ echo'selected';} ?>><?php _e('Do not link posts with empty content', 'eventpost' ); ?></option>
                 </select>
             </label>
         </p>

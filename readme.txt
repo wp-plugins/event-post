@@ -33,17 +33,50 @@ The plugin comes with three shortcodes wich allows to :
 
 Available options : 
 <h5>[events_list]</h5>
+<h6>Query parameters</h6>
 <ul>
 <li><b>nb=5</b> <i>(number of post, -1 is all, default: 5)</i></li>
 <li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
 <li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
-<li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div)</i></li>
 <li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
 <li><b>tag=''</b> <i>(string, select posts only from the selected tag, default=null, for all tags)</i></li>
 <li><b>geo=0</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0)</i></li>
-<li><b>title=''</b> <i>(string (default )</i></li>
+<li><b>order="ASC"</b> <i>(string (can be "ASC" or "DESC")</i></li>
+<li><b>orderby="meta_value"</b> <i>(string (if set to "meta_value" events are sorted by event date, possible values are native posts fileds : "post_title","post_date" etc...)</i></li>
+</ul>
+<h6>Display parameters</h6>
+<ul>
+<li><b>thumbnail=""</b> <i> (Bool, default:false, used to display posts thumbnails)</i></li>
+<li><b>thumbnail_size=""</b> <i> (String, default:"thmbnail", can be set to any existing thmnbail size : "medium","large","full" etc...)</i></li>
+<li><b>excerpt=""</b> <i> (Bool, default:false, used to display posts excerpts)</i></li>
+<li><b>style=""</b> <i> (String, add some inline CSS to the list wrapper)</i></li>
+<li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div)</i></li>
+<li><b>title=''</b> <i>(string, hidden if no events is found)</i></li>
 <li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
 <li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
+<li><b>container_schema=""</b> <i>(string html schema to display list)</i>
+default value :
+<pre>
+	&lt;%type% class="event_loop %id% %class%" id="%listid%" style="%style%" %attributes%&gt;
+		%list%
+	&lt;/%type%&gt;
+</pre>
+</li>
+<li><b>item_schema="" <i>(string html schema to display item)
+default value :
+<pre>
+	&lt;%child% class="event_item %class%" data-color="%color%"&gt;
+	      	&lt;a href="%event_link%"&gt;
+	      		%event_thumbnail%
+	      		&lt;h5>%event_title%&lt;/h5&gt;
+	      	&lt;/a&gt;
+      		%event_date%
+      		%event_cat%
+      		%event_location%
+      		%event_excerpt%
+     &lt;/%child%&gt;
+</pre>
+</li>
 </ul>
 example : <pre>[events_list future=1 past=1 cat="actuality" nb=10]</pre>
 
@@ -107,6 +140,11 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 2.8.5 =
+* Add : Setting to print/hide link for events with empty content
+* Fix : Check content with queried object instead of global $post
+* Fix : Bug in calendar animations
 
 = 2.8.4 =
 * Fix : Optimize JS in admin side
