@@ -47,7 +47,7 @@ Available options :
 <h6>Display parameters</h6>
 <ul>
 <li><b>thumbnail=""</b> <i> (Bool, default:false, used to display posts thumbnails)</i></li>
-<li><b>thumbnail_size=""</b> <i> (String, default:"thmbnail", can be set to any existing thmnbail size : "medium","large","full" etc...)</i></li>
+<li><b>thumbnail_size=""</b> <i> (String, default:"thmbnail", can be set to any existing size : "medium","large","full" etc...)</i></li>
 <li><b>excerpt=""</b> <i> (Bool, default:false, used to display posts excerpts)</i></li>
 <li><b>style=""</b> <i> (String, add some inline CSS to the list wrapper)</i></li>
 <li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div)</i></li>
