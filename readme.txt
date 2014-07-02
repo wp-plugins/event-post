@@ -141,6 +141,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.8 =
+* Fix : Empty date error
+
 = 2.8.7 =
 * Fix : JS error in minified osm-admin.js file
 

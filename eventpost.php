@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.8.7
+Version: 2.8.8
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv2
@@ -277,7 +277,7 @@ class EventPost{
         }
 		$start_date = $post->start;
 		$end_date = $post->end;
-		if($start_date!='' && $end_date!=''){
+		if($start_date!='' && $end_date!='' && !strstr($start_date,'0:0:00') && !strstr($end_date,'0:0:00')){
 			
 			$gmt_offset   = get_option('gmt_offset ');
 			$timezone_string  = get_option('timezone_string');
@@ -666,10 +666,21 @@ class EventPost{
 		           'compare' => '!='
 		       ),
 		      array(
+		           'key' => $this->META_END,
+		           'value' => ' 0:0:00 0:',
+		           'compare' => '!='
+		       ),
+		      array(
 		           'key' => $this->META_START,
 		           'value' => '',
 		           'compare' => '!='
+		       ),
+		      array(
+		           'key' => $this->META_START,
+		           'value' => ' 0:0:00 0:',
+		           'compare' => '!='
 		       )
+                    
 		 );		
 		if($future==0 && $past==0){
 			  $meta_query=array();
@@ -756,8 +767,13 @@ class EventPost{
         $ob = get_post($event);
 		$ob->start=get_post_meta($ob->ID,$this->META_START,true);
 		$ob->end=get_post_meta($ob->ID,$this->META_END,true);
+                
+                if(strstr($ob->start,'0:0:00')) $ob->start='';                
+                if(strstr($ob->end,'0:0:00')) $ob->end='';
+                
 		$ob->time_start=!empty($ob->start)?strtotime($ob->start):'';
 		$ob->time_end=!empty($ob->end)?strtotime($ob->end):'';
+                
 		$ob->address=get_post_meta($ob->ID,$this->META_ADD,true);
 		$ob->lat=get_post_meta($ob->ID,$this->META_LAT,true);
 		$ob->long=get_post_meta($ob->ID,$this->META_LONG,true);
@@ -1001,7 +1017,7 @@ class EventPost{
 	  }	
 	// Clean date or no date
 		if(isset($_POST[$this->META_START]) && isset($_POST[$this->META_END])){
-			if(is_array($_POST[$this->META_START]) && is_array($_POST[$this->META_END])){
+			if(is_array($_POST[$this->META_START]) && is_array($_POST[$this->META_END]) && $_POST[$this->META_START]['date']!='' && $_POST[$this->META_END]['date']!=''){
 			    
                 
                 
