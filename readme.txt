@@ -141,8 +141,11 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.7 =
+* Fix : JS error in minified osm-admin.js file
+
 = 2.8.6 =
-* Fix : Eror while retreiving the excerpt
+* Fix : Error while retreiving the excerpt
 
 = 2.8.5 =
 * Add : Setting to print/hide link for events with empty content

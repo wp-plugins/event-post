@@ -8,7 +8,9 @@ function eventpost_apply(addr,lat,lon){
 }
 function eventpost_numdate(str){
     var r=new RegExp("[-: T/]", "g");
-    str=str.replace(r,'');
+    if(str.replace){
+        str=str.replace(r,'');
+    }
     return parseInt(str);
 }
 function eventpost_getdate(field){
