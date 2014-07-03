@@ -141,6 +141,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.9 =
+* Fix : Bug fix
+* Change : Multisite support is no more a separated plugin
+
 = 2.8.8 =
 * Fix : Empty date error
 

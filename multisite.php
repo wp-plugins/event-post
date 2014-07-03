@@ -1,15 +1,7 @@
 <?php
 /*
-Plugin Name: Event Post multisite support
-Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
-Description: Extends Event post to multisite networks
-Version: 2.8.8
-Author: bastho, ecolosites // EÉLV
-Author URI: http://ecolosites.eelv.fr/
-License: GPLv2
-Text Domain: eventpost
-Domain Path: /languages/
-Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap, EELV, multisite,network
+Event Post multisite support
+Extends Event post to multisite networks
 */
 
 if(is_multisite()){

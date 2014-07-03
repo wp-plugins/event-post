@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.8.8
+Version: 2.8.9
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv2
@@ -67,6 +67,7 @@ class EventPost{
         include_once (plugin_dir_path(__FILE__).'widget.php');
         include_once (plugin_dir_path(__FILE__).'widget.cal.php');
         include_once (plugin_dir_path(__FILE__).'widget.map.php');
+        include_once (plugin_dir_path(__FILE__).'multisite.php');
 
 
         $this->META_START ='event_begin';
@@ -245,7 +246,9 @@ class EventPost{
 			<?php }
 		}
 	}
-	
+	function dateisvalid($str){
+            return trim(str_replace(array(':','0'),'',$str))!='';
+        }
 	function parsedate($date,$sep=''){
 		if(!empty($date)){
 			return substr($date,0,10).$sep.substr($date,11,8);
@@ -277,7 +280,7 @@ class EventPost{
         }
 		$start_date = $post->start;
 		$end_date = $post->end;
-		if($start_date!='' && $end_date!='' && !strstr($start_date,'0:0:00') && !strstr($end_date,'0:0:00')){
+		if($start_date!='' && $end_date!='' && $this->dateisvalid($start_date) && $this->dateisvalid($end_date)){
 			
 			$gmt_offset   = get_option('gmt_offset ');
 			$timezone_string  = get_option('timezone_string');
@@ -559,8 +562,7 @@ class EventPost{
 			
 			foreach($events as $post){ //$post=get_post($item_id);
 			    $item_id=$post->ID;
-                $meta_end = $this->META_END;
-				$class=(strtotime($post->$meta_end)>=time()) ? 'event_future' : 'event_past';
+				$class=($post->time_end>=time()) ? 'event_future' : 'event_past';
 				if($ep_settings['emptylink']==0 && empty($post->post_content)){
 					$post->permalink='#'.$id.$this->list_id;
 				}
@@ -667,7 +669,7 @@ class EventPost{
 		       ),
 		      array(
 		           'key' => $this->META_END,
-		           'value' => ' 0:0:00 0:',
+		           'value' => '0:0:00 0:',
 		           'compare' => '!='
 		       ),
 		      array(
@@ -677,7 +679,7 @@ class EventPost{
 		       ),
 		      array(
 		           'key' => $this->META_START,
-		           'value' => ' 0:0:00 0:',
+		           'value' => '0:0:00 0:',
 		           'compare' => '!='
 		       )
                     
@@ -768,8 +770,8 @@ class EventPost{
 		$ob->start=get_post_meta($ob->ID,$this->META_START,true);
 		$ob->end=get_post_meta($ob->ID,$this->META_END,true);
                 
-                if(strstr($ob->start,'0:0:00')) $ob->start='';                
-                if(strstr($ob->end,'0:0:00')) $ob->end='';
+                if(!$this->dateisvalid($ob->start)) $ob->start='';                
+                if(!$this->dateisvalid($ob->end)) $ob->end='';
                 
 		$ob->time_start=!empty($ob->start)?strtotime($ob->start):'';
 		$ob->time_end=!empty($ob->end)?strtotime($ob->end):'';
@@ -796,6 +798,8 @@ class EventPost{
 		$event=$this->retreive($post_id);
 		$start_date = $event->start;
 		$end_date = $event->end;
+                
+                
 		
 		$start_date_date=!empty($start_date)?substr($start_date,0,10):'';
         $start_date_hour=!empty($start_date)?abs(substr($start_date,11,2)):'';
@@ -1016,19 +1020,16 @@ class EventPost{
 			update_post_meta($post_id,$this->META_COLOR,$_POST[$this->META_COLOR]);
 	  }	
 	// Clean date or no date
-		if(isset($_POST[$this->META_START]) && isset($_POST[$this->META_END])){
-			if(is_array($_POST[$this->META_START]) && is_array($_POST[$this->META_END]) && $_POST[$this->META_START]['date']!='' && $_POST[$this->META_END]['date']!=''){
-			    
-                
-                
-                update_post_meta($post_id,$this->META_START,$_POST[$this->META_START]['date'].' '.$_POST[$this->META_START]['hour'].':'.$_POST[$this->META_START]['minute'].':00');
-                update_post_meta($post_id,$this->META_END,$_POST[$this->META_END]['date'].' '.$_POST[$this->META_END]['hour'].':'.$_POST[$this->META_END]['minute'].':00');
-			}
-			else{
-				delete_post_meta($post_id,$this->META_START);
-				delete_post_meta($post_id,$this->META_END);
-			}
-		}
+          if(isset($_POST[$this->META_START]) && isset($_POST[$this->META_END])){
+                    if(is_array($_POST[$this->META_START]) && is_array($_POST[$this->META_END]) && $_POST[$this->META_START]['date']!='' && $_POST[$this->META_END]['date']!=''){
+                        update_post_meta($post_id,$this->META_START,$_POST[$this->META_START]['date'].' '.$_POST[$this->META_START]['hour'].':'.$_POST[$this->META_START]['minute'].':00');
+                        update_post_meta($post_id,$this->META_END,$_POST[$this->META_END]['date'].' '.$_POST[$this->META_END]['hour'].':'.$_POST[$this->META_END]['minute'].':00');
+                    }
+                    else{
+                        delete_post_meta($post_id,$this->META_START);
+                        delete_post_meta($post_id,$this->META_END);
+                    }
+            }  
 		
 	// Clean location or no location
 		if(isset($_POST[$this->META_LAT]) && isset($_POST[$this->META_LONG])){		
