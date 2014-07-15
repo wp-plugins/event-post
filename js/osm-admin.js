@@ -14,7 +14,16 @@ function eventpost_numdate(str){
     return parseInt(str);
 }
 function eventpost_getdate(field){
-    return eventpost_numdate(jQuery('#'+field+'_date').val()+jQuery('#'+field+'_hour').val()+jQuery('#'+field+'_minute').val());
+    d = jQuery('#'+field+'_date').val();
+    h = jQuery('#'+field+'_hour').val();
+    if(h=='0'){
+        h='00';
+    }
+    m = jQuery('#'+field+'_minute').val();
+    if(m=='0'){
+        m='00';
+    }
+    return eventpost_numdate(d+''+h+''+m);
 }
 function eventpost_getdate_sql(field){
     return jQuery('#'+field+'_date').val()+' '+jQuery('#'+field+'_hour').val()+':'+jQuery('#'+field+'_minute').val()+' ';
