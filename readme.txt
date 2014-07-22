@@ -141,6 +141,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.11 =
+* Fix : PHP warnings on empty dates
+
 = 2.8.10 =
 * Fix : 00 minutes bug
 

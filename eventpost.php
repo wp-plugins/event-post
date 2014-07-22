@@ -3,7 +3,7 @@
 Plugin Name: Event Post
 Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
 Description: Add calendar and/or geolocation metadata on posts
-Version: 2.8.10
+Version: 2.8.11
 Author: bastho, n4thaniel, ecolosites // EÉLV
 Author URI: http://ecolosites.eelv.fr/
 License: GPLv2
@@ -258,13 +258,13 @@ class EventPost{
 		} 
 	}
 	function human_date($date,$format='l j F Y'){
-		if(date('d/m/Y',$date)==date('d/m/Y')){
+		if(is_numeric($date) && date('d/m/Y',$date)==date('d/m/Y')){
 			return __('today','eventpost');
 		}
-		elseif(date('d/m/Y',$date)==date('d/m/Y', strtotime('+1 day'))){
+		elseif(is_numeric($date) && date('d/m/Y',$date)==date('d/m/Y', strtotime('+1 day'))){
 			return __('tomorrow','eventpost');
 		}
-		elseif(date('d/m/Y',$date)==date('d/m/Y', strtotime('-1 day'))){
+		elseif(is_numeric($date) && date('d/m/Y',$date)==date('d/m/Y', strtotime('-1 day'))){
 			return __('yesterday','eventpost');
 		}
 		return date_i18n($format ,$date);
@@ -824,7 +824,10 @@ class EventPost{
 		    <label for="<?php echo $this->META_START; ?>_date">  
     		    <p><?php _e( 'Begin:', 'eventpost' ) ?>
                 <span id="<?php echo $this->META_START; ?>_date_human" class="human_date">
-                	<?php echo $this->human_date($event->time_start).date(' H:i',$event->time_start)?>
+                	<?php if($event->time_start!=''){
+                            echo $this->human_date($event->time_start).date(' H:i',$event->time_start);
+                        }
+                        ?>
                 </span>   
                  </p>      
                 <input type="text" class="input-date" data-language="<?php echo $language; ?>" value ="<?php echo $start_date_date ?>" name="<?php echo $this->META_START; ?>[date]" id="<?php echo $this->META_START; ?>_date"/>
@@ -850,7 +853,9 @@ class EventPost{
 		    <label for="<?php echo $this->META_END; ?>_date">
     		    <p><?php _e( 'End:', 'eventpost' ) ?>
                 <span id="<?php echo $this->META_END; ?>_date_human" class="human_date">
-                	<?php echo $this->human_date($event->time_end).date(' H:i',$event->time_end)?>
+                	<?php if($event->time_start!=''){
+                            echo $this->human_date($event->time_end).date(' H:i',$event->time_end);
+                        }?>
                 </span> 
                 </p>
 				<input type="text" class="input-date" data-language="<?php echo $language; ?>"  value ="<?php echo $end_date_date ?>" name="<?php echo $this->META_END; ?>[date]" id="<?php echo $this->META_END; ?>_date"/>        
