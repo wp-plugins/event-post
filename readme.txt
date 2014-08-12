@@ -141,6 +141,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 2.8.12 =
+* Add : Swedish localization, thanks to Mepmepmep
+
 = 2.8.11 =
 * Fix : PHP warnings on empty dates
 
@@ -292,3 +295,6 @@ available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 
 = English =
 * en	: 100%
+
+= Swedish =
+* sv_SE	: 100%, by mepmepmep
