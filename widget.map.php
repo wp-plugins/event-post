@@ -31,8 +31,8 @@ class eventpostmap_widget extends WP_Widget {
 			}			
             $atts=array(
                 'events'=>$events,
-                'width'=>'100%',
-                'height'=>'200px',
+                'width'=>'',
+                'height'=>'',
                 'geo'=>1,
                 'class'=>'eventpost_widget'
             );

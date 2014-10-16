@@ -87,7 +87,7 @@ example : <pre>[events_list future=1 past=1 cat="actuality" nb=10]</pre>
 <li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
 <li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
 <li><b>tag=''</b> <i>(string, select posts only from the selected tag, default=null, for all tags)</i></li>
-<li><b>tile=''</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u), sets the map background, default=default@osm.org)</i></li>
+<li><b>tile=''</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u, satelite, toner), sets the map background, default=default@osm.org)</i></li>
 <li><b>title=''</b> <i>(string (default )</i></li>
 <li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
 <li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
@@ -140,6 +140,15 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.0.0 =
+* Update to OpenLayer3
+* Add: Responsive support
+* Add: Satelite and Toner view
+* Add: `cat` attributes now accepts multiple categories values ( cat="1,2,3" ) 
+* Add: Custom markers directory for developpers 
+* Add: Global "event bar position" option : before or after the single content
+* Fix: Cleaner settings page
 
 = 2.8.12 =
 * Add : Swedish localization, thanks to Mepmepmep
