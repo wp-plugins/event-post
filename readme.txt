@@ -16,106 +16,109 @@ Add some meta-datas to posts to convert them into full calendar events.
 Each event can be exported into ical(.ics), outlook(vcs), or Google Calendar.
 Localization works thanks to openstreetmap.
 
-= Date options =
+= Post metas =
+## Date attributes
 * Begin date-time
 * End date-time
 * Color
 
-= Location options =
+## Location attributes
 * Address
 * GPS coordinates
 
 = Shortcodes =
 The plugin comes with three shortcodes wich allows to :
-<pre>[events_list]</pre> : display a list of events 
-<pre>[events_map]</pre> : display a map of events  
-<pre>[events_cal]</pre> : display a calendar of events 
 
-Available options : 
-<h5>[events_list]</h5>
-<h6>Query parameters</h6>
-<ul>
-<li><b>nb=5</b> <i>(number of post, -1 is all, default: 5)</i></li>
-<li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
-<li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
-<li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
-<li><b>tag=''</b> <i>(string, select posts only from the selected tag, default=null, for all tags)</i></li>
-<li><b>geo=0</b> <i>(boolean, retreives or not, only events wich have geolocation informations, default=0)</i></li>
-<li><b>order="ASC"</b> <i>(string (can be "ASC" or "DESC")</i></li>
-<li><b>orderby="meta_value"</b> <i>(string (if set to "meta_value" events are sorted by event date, possible values are native posts fileds : "post_title","post_date" etc...)</i></li>
-</ul>
-<h6>Display parameters</h6>
-<ul>
-<li><b>thumbnail=""</b> <i> (Bool, default:false, used to display posts thumbnails)</i></li>
-<li><b>thumbnail_size=""</b> <i> (String, default:"thmbnail", can be set to any existing size : "medium","large","full" etc...)</i></li>
-<li><b>excerpt=""</b> <i> (Bool, default:false, used to display posts excerpts)</i></li>
-<li><b>style=""</b> <i> (String, add some inline CSS to the list wrapper)</i></li>
-<li><b>type=div</b> <i>(string, possible values are : div, ul, ol default=div)</i></li>
-<li><b>title=''</b> <i>(string, hidden if no events is found)</i></li>
-<li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
-<li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
-<li><b>container_schema=""</b> <i>(string html schema to display list)</i>
-default value :
-<pre>
-	&lt;%type% class="event_loop %id% %class%" id="%listid%" style="%style%" %attributes%&gt;
-		%list%
-	&lt;/%type%&gt;
-</pre>
-</li>
-<li><b>item_schema="" <i>(string html schema to display item)
-default value :
-<pre>
-	&lt;%child% class="event_item %class%" data-color="%color%"&gt;
-	      	&lt;a href="%event_link%"&gt;
-	      		%event_thumbnail%
-	      		&lt;h5>%event_title%&lt;/h5&gt;
-	      	&lt;/a&gt;
-      		%event_date%
-      		%event_cat%
-      		%event_location%
-      		%event_excerpt%
-     &lt;/%child%&gt;
-</pre>
-</li>
-</ul>
-example : <pre>[events_list future=1 past=1 cat="actuality" nb=10]</pre>
+* `[events_list]` : display a list of events 
+* `[events_map]` : display a map of events  
+* `[events_cal]` : display a calendar of events 
 
-<h5>[events_map]</h5>
-<ul>
-<li><b>nb=5</b> <i>(number of post, -1 is all, default: 5)</i></li>
-<li><b>future=1</b> <i>(boolean, retreive, or not, events in the future, default = 1)</i></li>
-<li><b>past=0</b> <i>(boolean, retreive, or not, events in the past, default = 0)</i></li>
-<li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
-<li><b>tag=''</b> <i>(string, select posts only from the selected tag, default=null, for all tags)</i></li>
-<li><b>tile=''</b> <i>(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u, satelite, toner), sets the map background, default=default@osm.org)</i></li>
-<li><b>title=''</b> <i>(string (default )</i></li>
-<li><b>before_title="&lt;h3&gt;"</b> <i>(string (default &lt;h3&gt;)</i></li>
-<li><b>after_title="&lt;/h3&gt;"</b> <i>(string (default &lt;/h3&gt;)</i></li>
-</ul>
-example : <pre>[events_map future=1 past=1 cat="actuality" nb="-1"]</pre>
+### Available options : 
+#### [events_list]
+##### Query parameters
+* **nb=5** *(number of post, -1 is all, default: 5)*
+* **future=1** *(boolean, retreive, or not, events in the future, default = 1)*
+* **past=0** *(boolean, retreive, or not, events in the past, default = 0)*
+* **cat=''** *(string, select posts only from the selected category, default=null, for all categories)*
+* **tag=''** *(string, select posts only from the selected tag, default=null, for all tags)*
+* **geo=0** *(boolean, retreives or not, only events wich have geolocation informations, default=0)*
+* **order="ASC"** *(string (can be "ASC" or "DESC")*
+* **orderby="meta_value"** *(string (if set to "meta_value" events are sorted by event date, possible values are native posts fileds : "post_title","post_date" etc...)*
 
-<h5>[events_cal]</h5>
-<ul>
-<li><b>cat=''</b> <i>(string, select posts only from the selected category, default=null, for all categories)</i></li>
-<li><b>date=''</b> <i>(string, date for a month. Absolutly : 2013-9 or relatively : -1 month, default is empty, current month</i></li>
-<li><b>datepicker=1</b> <i>(boolean, displays or not a date picker</i></li>
-<li><b>mondayfirst=0</b> <i>(boolean, weeks start on monday, default is 0 (sunday)</i></li>
-</ul>
-example : <pre>[events_cal cat="actuality" date="-2 months" mondayfirst=1]</pre>
+##### Display parameters
+
+* **thumbnail=""** * (Bool, default:false, used to display posts thumbnails)*
+* **thumbnail_size=""** * (String, default:"thmbnail", can be set to any existing size : "medium","large","full" etc...)*
+* **excerpt=""** * (Bool, default:false, used to display posts excerpts)*
+* **style=""** * (String, add some inline CSS to the list wrapper)*
+* **type=div** *(string, possible values are : div, ul, ol default=div)*
+* **title=''** *(string, hidden if no events is found)*
+* **before_title="&lt;h3&gt;"** *(string (default &lt;h3&gt;)*
+* **after_title="&lt;/h3&gt;"** *(string (default &lt;/h3&gt;)*
+* **container_schema=""** *(string html schema to display list)*
+* **item_schema=""** *(string html schema to display item)*
+
+example : `[events_list future=1 past=1 cat="actuality" nb=10]`
+
+container_schema default value :
+
+>	&lt;%type% class="event_loop %id% %class%" id="%listid%" style="%style%" %attributes%&gt;
+>		%list%
+>	&lt;/%type%&gt;
+>
+
+
+item_schema default value :
+
+>	&lt;%child% class="event_item %class%" data-color="%color%"&gt;
+>	      	&lt;a href="%event_link%"&gt;
+>	      		%event_thumbnail%
+>	      		&lt;h5>%event_title%&lt;/h5&gt;
+>	      	&lt;/a&gt;
+>     		%event_date%
+>      		%event_cat%
+>      		%event_location%
+>      		%event_excerpt%
+>     &lt;/%child%&gt;
+>
+
+####[events_map]
+
+* **nb=5** *(number of post, -1 is all, default: 5)*
+* **future=1** *(boolean, retreive, or not, events in the future, default = 1)*
+* **past=0** *(boolean, retreive, or not, events in the past, default = 0)*
+* **cat=''** *(string, select posts only from the selected category, default=null, for all categories)*
+* **tag=''** *(string, select posts only from the selected tag, default=null, for all tags)*
+* **tile=''** *(string (default@osm.org, OpenCycleMap, mapquest, osmfr, 2u, satelite, toner), sets the map background, default=default@osm.org)*
+* **title=''** *(string (default )*
+* **before_title="&lt;h3&gt;"** *(string (default &lt;h3&gt;)*
+* **after_title="&lt;/h3&gt;"** *(string (default &lt;/h3&gt;)** **thumbnail=""** * (Bool, default:false, used to display posts thumbnails)*
+* **excerpt=""** * (Bool, default:false, used to display posts excerpts)*
+
+example: `[events_map future=1 past=1 cat="actuality" nb="-1"]`
+
+####[events_cal]
+
+* **cat=''** *(string, select posts only from the selected category, default=null, for all categories)*
+* **date=''** *(string, date for a month. Absolutly : 2013-9 or relatively : -1 month, default is empty, current month*
+* **datepicker=1** *(boolean, displays or not a date picker*
+* **mondayfirst=0** *(boolean, weeks start on monday, default is 0 (sunday)*
+
+example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 
 = Hooks =
-<h5>Filters</h5>
-eventpost_printdate
-eventpost_printlocation
-eventpost_params
-eventpost_get
-eventpost_retreive
-eventpost_multisite_get
-eventpost_multisite_blogids
+#### Filters
+* eventpost_printdate
+* eventpost_printlocation
+* eventpost_params
+* eventpost_get
+* eventpost_retreive
+* eventpost_multisite_get
+* eventpost_multisite_blogids
 
-<h5>Actions</h5>
-before_eventpost_generator
-after_eventpost_generator
+#### Actions
+* before_eventpost_generator
+* after_eventpost_generator
 
 
 
@@ -309,4 +312,4 @@ available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 * en	: 100%
 
 = Swedish =
-* sv_SE	: 100%, by mepmepmep
+* sv_SE	: 85%, by mepmepmep
