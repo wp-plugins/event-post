@@ -161,6 +161,7 @@ jQuery(document).ready(function () {
                         '<strong>' + feature.get('name') + '</strong><br>' +
                         '<time>' + feature.get('date') + '</time><br>' +
                         '<address>' + feature.get('address') + '</address>' +
+                        (feature.get('desc')!=''&&feature.get('desc')!=undefined?'<p>'+feature.get('desc')+'</p>':'')+
                         '</a>';
                 ep_pop_elements[map_id].delay(500).html(html_output).show(500);
 
@@ -184,7 +185,8 @@ jQuery(document).ready(function () {
                     name: item.find('h5').text(),
                     address: jQuery(this).html(),
                     date: item.find('time').text(),
-                    link: item.find('a').attr('href')
+                    link: item.find('a').attr('href'),
+                    desc: item.find('.event_exerpt').html()
                 };
                 if(item.find('img').length>0){
                     obj.thumbnail=item.find('img').attr('src');

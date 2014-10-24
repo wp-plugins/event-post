@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.0.0
+  Version: 3.1.0
   Author: bastho, n4thaniel, ecolosites // EÉLV
   Author URI: http://ecolosites.eelv.fr/
   License: GPLv2
@@ -28,8 +28,8 @@ class EventPost {
     static $list_id;
     static $NomDuMois;
     static $Week;
-    private $settings;
-    private $dateformat;
+    public $settings;
+    public $dateformat;
 
     function EventPost() {
 
@@ -83,6 +83,15 @@ class EventPost {
         $this->NomDuMois = array('', __('Jan', 'eventpost'), __('Feb', 'eventpost'), __('Mar', 'eventpost'), __('Apr', 'eventpost'), __('May', 'eventpost'), __('Jun', 'eventpost'), __('Jul', 'eventpost'), __('Aug', 'eventpost'), __('Sept', 'eventpost'), __('Oct', 'eventpost'), __('Nov', 'eventpost'), __('Dec', 'eventpost'));
         $this->Week = array(__('Sunday', 'eventpost'), __('Monday', 'eventpost'), __('Tuesday', 'eventpost'), __('Wednesday', 'eventpost'), __('Thursday', 'eventpost'), __('Friday', 'eventpost'), __('Saturday', 'eventpost'));
 
+        if (!empty($this->settings['markpath']) && !empty($this->settings['markurl'])) {
+            $this->markpath = ABSPATH.'/'.$this->settings['markpath'];
+            $this->markurl = $this->settings['markurl'];
+        } else {
+            $this->markpath = plugin_dir_path(__FILE__) . 'markers/';
+            $this->markurl = plugins_url('/markers/', __FILE__);
+        }
+        
+        $this->maps = $this->get_maps();
         $this->settings = $this->get_settings();
 
         $this->dateformat = str_replace(array('yy', 'mm', 'dd'), array('Y', 'm', 'd'), __('yy-mm-dd', 'eventpost'));
@@ -105,13 +114,6 @@ class EventPost {
 		      </%child%>'
         );
         
-        if (!empty($this->settings['markpath']) && !empty($this->settings['markurl'])) {
-            $this->markpath = ABSPATH.'/'.$this->settings['markpath'];
-            $this->markurl = $this->settings['markurl'];
-        } else {
-            $this->markpath = plugin_dir_path(__FILE__) . 'markers/';
-            $this->markurl = plugins_url('/markers/', __FILE__);
-        }
     }
 
     //Usefull hexadecimal to decimal converter	
@@ -132,27 +134,41 @@ class EventPost {
 
     function get_settings() {
         $ep_settings = get_option('ep_settings', array());
+        $reg_settings=false;
+
         if (!isset($ep_settings['dateformat']) || empty($ep_settings['dateformat'])) {
             $ep_settings['dateformat'] = get_option('date_format');
+            $reg_settings=true;
         }
-        if (!isset($ep_settings['tile']) || empty($ep_settings['tile'])) {
-            $maps = $this->get_maps();
-            $ep_settings['tile'] = $maps[0]['id'];
+        if (!isset($ep_settings['tile']) || empty($ep_settings['tile']) || !isset($this->maps[$ep_settings['tile']])) {
+            $maps = array_keys($this->maps);
+            $ep_settings['tile'] = $this->maps[$maps[0]]['id'];
+            $reg_settings=true;
         }
         if (!isset($ep_settings['cache']) || !is_numeric($ep_settings['cache'])) {
             $ep_settings['cache'] = 0;
+            $reg_settings=true;
         }
         if (!isset($ep_settings['export']) || empty($ep_settings['export'])) {
             $ep_settings['export'] = 'both';
+            $reg_settings=true;
         }
         if (!isset($ep_settings['emptylink'])) {
             $ep_settings['emptylink'] = 1;
+            $reg_settings=true;
         }
         if (!isset($ep_settings['markpath'])) {
             $ep_settings['markpath'] = '';
+            $reg_settings=true;
         }
         if (!isset($ep_settings['singlepos']) || empty($ep_settings['singlepos'])) {
             $ep_settings['singlepos'] = 'after';
+            $reg_settings=true;
+        }
+        
+        //Save settings  not changed
+        if($reg_settings===true){
+           update_option('ep_settings', $ep_settings); 
         }
         return $ep_settings;
     }
@@ -211,7 +227,7 @@ class EventPost {
         wp_enqueue_script('eventpost', plugins_url('/js/eventpost.min.js', __FILE__), false, false, true);
         wp_localize_script('eventpost', 'eventpost_params', array(
             'imgpath' => plugins_url('/img/', __FILE__),
-            'maptiles' => $this->get_maps(),
+            'maptiles' => $this->maps,
             'defaulttile' => $this->settings['tile'],
             'ajaxurl' => get_bloginfo('url') . '/wp-admin/admin-ajax.php'
         ));
@@ -584,6 +600,7 @@ class EventPost {
             'container_schema' => $this->list_shema['container'],
             'item_schema' => $this->list_shema['item'],
                         ), 'list_events'), $atts);
+        
         extract($atts);
         if (!is_array($events)) {
             $events = $this->get_events($atts);
@@ -627,7 +644,7 @@ class EventPost {
                     $this->get_singledate($post),
                     $this->get_singlecat($post),
                     $this->get_singleloc($post),
-                    $excerpt == true ? $post->post_excerpt : '',
+                    $excerpt == true && $post->post_excerpt!='' ? '<span class="event_exerpt">'.$post->post_excerpt.'</span>' : '',
                         ), $item_schema
                 );
             }
@@ -1035,8 +1052,8 @@ class EventPost {
                 <p>
                     <label for="ep_sce_tile"><?php _e('Map background', 'eventpost'); ?>
                         <select id="ep_sce_tile" data-att="tile">
-                                    <?php $maps = $this->get_maps();
-                                    foreach ($maps as $id => $map):
+                                    <?php
+                                    foreach ($this->maps as $id => $map):
                                         ?>
                                 <option value="<?php
                                             if ($ep_settings['tile'] != $map['id']) {
@@ -1355,8 +1372,7 @@ class EventPost {
                                 </label></th>
                             <td><select name="ep_settings[tile]" id="ep_tile" class="widefat">
                                     <?php
-                                    $maps = $this->get_maps();
-                                    foreach ($maps as $id => $map):
+                                    foreach ($this->maps as $id => $map):
                                         ?>
                                         <option value="<?php echo $map['id']; ?>" <?php
                                         if ($ep_settings['tile'] == $map['id']) {

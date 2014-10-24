@@ -124,8 +124,7 @@ after_eventpost_generator
 
 1. Upload `event-post` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress admin
-3. Create a new page and insert the short code `[eelv_news_form]`
-4. You can edit defaults settings in Settings > Event post
+3. You can edit defaults settings in Settings > Event post
 
 == Frequently asked questions ==
 
@@ -140,6 +139,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.1.0 =
+* Add: Save default settings to improve performances
+* Add: More options in list and map widgets
 
 = 3.0.0 =
 * Update to OpenLayer3
