@@ -143,6 +143,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.1.1 =
+* Fix: Future/past display style
+
 = 3.1.0 =
 * Add: Save default settings to improve performances
 * Add: More options in list and map widgets
