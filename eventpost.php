@@ -4,7 +4,8 @@
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
   Version: 3.1.1
-  Author: bastho, n4thaniel, ecolosites // EÉLV
+  Author: bastho
+  Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
   License: GPLv2
   Text Domain: eventpost

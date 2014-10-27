@@ -5,8 +5,8 @@ Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calenda
 Requires at least: 3.8
 Tested up to: 4.0.0
 Stable tag: /trunk
-License: GPLv3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+License: GPLv2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Add some meta-datas to posts to convert them into full calendar events :
 begin, end, location, color
