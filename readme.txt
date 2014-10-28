@@ -14,7 +14,15 @@ begin, end, location, color
 == Description ==
 Add some meta-datas to posts to convert them into full calendar events.
 Each event can be exported into ical(.ics), outlook(vcs), or Google Calendar.
-Localization works thanks to openstreetmap.
+Geolocation works thanks to openstreetmap.
+
+= Localization =
+
+* English : 100%
+* French, fr_FR
+* Italian, it_IT by NewHouseStef
+* Swedish, sv_SE by mepmepmep
+
 
 = Post metas =
 ## Date attributes
@@ -142,6 +150,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.2.0 =
+* Add: Italian localization, thanks to NewHouseStef
 
 = 3.1.1 =
 * Fix: Future/past display style
@@ -305,14 +316,3 @@ available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 = 2.7.0 =
 * The event meta box is no more displayed for non posts items such as pages or custom post-types
 * Please active the multisite plugin in order to allow your users to browse events from the network
-
-== Languages ==
-
-= Français  =
-* fr_FR : 100%
-
-= English =
-* en	: 100%
-
-= Swedish =
-* sv_SE	: 85%, by mepmepmep
