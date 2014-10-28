@@ -18,10 +18,10 @@ Geolocation works thanks to openstreetmap.
 
 = Localization =
 
-* English : 100%
-* French, fr_FR
-* Italian, it_IT by NewHouseStef
-* Swedish, sv_SE by mepmepmep
+* English
+* fr_FR : French
+* it_IT : Italian by NewHouseStef
+* sv_SE : Swedish by mepmepmep
 
 
 = Post metas =
