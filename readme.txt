@@ -37,11 +37,11 @@ Geolocation works thanks to openstreetmap.
 = Shortcodes =
 The plugin comes with three shortcodes wich allows to :
 
-* `[events_list]` : display a list of events 
-* `[events_map]` : display a map of events  
-* `[events_cal]` : display a calendar of events 
+* `[events_list]` : display a list of events
+* `[events_map]` : display a map of events
+* `[events_cal]` : display a calendar of events
 
-### Available options : 
+### Available options :
 #### [events_list]
 ##### Query parameters
 * **nb=5** *(number of post, -1 is all, default: 5)*
@@ -151,6 +151,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.2.1 =
+* Fix: Event list widget : missing title
+
 = 3.2.0 =
 * Add: Italian localization, thanks to NewHouseStef
 
@@ -165,8 +168,8 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 * Update to OpenLayer3
 * Add: Responsive support
 * Add: Satelite and Toner view
-* Add: `cat` attributes now accepts multiple categories values ( cat="1,2,3" ) 
-* Add: Custom markers directory for developpers 
+* Add: `cat` attributes now accepts multiple categories values ( cat="1,2,3" )
+* Add: Custom markers directory for developpers
 * Add: Global "event bar position" option : before or after the single content
 * Fix: Cleaner settings page
 
@@ -212,9 +215,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 * Fix : content filter bug on home page
 
 = 2.8.0 =
-* Add : attributes to events_list shortcode : 
-* * thumbnail=(true/false) 
-* * thumbnail_size=thumbnail 
+* Add : attributes to events_list shortcode :
+* * thumbnail=(true/false)
+* * thumbnail_size=thumbnail
 * * excertp=(true/false)
 * * container_schema (documentation comming soon)
 * * item_schema (documentation comming soon)
@@ -305,8 +308,8 @@ available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 = 1.1.0 =
 * Add: Width & height properties in the '[events_map]' shortcode
 * Add: Allow multiple maps on the same page
-* Fix: Same ID in multiple DOM elements bug fix 
-* Fix: Some W3C standard corrections 
+* Fix: Same ID in multiple DOM elements bug fix
+* Fix: Some W3C standard corrections
 
 = 1.0.0 =
 * Plugin creation

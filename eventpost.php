@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.1.1
+  Version: 3.2.1
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -91,7 +91,7 @@ class EventPost {
             $this->markpath = plugin_dir_path(__FILE__) . 'markers/';
             $this->markurl = plugins_url('/markers/', __FILE__);
         }
-        
+
         $this->maps = $this->get_maps();
         $this->settings = $this->get_settings();
 
@@ -114,10 +114,10 @@ class EventPost {
 		      		%event_excerpt%
 		      </%child%>'
         );
-        
+
     }
 
-    //Usefull hexadecimal to decimal converter	
+    //Usefull hexadecimal to decimal converter
     function hex2dec($color = '000000') {
         $tbl_color = array();
         if (!ereg('#', $color))
@@ -166,10 +166,10 @@ class EventPost {
             $ep_settings['singlepos'] = 'after';
             $reg_settings=true;
         }
-        
+
         //Save settings  not changed
         if($reg_settings===true){
-           update_option('ep_settings', $ep_settings); 
+           update_option('ep_settings', $ep_settings);
         }
         return $ep_settings;
     }
@@ -270,7 +270,7 @@ class EventPost {
                 ?>
                 <meta name="geo.placename" content="<?php echo $address ?>" />
                 <meta name="geo.position" content="<?php echo $lat ?>;<?php echo $long ?>" />
-                <meta name="ICBM" content="<?php echo $lat ?>;<?php echo $long ?>" />								
+                <meta name="ICBM" content="<?php echo $lat ?>;<?php echo $long ?>" />
                 <?php
             }
             $start = get_post_meta($post_id, $this->META_START, true);
@@ -278,7 +278,7 @@ class EventPost {
             if ($lat != '' && $end != '') {
                 ?>
                 <meta name="datetime-coverage-start" content="<?php echo date('c', strtotime($start)) ?>" />
-                <meta name="datetime-coverage-end" content="<?php echo date('c', strtotime($end)) ?>" />	
+                <meta name="datetime-coverage-end" content="<?php echo date('c', strtotime($end)) ?>" />
                 <?php
             }
         }
@@ -338,9 +338,9 @@ class EventPost {
             if (date('d/m/Y', $dd) == date('d/m/Y', $df)) {
                 $dates.= '<span class="date">' . $this->human_date($df) . "</span>";
                 if (date('H:i', $dd) != date('H:i', $df) && date('H:i', $dd) != '00:00' && date('H:i', $df) != '00:00') {
-                    $dates.='<span class="linking_word">, ' . __('from:', 'eventpost') . '</span> 
-					<time class="time" itemprop="dtstart" datetime="' . date('c', $dd) . '">' . date('H:i', $dd) . '</time> 
-					<span class="linking_word">' . __('to:', 'eventpost') . '</span> 
+                    $dates.='<span class="linking_word">, ' . __('from:', 'eventpost') . '</span>
+					<time class="time" itemprop="dtstart" datetime="' . date('c', $dd) . '">' . date('H:i', $dd) . '</time>
+					<span class="linking_word">' . __('to:', 'eventpost') . '</span>
 					<time class="time" itemprop="dtend" datetime="' . date('c', $df) . '">' . date('H:i', $df) . '</time>';
                 } elseif (date('H:i', $dd) != '00:00') {
                     $dates.='<span class="linking_word">,' . __('at:', 'eventpost') . '</span>
@@ -348,9 +348,9 @@ class EventPost {
                 }
             } else {
                 $dates.= '
-				<span class="linking_word">' . __('from:', 'eventpost') . '</span> 
-				<time class="date" itemprop="dtstart" datetime="' . date('c', $dd) . '">' . $this->human_date($dd, $ep_settings['dateformat']) . '</time> 
-				<span class="linking_word">' . __('to:', 'eventpost') . '</span> 
+				<span class="linking_word">' . __('from:', 'eventpost') . '</span>
+				<time class="date" itemprop="dtstart" datetime="' . date('c', $dd) . '">' . $this->human_date($dd, $ep_settings['dateformat']) . '</time>
+				<span class="linking_word">' . __('to:', 'eventpost') . '</span>
 				<time class="date" itemprop="dtend" datetime="' . date('c', $df) . '">' . $this->human_date($df, $ep_settings['dateformat']) . '</time>';
             }
 
@@ -373,7 +373,7 @@ class EventPost {
                 // format de date ICS
                 $ics_url = plugins_url('export/ics.php', __FILE__) . '?t=' . $title . '&amp;u=' . $uid . '&amp;sd=' . $d_s . '&amp;ed=' . $d_e . '&amp;a=' . $address . '&amp;d=' . $url . '&amp;tz=%3BTZID%3D' . urlencode($timezone_string);
 
-                // format de date Google cal				  
+                // format de date Google cal
                 $google_url = 'https://www.google.com/calendar/event?action=TEMPLATE&amp;text=' . $title . '&amp;dates=' . $d_s . 'Z/' . $d_e . 'Z&amp;details=' . $url . '&amp;location=' . $address . '&amp;trp=false&amp;sprop=&amp;sprop=name';
 
                 // format de date VCS
@@ -383,7 +383,7 @@ class EventPost {
 				  <a href="' . $ics_url . '" class="event_link ics" target="_blank" title="' . __('Download ICS file', 'eventpost') . '">ical</a>
 				  <a href="' . $google_url . '" class="event_link gcal" target="_blank" title="' . __('Add to Google calendar', 'eventpost') . '">Google</a>
 				  <a href="' . $vcs_url . '" class="event_link vcs" target="_blank" title="' . __('Add to Outlook', 'eventpost') . '">outlook</a>
-			  
+
 				  ';
             }
             $dates.='</div>';
@@ -601,7 +601,7 @@ class EventPost {
             'container_schema' => $this->list_shema['container'],
             'item_schema' => $this->list_shema['item'],
                         ), 'list_events'), $atts);
-        
+
         extract($atts);
         if (!is_array($events)) {
             $events = $this->get_events($atts);
@@ -864,7 +864,7 @@ class EventPost {
         $end_date_date = !empty($end_date) ? substr($end_date, 0, 10) : '';
         $end_date_hour = !empty($end_date) ? abs(substr($end_date, 11, 2)) : '';
         $end_date_minutes = !empty($end_date) ? abs(substr($end_date, 14, 2)) : '';
-        //$end_date_to_print=$this->parsedate($end_date,'T');	
+        //$end_date_to_print=$this->parsedate($end_date,'T');
 
 
 
@@ -877,7 +877,7 @@ class EventPost {
         ?>
         <b><?php _e('Date:', 'eventpost') ?></b>
         <div class="misc-pub-section">
-            <label for="<?php echo $this->META_START; ?>_date">  
+            <label for="<?php echo $this->META_START; ?>_date">
                 <p><?php _e('Begin:', 'eventpost') ?>
                     <span id="<?php echo $this->META_START; ?>_date_human" class="human_date">
                         <?php
@@ -885,26 +885,26 @@ class EventPost {
                             echo $this->human_date($event->time_start) . date(' H:i', $event->time_start);
                         }
                         ?>
-                    </span>   
-                </p>      
+                    </span>
+                </p>
                 <input type="text" class="input-date" data-language="<?php echo $language; ?>" value ="<?php echo $start_date_date ?>" name="<?php echo $this->META_START; ?>[date]" id="<?php echo $this->META_START; ?>_date"/>
-            </label> 
+            </label>
 
-            <p><label for="<?php echo $this->META_START; ?>_hour">             
+            <p><label for="<?php echo $this->META_START; ?>_hour">
                     <select name="<?php echo $this->META_START; ?>[hour]" id="<?php echo $this->META_START; ?>_hour" class="select-date">
                         <?php for ($h = 0; $h < 24; $h++): ?>
                             <option value="<?= $h ?>" <?= ($start_date_hour == $h ? 'selected' : '') ?>><?= $h ?></option>
                         <?php endfor; ?>
                     </select>:
-                </label> 
-                <label for="<?php echo $this->META_START; ?>_minute">             
+                </label>
+                <label for="<?php echo $this->META_START; ?>_minute">
                     <select name="<?php echo $this->META_START; ?>[minute]" id="<?php echo $this->META_START; ?>_minute" class="select-date">
                         <?php for ($m = 0; $m < 60; $m+=15): ?>
                             <option value="<?= $m ?>" <?= ($start_date_minutes == $m ? 'selected' : '') ?>><?= $m ?></option>
                         <?php endfor; ?>
                     </select>
-                </label> 
-            </p> 
+                </label>
+            </p>
         </div>
         <div class="misc-pub-section">
             <label for="<?php echo $this->META_END; ?>_date">
@@ -915,24 +915,24 @@ class EventPost {
                             echo $this->human_date($event->time_end) . date(' H:i', $event->time_end);
                         }
                         ?>
-                    </span> 
+                    </span>
                 </p>
-                <input type="text" class="input-date" data-language="<?php echo $language; ?>"  value ="<?php echo $end_date_date ?>" name="<?php echo $this->META_END; ?>[date]" id="<?php echo $this->META_END; ?>_date"/>        
-            </label> 
-            <p><label for="<?php echo $this->META_END; ?>_hour">             
+                <input type="text" class="input-date" data-language="<?php echo $language; ?>"  value ="<?php echo $end_date_date ?>" name="<?php echo $this->META_END; ?>[date]" id="<?php echo $this->META_END; ?>_date"/>
+            </label>
+            <p><label for="<?php echo $this->META_END; ?>_hour">
                     <select name="<?php echo $this->META_END; ?>[hour]" id="<?php echo $this->META_END; ?>_hour" class="select-date">
                         <?php for ($h = 0; $h < 24; $h++): ?>
                             <option value="<?= $h ?>" <?= ($end_date_hour == $h ? 'selected' : '') ?>><?= $h ?></option>
                         <?php endfor; ?>
                     </select>:
-                </label> 
-                <label for="<?php echo $this->META_END; ?>_minute">             
+                </label>
+                <label for="<?php echo $this->META_END; ?>_minute">
                     <select name="<?php echo $this->META_END; ?>[minute]" id="<?php echo $this->META_END; ?>_minute" class="select-date">
                         <?php for ($m = 0; $m < 60; $m+=15): ?>
                             <option value="<?= $m ?>" <?= ($end_date_minutes == $m ? 'selected' : '') ?>><?= $m ?></option>
                         <?php endfor; ?>
                     </select>
-                </label> 
+                </label>
             </p>
         </div>
         <?php $colors = $this->get_colors();
@@ -941,16 +941,16 @@ class EventPost {
             <div class="misc-pub-section">
                     <?php _e('Color:', 'eventpost'); ?>
                 <p>
-            <?php foreach ($colors as $color => $file): ?>	
-                        <label style="background:#<?php echo $color ?>" for="<?php echo $this->META_COLOR; ?><?php echo $color ?>">		
+            <?php foreach ($colors as $color => $file): ?>
+                        <label style="background:#<?php echo $color ?>" for="<?php echo $this->META_COLOR; ?><?php echo $color ?>">
                             <img src="<?=$this->markurl.$color.'.png' ?>"><input type="radio" value ="<?php echo $color ?>" name="<?php echo $this->META_COLOR; ?>" id="<?php echo $this->META_COLOR; ?><?php echo $color ?>" <?php
                                    if ($eventcolor == $color) {
                                        echo 'checked';
                                    }
                                    ?>/>
-                        </label>	
-            <?php endforeach; ?> 
-                </p>        
+                        </label>
+            <?php endforeach; ?>
+                </p>
             </div>
         <?php endif; ?>
 
@@ -958,28 +958,28 @@ class EventPost {
         <b><?php _e('Location:', 'eventpost') ?></b>
         <div class="misc-pub-section">
             <p><a href="#event_address_search" id="event_address_search">
-                    <span class="dashicons dashicons-search"></span> 
-        <?php _e('Look for event\'s GPS coordinates:', 'eventpost') ?>				
+                    <span class="dashicons dashicons-search"></span>
+        <?php _e('Look for event\'s GPS coordinates:', 'eventpost') ?>
                 </a>
-                <span id="eventaddress_result"></span> 
+                <span id="eventaddress_result"></span>
             </p>
             <label for="<?php echo $this->META_ADD; ?>">
         <?php _e('Event address, as it will be displayed:', 'eventpost') ?>
                 <textarea name="<?php echo $this->META_ADD; ?>" id="<?php echo $this->META_ADD; ?>"><?php echo $event->address ?></textarea>
-            </label> 
+            </label>
 
         </div>
         <div class="misc-pub-section">
             <label for="<?php echo $this->META_LAT; ?>">
         <?php _e('Latitude:', 'eventpost') ?>
                 <input type="text" value ="<?php echo $event->lat ?>" name="<?php echo $this->META_LAT; ?>" id="<?php echo $this->META_LAT; ?>"/>
-            </label>  
+            </label>
         </div>
         <div class="misc-pub-section">
             <label for="<?php echo $this->META_LONG; ?>">
         <?php _e('Longitude:', 'eventpost') ?>
                 <input type="text" value ="<?php echo $event->long ?>" name="<?php echo $this->META_LONG; ?>" id="<?php echo $this->META_LONG; ?>"/>
-            </label>  
+            </label>
         </div>
         <?php
         wp_nonce_field(plugin_basename(__FILE__), 'agenda_noncename');
@@ -997,7 +997,7 @@ class EventPost {
                         <option value='map'><?php _e('Map', 'eventpost') ?></option>
                     </select>
                 </label>
-            </p>      
+            </p>
 
             <p>
                 <label for="ep_sce_nb"><?php _e('Number of posts', 'eventpost'); ?>
@@ -1211,7 +1211,7 @@ class EventPost {
         $cejour = date('Y-m-d');
         for ($semaine = 0; $semaine <= 5; $semaine++) {   // 6 semaines par mois
             $ret.='<tr>';
-            for ($journee = 0; $journee <= 6; $journee++) { // 7 jours par semaine				
+            for ($journee = 0; $journee <= 6; $journee++) { // 7 jours par semaine
                 if ($NoJour > 0 && $NoJour <= $JourMax) { // si le jour est valide a afficher
                     $td = '<td class="event_post_day">';
                     if ($sqldate . '-' . $NoJour == $cejour) {
@@ -1284,7 +1284,7 @@ class EventPost {
         return $defaults;
     }
 
-    // COLUMN CONTENT  (ARCHIVES) 
+    // COLUMN CONTENT  (ARCHIVES)
     function columns_content($column_name, $post_id) {
         if ($column_name == 'location') {
             $lat = get_post_meta($post_id, $this->META_LAT, true);
@@ -1399,7 +1399,7 @@ class EventPost {
                             </td>
                         </tr>
                         <tr><td colspan="2">
-                                <h3><?php _e('Global settings', 'eventpost'); ?></h3>  
+                                <h3><?php _e('Global settings', 'eventpost'); ?></h3>
                             </td>
                         </tr>
                         <tr>
@@ -1438,10 +1438,10 @@ class EventPost {
                                     ?>><?php _e('After the content', 'eventpost'); ?></option>
                                 </select></td>
                         </tr>
-                        
-                        
+
+
                         <tr><td colspan="2">
-                                <h3><?php _e('Performances settings', 'eventpost'); ?></h3> 
+                                <h3><?php _e('Performances settings', 'eventpost'); ?></h3>
                             </td>
                         </tr>
                         <tr>
