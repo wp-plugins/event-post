@@ -67,7 +67,7 @@ jQuery(document).ready(function () {
                 }
                 ep_feature.setStyle(ep_icons[marker]);
                 ep_vectorSources[map_id].addFeature(ep_feature);
-                
+
             }
             jQuery('#' + map_id+'-wrap').animate({height: 'toggle'}, 1000, function () {
                 ep_maps[map_id].getView().setCenter(position);
@@ -81,7 +81,7 @@ jQuery(document).ready(function () {
 
     /* ------------------------------------------------------------------------------------------------------------------
      * List of events
-     * Making a big map with all available locations 
+     * Making a big map with all available locations
      */
     // Parse all list wich have to be displayed as a map
     jQuery('.event_geolist').each(function () {
@@ -131,7 +131,8 @@ jQuery(document).ready(function () {
             ],
             view: new ol.View({
                 center: [0, 0],
-                zoom: 12
+                zoom: 12,
+                maxZoom: 18
             }),
             overlays: [ep_popups[map_id]]
         });
@@ -179,7 +180,7 @@ jQuery(document).ready(function () {
                 var marker = jQuery(this).data('marker');
                 var id = jQuery(this).data('id');
                 coords = new ol.proj.transform([lon, lat], ep_proj_source, ep_proj_destination);
-                
+
                 obj={
                     geometry: new ol.geom.Point(coords),
                     name: item.find('h5').text(),

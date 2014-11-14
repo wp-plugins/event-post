@@ -151,6 +151,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.2.2 =
+* Fix: Category filter
+* Fix: Add max zoom
+
 = 3.2.1 =
 * Fix: Event list widget : missing title
 
