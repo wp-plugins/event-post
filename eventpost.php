@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.2.2
+  Version: 3.2.3
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -84,6 +84,7 @@ class EventPost {
         $this->NomDuMois = array('', __('Jan', 'eventpost'), __('Feb', 'eventpost'), __('Mar', 'eventpost'), __('Apr', 'eventpost'), __('May', 'eventpost'), __('Jun', 'eventpost'), __('Jul', 'eventpost'), __('Aug', 'eventpost'), __('Sept', 'eventpost'), __('Oct', 'eventpost'), __('Nov', 'eventpost'), __('Dec', 'eventpost'));
         $this->Week = array(__('Sunday', 'eventpost'), __('Monday', 'eventpost'), __('Tuesday', 'eventpost'), __('Wednesday', 'eventpost'), __('Thursday', 'eventpost'), __('Friday', 'eventpost'), __('Saturday', 'eventpost'));
 
+        $this->settings = $this->get_settings();
         if (!empty($this->settings['markpath']) && !empty($this->settings['markurl'])) {
             $this->markpath = ABSPATH.'/'.$this->settings['markpath'];
             $this->markurl = $this->settings['markurl'];
@@ -93,7 +94,6 @@ class EventPost {
         }
 
         $this->maps = $this->get_maps();
-        $this->settings = $this->get_settings();
 
         $this->dateformat = str_replace(array('yy', 'mm', 'dd'), array('Y', 'm', 'd'), __('yy-mm-dd', 'eventpost'));
 
