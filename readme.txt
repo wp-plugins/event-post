@@ -151,6 +151,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.2.4 =
+* Fix: Previous fix fix
+
 = 3.2.3 =
 * Fix: Custom icons fix
 
