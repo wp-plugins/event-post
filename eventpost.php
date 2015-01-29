@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.2.4
+  Version: 3.3.0
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -42,7 +42,7 @@ class EventPost {
         // Scripts
         add_action('admin_enqueue_scripts', array(&$this, 'admin_head'));
         add_action('admin_print_scripts', array(&$this, 'admin_scripts'));
-        add_action('wp_enqueue_scripts', array(&$this, 'load_scripts'));
+        add_action('wp_enqueue_scripts', array(&$this, 'load_styles'));
 
         // Single
         add_filter('the_content', array(&$this, 'display_single'), 9999);
@@ -66,6 +66,11 @@ class EventPost {
         add_shortcode('events_list', array(&$this, 'shortcode_list'));
         add_shortcode('events_map', array(&$this, 'shortcode_map'));
         add_shortcode('events_cal', array(&$this, 'shortcode_cal'));
+	//
+	add_filter('eventpost_list_shema',array(&$this, 'custom_shema'),10,1);
+
+	// Admin
+	add_action('admin_post_EventPostSaveSettings', array(&$this, 'save_settings'));
 
         include_once (plugin_dir_path(__FILE__) . 'widget.php');
         include_once (plugin_dir_path(__FILE__) . 'widget.cal.php');
@@ -97,7 +102,7 @@ class EventPost {
 
         $this->dateformat = str_replace(array('yy', 'mm', 'dd'), array('Y', 'm', 'd'), __('yy-mm-dd', 'eventpost'));
 
-        $this->list_shema = array(
+        $this->default_list_shema = array(
             'container' => '
 		      <%type% class="event_loop %id% %class%" id="%listid%" style="%style%" %attributes%>
 		      	%list%
@@ -114,6 +119,7 @@ class EventPost {
 		      		%event_excerpt%
 		      </%child%>'
         );
+	$this->list_shema = apply_filters('eventpost_list_shema',$this->default_list_shema);
 
     }
 
@@ -166,6 +172,15 @@ class EventPost {
             $ep_settings['singlepos'] = 'after';
             $reg_settings=true;
         }
+	if (!isset($ep_settings['container_shema']) ) {
+            $ep_settings['container_shema'] = '';
+            $reg_settings=true;
+        }
+
+	if (!isset($ep_settings['item_shema']) ) {
+            $ep_settings['item_shema'] = '';
+            $reg_settings=true;
+        }
 
         //Save settings  not changed
         if($reg_settings===true){
@@ -173,7 +188,15 @@ class EventPost {
         }
         return $ep_settings;
     }
-
+    function custom_shema($shema){
+	if(!empty($this->settings['container_shema'])){
+	    $shema['container']=$this->settings['container_shema'];
+	}
+	if(!empty($this->settings['item_shema'])){
+	    $shema['item']=$this->settings['item_shema'];
+	}
+	return $shema;
+    }
     function get_maps() {
         $maps = array();
         if (is_file(plugin_dir_path(__FILE__) . 'maps.csv')) {
@@ -213,7 +236,7 @@ class EventPost {
         return plugins_url('/markers/ffffff.png', __FILE__);
     }
 
-    function load_scripts() {
+    function load_styles() {
         //CSS
         wp_register_style(
                 'eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false, 1.0
@@ -221,10 +244,10 @@ class EventPost {
         wp_enqueue_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false, null);
         wp_enqueue_style('openlayers', plugins_url('/css/openlayers.css', __FILE__));
         wp_enqueue_style('dashicons-css', includes_url('/css/dashicons.min.css'));
-
+    }
+    function load_scripts() {
         // JS
         wp_enqueue_script('jquery', false, false, false, true);
-        wp_enqueue_script('openlayers', plugins_url('/js/OpenLayers.js', __FILE__), false, false, true);
         wp_enqueue_script('eventpost', plugins_url('/js/eventpost.min.js', __FILE__), false, false, true);
         wp_localize_script('eventpost', 'eventpost_params', array(
             'imgpath' => plugins_url('/img/', __FILE__),
@@ -232,6 +255,11 @@ class EventPost {
             'defaulttile' => $this->settings['tile'],
             'ajaxurl' => get_bloginfo('url') . '/wp-admin/admin-ajax.php'
         ));
+    }
+    function load_map_scripts() {
+        // JS
+	$this->load_scripts();
+        wp_enqueue_script('openlayers', plugins_url('/js/OpenLayers.js', __FILE__), false, false, true);
     }
 
     function admin_head() {
@@ -561,6 +589,7 @@ class EventPost {
     // Shortcode to display a calendar of events
     // uses filter : eventpost_params
     function shortcode_cal($atts) {
+	$this->load_scripts();
         $ep_settings = $this->settings;
         $atts = shortcode_atts(apply_filters('eventpost_params', array(
             'date' => date('Y-n'),
@@ -574,8 +603,8 @@ class EventPost {
 
     // Return an HTML list of events
     // uses filter : eventpost_params
-    function list_events($atts, $id = 'event_list') {//$nb=0,$type='div',$future=1,$past=0,$geo=0,$id='event_list'){
-        $ep_settings = $this->settings;
+    function list_events($atts, $id = 'event_list') {
+	$ep_settings = $this->settings;
         $atts = shortcode_atts(apply_filters('eventpost_params', array(
             'nb' => 0,
             'type' => 'div',
@@ -609,6 +638,9 @@ class EventPost {
         $ret = '';
         $this->list_id++;
         if (sizeof($events) > 0) {
+	    if($id=='event_geolist'){
+		$this->load_map_scripts();
+	    }
             if (!empty($title)) {
                 $ret.= html_entity_decode($before_title) . $title . html_entity_decode($after_title);
             }
@@ -1303,25 +1335,52 @@ class EventPost {
     }
 
     /** ADMIN PAGES * */
+    function save_settings(){
+	if (!current_user_can('manage_options')){
+	    return;
+	}
+	if (!wp_verify_nonce(\filter_input(INPUT_POST,'ep_nonce_settings',FILTER_SANITIZE_STRING), 'ep_nonce_settings')) {
+	    wp_die(__('Security error', 'eventpost'));
+	}
+
+	$valid_post = array(
+	    'ep_settings'=>array(
+		'filter' => FILTER_SANITIZE_STRING,
+		'flags'  => FILTER_REQUIRE_ARRAY
+	    )
+	);
+
+	foreach ($this->settings as $item_name=>$item_value){
+	    $valid_post['ep_settings'][$item_name] = FILTER_SANITIZE_STRING;
+	}
+
+	if (false !== $settings = \filter_input_array(INPUT_POST,$valid_post)) {
+	    $settings['ep_settings']['container_shema']=stripslashes($_POST['ep_settings']['container_shema']);
+	    $settings['ep_settings']['item_shema']=  stripslashes($_POST['ep_settings']['item_shema']);
+	    update_option('ep_settings', $settings['ep_settings']);
+	}
+	wp_redirect('options-general.php?page=event-settings&confirm=options_saved');
+	exit;
+    }
     function manage_options() {
         add_submenu_page('options-general.php', __('Event settings', 'eventpost'), __('Event settings', 'eventpost'), 'manage_options', 'event-settings', array(&$this, 'manage_settings'));
     }
 
     function manage_settings() {
-        if (isset($_POST['ep_settings'])) {
-            update_option('ep_settings', $_POST['ep_settings']);
+        if ('options_saved'===\filter_input(INPUT_GET,'confirm',FILTER_SANITIZE_STRING)) {
             ?>
             <div class="updated"><p><strong><?php _e('Event settings saved !', 'eventpost') ?></strong></p></div>
             <?php
         }
-        $this->settings = $this->get_settings();
         $ep_settings = $this->settings;
         ?>
         <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php _e('Event settings', 'eventpost'); ?></h2>
-            <form name="form1" method="post" action="#">
-                <table class="form-table">
+            <form name="form1" method="post" action="admin-post.php">
+		<input type="hidden" name="action" value="EventPostSaveSettings">
+		<?php wp_nonce_field('ep_nonce_settings','ep_nonce_settings') ?>
+                <table class="form-table" id="eventpost-settings-table">
                     <tbody>
                         <tr><td colspan="2">
                                 <h3><?php _e('Event settings', 'eventpost'); ?></h3>
@@ -1363,6 +1422,28 @@ class EventPost {
                                 </select></td>
                         </tr>
                         <tr><td colspan="2">
+                                <h3><?php _e('List settings', 'eventpost'); ?></h3>
+                            </td>
+                        </tr>
+			<tr>
+                            <th><label for="ep_container_shema">
+                                    <?php _e('Container shema', 'eventpost') ?>
+                                </label></th>
+				<td><textarea class="widefat" name="ep_settings[container_shema]" id="ep_container_shema"><?php echo $ep_settings['container_shema']; ?></textarea>
+				    <p><?php _e('default:','eventpost') ?></p>
+					<code><?php echo htmlentities($this->default_list_shema['container']) ?></code>
+                            </td>
+                        </tr>
+			<tr>
+                            <th><label for="ep_item_shema">
+                                    <?php _e('Item shema', 'eventpost') ?>
+                                </label></th>
+				<td><textarea class="widefat" name="ep_settings[item_shema]" id="ep_item_shema"><?php echo $ep_settings['item_shema']; ?></textarea>
+				    <p><?php _e('default:','eventpost') ?></p>
+					<code><?php echo htmlentities($this->default_list_shema['item']) ?></code>
+                            </td>
+                        </tr>
+			<tr><td colspan="2">
                                 <h3><?php _e('Map settings', 'eventpost'); ?></h3>
                             </td>
                         </tr>

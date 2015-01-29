@@ -123,6 +123,7 @@ example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 * eventpost_retreive
 * eventpost_multisite_get
 * eventpost_multisite_blogids
+* eventpost_list_shema
 
 #### Actions
 * before_eventpost_generator
@@ -150,6 +151,12 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.3.0 =
+* Add: eventpost_list_shema filter
+* Add: Global container/item shema settings
+* Add: Security improvement in settings management
+* Fix: Load scripts only of needed
 
 = 3.2.4 =
 * Fix: Previous fix fix
