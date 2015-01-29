@@ -26,16 +26,20 @@ Geolocation works thanks to openstreetmap.
 
 = Post metas =
 
-## Date attributes
+**Date attributes**
+
 * Begin date-time
 * End date-time
 * Color
 
-## Location attributes
+**Location attributes**
+
 * Address
 * GPS coordinates
 
-= Shortcodes =
+[see full documentation](https://wordpress.org/plugins/event-post/other_notes/)
+
+## Shortcodes =
 The plugin comes with three shortcodes wich allows to :
 
 * `[events_list]` : display a list of events
