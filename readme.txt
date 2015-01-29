@@ -25,6 +25,7 @@ Geolocation works thanks to openstreetmap.
 
 
 = Post metas =
+
 ## Date attributes
 * Begin date-time
 * End date-time
