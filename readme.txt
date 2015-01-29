@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://ba.stienho.fr/#don
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar
 Requires at least: 3.8
-Tested up to: 4.0.1
+Tested up to: 4.1.0
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -26,6 +26,7 @@ Geolocation works thanks to openstreetmap.
 
 = Post metas =
 
+
 **Date attributes**
 
 * Begin date-time
@@ -39,7 +40,7 @@ Geolocation works thanks to openstreetmap.
 
 [see full documentation](https://wordpress.org/plugins/event-post/other_notes/)
 
-## Shortcodes =
+## Shortcodes
 The plugin comes with three shortcodes wich allows to :
 
 * `[events_list]` : display a list of events
