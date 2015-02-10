@@ -23,39 +23,44 @@ class eventpost_widget extends WP_Widget {
         $thumbnail=isset($instance['thumbnail']) && is_numeric($instance['thumbnail'])?esc_attr($instance['thumbnail']):0;
         /*Display excerpt */
         $excerpt=isset($instance['excerpt']) && is_numeric($instance['excerpt'])?esc_attr($instance['excerpt']):0;
+        /*Display excerpt */
+        $feed=isset($instance['feed']) && is_numeric($instance['feed'])?esc_attr($instance['feed']):0;
         /*Date sorting */
         $order=isset($instance['order']) && !empty($instance['order'])?esc_attr($instance['order']):'ASC';
 
         global $EventPost;
-		$events = $EventPost->get_events(
-			array(
-				'nb'=>$numberposts,
-				'future'=>$future,
-				'past'=>$past,
-				'geo'=>0,
-				'cat'=>$cat,
-				'tag'=>$tag,
-                                'order'=>$order
-			)
-		);
+	$events = $EventPost->get_events(
+	    array(
+		'nb'=>$numberposts,
+		'future'=>$future,
+		'past'=>$past,
+		'geo'=>0,
+		'cat'=>$cat,
+		'tag'=>$tag,
+		'order'=>$order
+	    )
+	);
 
-		if(sizeof($events)>0){
-			echo $args['before_widget'];
-			if(!empty($widgettitle)){
-				echo $args['before_title'];
-				echo $widgettitle;
-				echo $args['after_title'];
-			}
-                        $atts=array(
-                            'events'=>$events,
-                            'class'=>'eventpost_widget',
-                            'thumbnail'=>$thumbnail,
-                            'excerpt'=>$excerpt,
-                            'order'=>$order
-                        );
-			echo $EventPost->list_events($atts);
-			echo $args['after_widget'];
+	if(sizeof($events)>0){
+	    echo $args['before_widget'];
+	    if(!empty($widgettitle)){
+		echo $args['before_title'];
+		echo $widgettitle;
+		if(!empty($cat) && $feed){
+		    echo' <a href="'.admin_url('admin-ajax.php').'?action=EventPostFeed&cat='.$cat.'"><span class="dashicons dashicons-rss"></span></a>';
 		}
+		echo $args['after_title'];
+	    }
+	    $atts=array(
+		'events'=>$events,
+		'class'=>'eventpost_widget',
+		'thumbnail'=>$thumbnail,
+		'excerpt'=>$excerpt,
+		'order'=>$order
+	    );
+	    echo $EventPost->list_events($atts);
+	    echo $args['after_widget'];
+	}
    }
 
    function update($new_instance, $old_instance) {
@@ -80,6 +85,8 @@ class eventpost_widget extends WP_Widget {
         $thumbnail=isset($instance['thumbnail']) && is_numeric($instance['thumbnail'])?esc_attr($instance['thumbnail']):0;
         /*Display excerpt */
         $excerpt=isset($instance['excerpt']) && is_numeric($instance['excerpt'])?esc_attr($instance['excerpt']):0;
+        /*Display excerpt */
+        $feed=isset($instance['feed']) && is_numeric($instance['feed'])?esc_attr($instance['feed']):0;
         /*Date sorting */
         $order=isset($instance['order']) && !empty($instance['order'])?esc_attr($instance['order']):'ASC';
        ?>
@@ -124,6 +131,14 @@ class eventpost_widget extends WP_Widget {
        </select>
        </label>
        </p>
+
+       <p style="margin-top:10px;">
+       <label for="<?php echo $this->get_field_id('feed'); ?>">
+       <input id="<?php echo $this->get_field_id('feed'); ?>" name="<?php echo $this->get_field_name('feed'); ?>" type="checkbox" value="1" <?=($feed==true?'checked':'')?> />
+       <?php _e('Show category ICS link','eventpost'); ?>
+       </label>
+       </p>
+       <hr>
 
        <p>
        	<label for="<?php echo $this->get_field_id('tag'); ?>">

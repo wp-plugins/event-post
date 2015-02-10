@@ -158,6 +158,12 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.4.0 =
+* Add: Whole category ICS feed (link available in list widget, for future events)
+* Fix: JS was not loaded in single events since last version
+* Fix: Strict Standards warning, reported by argad
+* Fix: Depence of OpenLayer librairy not needed by calendar widget, reported by p1s1
+
 = 3.3.0 =
 * Add: eventpost_list_shema filter
 * Add: Global container/item shema settings

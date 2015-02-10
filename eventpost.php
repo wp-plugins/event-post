@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.3.0
+  Version: 3.4.0
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -26,9 +26,9 @@ class EventPost {
     const META_LAT = 'geo_latitude';
     const META_LONG = 'geo_longitude';
 
-    static $list_id;
-    static $NomDuMois;
-    static $Week;
+    public $list_id;
+    public $NomDuMois;
+    public $Week;
     public $settings;
     public $dateformat;
 
@@ -56,6 +56,10 @@ class EventPost {
         add_action('wp_ajax_nopriv_EventPostCalendar', array(&$this, 'ajaxcal'));
         add_action('wp_ajax_EventPostCalendarDate', array(&$this, 'ajaxdate'));
         add_action('wp_ajax_nopriv_EventPostCalendarDate', array(&$this, 'ajaxdate'));
+
+	// Calendar publishing
+        add_action('wp_ajax_EventPostFeed', array(&$this, 'feed'));
+        add_action('wp_ajax_nopriv_EventPostFeed', array(&$this, 'feed'));
 
         // Edit
         add_action('add_meta_boxes', array(&$this, 'add_custom_box'));
@@ -517,6 +521,7 @@ class EventPost {
             else{
                 $content.=$this->get_single($post, 'event_single');
             }
+	    $this->load_map_scripts();
         }
         add_filter('the_content', array(&$this, 'display_single'), 9999);
         return $content;
@@ -1544,6 +1549,54 @@ class EventPost {
             </form>
         </div>
         <?php
+    }
+
+    /*
+     * feed
+     * generate ICS or VCS files from a category
+     */
+    function ics_date($timestamp){
+	return date("Ymd",$timestamp).'T'.date("His",$timestamp).'Z';
+    }
+    function feed(){
+	if(false !== $cat=\filter_input(INPUT_GET, 'cat',FILTER_SANITIZE_STRING)){
+	    $format = \filter_input(INPUT_GET, 'format',FILTER_SANITIZE_STRING)?:'ics';
+	    $timezone_string = get_option('timezone_string');
+	    date_default_timezone_set($timezone_string);
+
+	    header("content-type:text/calendar");
+	    header("Pragma: public");
+	    header("Expires: 0");
+	    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	    header("Cache-Control: public");
+	    header("Content-Disposition: attachment; filename=". str_replace('+','-',urlencode(get_option('blogname').'-'.$cat)).".ics;" );
+	    echo"BEGIN:VCALENDAR\r\n"
+	    . "PRODID:EventPost\r\n"
+	    . "VERSION:2.0\r\n";
+	    /*
+	    . "BEGIN:VTIMEZONE\r\n"
+	    . "TZID:$timezone_string\r\n"
+	    . "X-LIC-LOCATION:$timezone_string\r\n"
+	    . "END:VTIMEZONE";
+	     *
+	     */
+	    $events=$this->get_events(array('cat'=>$cat,'nb'=>-1));
+	    //print_r($events);
+	    foreach ($events as $event) {
+		echo"BEGIN:VEVENT\r\n"
+			. "CREATED:".$this->ics_date(strtotime($event->post_date))."\r\n"
+			. "LAST-MODIFIED:".$this->ics_date(strtotime($event->post_modified))."\r\n"
+			. "SUMMARY:".$event->post_title."\r\n"
+			. "UID:".md5(site_url()."_eventpost_".$event->ID)."\r\n"
+			. "LOCATION:".str_replace(',','\,',$event->address)."\r\n"
+			. "DTSTART;TZID=$timezone_string:".$this->ics_date($event->time_start)."\r\n"
+			. "DTEND;TZID=$timezone_string:".$this->ics_date($event->time_end)."\r\n"
+			. "DESCRIPTION:".$event->guid."\r\n"
+			. "END:VEVENT\r\n";
+	    }
+	    echo"END:VCALENDAR\r\n";
+	    exit;
+	}
     }
 
 }
