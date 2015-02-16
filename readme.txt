@@ -158,6 +158,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.4.1 =
+* Fix: remove PHP warnings
+
 = 3.4.0 =
 * Add: Whole category ICS feed (link available in list widget, for future events)
 * Fix: JS was not loaded in single events since last version
