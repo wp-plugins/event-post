@@ -24,6 +24,7 @@ class eventpostcal_widget extends WP_Widget {
 	    )
 	);
 	if(sizeof($events)>0){
+	    $EventPost->load_scripts();
 	    echo $args['before_widget'];
 	    if(!empty($title)){
 		    echo $args['before_title'];

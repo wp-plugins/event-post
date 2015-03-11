@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://ba.stienho.fr/#don
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar
 Requires at least: 3.8
-Tested up to: 4.1.0
+Tested up to: 4.1.1
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -135,9 +135,6 @@ example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 * before_eventpost_generator
 * after_eventpost_generator
 
-
-
-
 == Installation ==
 
 1. Upload `event-post` to the `/wp-content/plugins/` directory
@@ -157,6 +154,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.4.2 =
+* Fix: remove PHP warnings
+* Fix: JS script not loaded when the "calendar widget" is alone
 
 = 3.4.1 =
 * Fix: remove PHP warnings
