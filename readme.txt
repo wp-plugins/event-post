@@ -1,9 +1,9 @@
 === Event post ===
-Contributors: bastho, ecolosites
+Contributors: bastho, n4thaniel, ecolosites
 Donate link: http://ba.stienho.fr/#don
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar
 Requires at least: 3.8
-Tested up to: 4.1.1
+Tested up to: 4.2.1
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,6 +46,7 @@ The plugin comes with three shortcodes wich allows to :
 * `[events_list]` : display a list of events
 * `[events_map]` : display a map of events
 * `[events_cal]` : display a calendar of events
+* `[event_details]` : display a detail of the current event
 
 ### Available options :
 #### [events_list]
@@ -120,6 +121,11 @@ example: `[events_map future=1 past=1 cat="actuality" nb="-1"]`
 
 example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 
+####[event_details]
+
+* **attribute** string (date, start, end, address, location). The default value is NULL adn displays the full event bar
+
+
 = Hooks =
 #### Filters
 * eventpost_printdate
@@ -154,6 +160,15 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.5.0 =
+* Add **event_details** shortcode
+* Add integration with shotcake (ShortCodes UI)
+* Add Optional event icons in the loop
+* Optimize UI : New datepicker, separated date and address custom boxes
+* Add stats in dashboard glance items
+* Code optimization
+* Update IT localization
 
 = 3.4.2 =
 * Fix: remove PHP warnings
@@ -348,6 +363,11 @@ available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 * Plugin creation
 
 == Upgrade notice ==
+
+= 3.5.0 =
+* New options are available for: icons in the loop, default position of the admin boxes
+* New shortcode [event_details] is available
+* Support for Shortcake (Shortcode UI plugin)
 
 = 2.7.0 =
 * The event meta box is no more displayed for non posts items such as pages or custom post-types

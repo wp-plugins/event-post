@@ -1,7 +1,7 @@
 function eventpost_apply(addr,lat,lon){
     if(jQuery('#geo_address').val()==''){
-        jQuery('#geo_address').val(addr);   
-    }   
+        jQuery('#geo_address').val(addr);
+    }
     jQuery('#geo_latitude').val(lat);
     jQuery('#geo_longitude').val(lon);
     jQuery('#eventaddress_result').html('');
@@ -15,32 +15,37 @@ function eventpost_numdate(str){
 }
 function eventpost_getdate(field){
     d = jQuery('#'+field+'_date').val();
-    h = jQuery('#'+field+'_hour').val();
-    if(h=='0'){
-        h='00';
-    }
-    m = jQuery('#'+field+'_minute').val();
-    if(m=='0'){
-        m='00';
-    }
-    return eventpost_numdate(d+''+h+''+m);
+    return eventpost_numdate(d.substring(0,16)+':00');
 }
 function eventpost_getdate_sql(field){
-    return jQuery('#'+field+'_date').val()+' '+jQuery('#'+field+'_hour').val()+':'+jQuery('#'+field+'_minute').val()+' ';
+    return jQuery('#'+field+'_date').val();
 }
 function eventpost_chkdate(){
     //console.log('change date');
     var date_start=eventpost_getdate(eventpost.META_START);
     var date_end=eventpost_getdate(eventpost.META_END);
-   //console.log(date_start+' '+date_end);
-    if(date_end=='' || date_start>date_end){
+    console.log(date_start+' '+date_end);
+    if(date_end==='' || date_start>date_end){
         jQuery('#'+eventpost.META_END+'_date').val(jQuery('#'+eventpost.META_START+'_date').val());
-        jQuery('#'+eventpost.META_END+'_hour').val(jQuery('#'+eventpost.META_START+'_hour').val());
-        jQuery('#'+eventpost.META_END+'_minute').val(jQuery('#'+eventpost.META_START+'_minute').val());
         jQuery('#'+eventpost.META_END+'_date').parent().find('.human_date').html(jQuery('#'+eventpost.META_START+'_date').parent().find('.human_date').html());
+        date_end=date_start;
+    }
+    console.log(date_start);
+    // UI
+    if(date_start===0){
+        jQuery('.event-post-event_begin_date-remove').hide();
+    }
+    else{
+        jQuery('.event-post-event_begin_date-remove').show();
+    }
+    if(date_end===0){
+        jQuery('.event-post-event_end_date-remove').hide();
+    }
+    else{
+        jQuery('.event-post-event_end_date-remove').show();
     }
 }
-function eventpost_edit(){  
+function eventpost_edit(){
     sctype = jQuery('#ep_sce_type').val();
     if(sctype=='list'){
         jQuery('#ep_sce_maponly').hide();
@@ -103,24 +108,24 @@ function eventpost_insertcontent(str){
       else{
         tinyMCE.activeEditor.execCommand("mceInsertRawHTML", false, str);
       }
-    }  
+    }
   }
 }
 jQuery(document).ready(function(){
     jQuery('#event_address_search').click(function(){
         jQuery('#eventaddress_result').html('<input type="search" id="event_address_search_txt"/><input type="button" id="event_address_search_bt" value="ok" class="button"/>');
-        
-        jQuery('#event_address_search_bt').click(function(){        
-        
+
+        jQuery('#event_address_search_bt').click(function(){
+
             var addr = jQuery('#event_address_search_txt').attr('value');
             console.log(addr);
             var data = {
                 action: 'EventPostGetLatLong',
                 q: addr
-            };  
-                
+            };
+
             jQuery('#eventaddress_result').html(addr+'<br/><img src="'+eventpost.imgpath+'loader.gif" alt="..."/>');
-            
+
             jQuery.post(ajaxurl, data, function(data) {
                 var html_ret='';
                 for(var lieu in data){
@@ -134,9 +139,9 @@ jQuery(document).ready(function(){
                         html_ret+=lieu.display_name+'</a></p>';
                     }
                 }
-                jQuery('#eventaddress_result').html(html_ret);  
-        },'json'); 
-        });    
+                jQuery('#eventaddress_result').html(html_ret);
+        },'json');
+        });
     });
     jQuery('#event_post_sc_edit input,#event_post_sc_edit select').change(function(){
         eventpost_edit();
@@ -151,49 +156,59 @@ jQuery(document).ready(function(){
     jQuery('#ep_sce_shortcode').click(function(){
         jQuery(this).select();
     });
-    
-    
+
+
     eventpost_edit();
-    
+    /*
+     * Hide icons
+     */
+    jQuery('.event-color-section p label:nth-child(n9)').wrapAll('<span id="event-color-section-more"/>');
+    jQuery('#event-color-section-more').hide().before('<a id="event-color-section-more-btn">'+eventpost.more_icons+'</a>');
+    jQuery('#event-color-section-more-btn').css({display:'block'}).click(function(){
+        jQuery('#event-color-section-more').toggle(300);
+    });
     /*
      * Date picker
      */
     eventpost_chkdate();
-    if(jQuery.datepicker){
-        jQuery( ".input-date").datepicker({ 
-            firstDay: 1,
-            changeYear: true,
-            changeMonth: true,
-            showMonthAfterYear: true,
-            yearRange: "c-5:+5",            
-            buttonText: eventpost.date_choose,
-            showOn: "both",         
-            dateFormat: "yy-mm-dd",     
-            autoSize: true
-        }).change(function(){
-            var date_id = jQuery(this).attr('id').replace('_date','');
-            var hd = jQuery('#'+date_id+'_date_human');
-            if(jQuery(this).val()!=''){
-                jQuery.post(ajaxurl, {  action: 'EventPostHumanDate',date: eventpost_getdate_sql(date_id)}, function(data) {
-                    hd.html(data);  
-                    eventpost_chkdate();
-                });
-            }
-        });
-    }
-    jQuery( ".select-date").change(function(){
-        var date_id = jQuery(this).attr('id').replace('_minute','').replace('_hour','');
-        var hd = jQuery('#'+date_id+'_date_human');
+    jQuery( ".input-datetime").datetimepicker({
+        format:'Y-m-d H:i',
+        value:jQuery(this).val(),
+        onSelectDate:function(ct,$i){
+          eventpost_chkdate();
+        },
+        onSelectTime:function(ct,$i){
+          eventpost_chkdate();
+        }
+    }).css({
+        visibility:'hidden',
+        height:'1px'
+    }).change(function(){
+        var date_id = jQuery(this).attr('id');
+        var hd = jQuery('#'+date_id+'_human');
         if(jQuery(this).val()!=''){
-            jQuery.post(ajaxurl, {  action: 'EventPostHumanDate',date: eventpost_getdate_sql(date_id)}, function(data) {
-                hd.html(data);  
+            jQuery.post(ajaxurl, {  action: 'EventPostHumanDate',date: jQuery(this).val()}, function(data) {
+                hd.html(data);
                 eventpost_chkdate();
             });
         }
     });
+    jQuery( ".human_date").click(function(){
+        var date_id = jQuery(this).attr('id').replace('_human','');
+        jQuery( "#"+date_id).datetimepicker('show');
+    }).each(function(){
+        var date_id = jQuery(this).attr('id').replace('_human','');
+        jQuery(this).after('<a class="dashicons dashicons-trash eventpost-date-remove event-post-'+date_id+'-remove" data-id="'+date_id+'"/>');
+    });
+    jQuery('.eventpost-date-remove').click(function(){
+        var date_id = jQuery(this).data('id');
+        jQuery( "#"+date_id).val('');
+        jQuery( "#"+date_id+'_human').text(eventpost.pick_a_date);
+        eventpost_chkdate();
+    });
     /*
      * Widgets stylish with icons
-     */ 
+     */
     if(jQuery('body').hasClass('widgets-php')){
         jQuery('.widget').each(function(){
             wid = jQuery(this).attr('id');

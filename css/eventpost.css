@@ -59,7 +59,7 @@
 }
 .event_data a{
     color:#333;
-    font-size:0.9em;    
+    font-size:0.9em;
     background:transparent;
     display:block;
     padding:0.2em 0.5em;
@@ -74,16 +74,11 @@
    background:#666;
 }
 .event_data a:before{
-    font-family:dashicons;
-    font-size:2em;
-    top:4px;
-    position:relative;
+    position: relative;
+    top: -4px;
 }
-.event_data a.ics:before,.event_data a.gcal:before,.event_data a.vcs:before{
-    content:' ';
-}
+
 .event_data a.gps:before{
-    content:' ';
     font-size:2.2em;
 }
 .event_data a.gps{
@@ -209,3 +204,4 @@
     min-height: none !important;
     min-width: none !important;
 }
+
