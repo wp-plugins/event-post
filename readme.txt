@@ -20,7 +20,7 @@ Geolocation works thanks to openstreetmap.
 
 * English
 * fr_FR : French
-* it_IT : Italian by NewHouseStef
+* it_IT : Italian by NewHouseStef, pgallina
 * sv_SE : Swedish by mepmepmep
 
 
