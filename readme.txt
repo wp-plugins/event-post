@@ -168,7 +168,7 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 * Optimize UI : New datepicker, separated date and address custom boxes
 * Add stats in dashboard glance items
 * Code optimization
-* Update IT localization
+* Update IT localization by pgallina
 
 = 3.4.2 =
 * Fix: remove PHP warnings
