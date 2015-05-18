@@ -162,7 +162,7 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 == Changelog ==
 
 
-= 3.5.1 =
+= 3.5.2 =
 * Fix missing files in last commit
 
 = 3.5.0 =
