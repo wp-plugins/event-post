@@ -162,6 +162,13 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 == Changelog ==
 
 
+= 3.5.3 =
+* Improve accessibility, use of native colors from the theme for links
+* More hookable ajax URL for calendar
+* Upgrade IT locale
+* Fix php warnings
+* Fix shortcake compatibility in pages
+
 = 3.5.2 =
 * Fix missing files in last commit
 

@@ -15,7 +15,7 @@ function eventpost_numdate(str){
 }
 function eventpost_getdate(field){
     d = jQuery('#'+field+'_date').val();
-    return eventpost_numdate(d.substring(0,16)+':00');
+    return d?eventpost_numdate(d.substring(0,16)+':00'):'';
 }
 function eventpost_getdate_sql(field){
     return jQuery('#'+field+'_date').val();

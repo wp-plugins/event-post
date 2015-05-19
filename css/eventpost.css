@@ -15,51 +15,48 @@
     margin:0 1em 0 0;
 }
 .event_map{
-	background:#CCC;
-	border:#999 1px solid;
+    background:#CCC;
+    border:#999 1px solid;
 }
 .event_past{
-	font-size:0.8em;
-	opacity:0.6;
+    font-size:0.8em;
+    opacity:0.7;
 }
 .event_item a{
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .event_item h5{
-	font-size:1em;
-	clear:none;
-	color:#222;
+    font-size:1em;
+    clear:none;
 }
 .event_item address{ /* Bootstrap patch */
     line-height:inherit;
     margin-bottom:0;
 }
 .event_data{
-	display:block;
-	font-size:0.8em;
-	color:#777;
-	line-height:1.1em;
+    display:block;
+    font-size:0.8em;
+    opacity:0.9;
+    line-height:1.1em;
 }
 .event_single{
-	padding:0.5em 0.5em 0.5em 1.5em;
-	margin:0.5em 0;
+    padding:0.5em 0.5em 0.5em 1.5em;
+    margin:0.5em 0;
     background: #FFF;
     background: rgba(255,255,255,0.9);
     border:none;
     border-left:#FFF 10px solid;
 }
 .event_data .date{
-	font-size:1.2em;
-	color:#333;
+    font-size:1.2em;
 }
 .event_data .time{
-	font-size:1.1em;
-	color:#555;
+    font-size:1.1em;
+    opacity:0.8;
 }
 .event_data a{
-    color:#333;
-    font-size:0.9em;
+    font-size:0.7em;
     background:transparent;
     display:block;
     padding:0.2em 0.5em;
@@ -69,18 +66,7 @@
     text-decoration:none !important;
     font-weight:900;
 }
-.event_data a:hover{
-    color:#FFF;
-   background:#666;
-}
-.event_data a:before{
-    position: relative;
-    top: -4px;
-}
 
-.event_data a.gps:before{
-    font-size:2.2em;
-}
 .event_data a.gps{
     font-size:1.1em;
 }
@@ -109,88 +95,88 @@
 }
 
 .olMap img{
-	max-width:none;
+    max-width:none;
 }
 .olControlZoom{
-	display:none;
+    display:none;
 }
 
 .olControlAttribution{
-	right:5px;
-	bottom:5px;
-	font-size:0.6em;
+    right:5px;
+    bottom:5px;
+    font-size:0.6em;
 }
 
 /** Calendar Widget **/
 .eventpost_calendar{
-	width:100%;
-	min-height:100px;
-	border:#CCC 1Px solid;
-	padding:0.3em;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	position:relative;
-	background: #555;
-	box-shadow: #333 0 0 10px inset;
-	text-align: center;
+    width:100%;
+    min-height:100px;
+    border:#CCC 1Px solid;
+    padding:0.3em;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    position:relative;
+    background: #555;
+    box-shadow: #333 0 0 10px inset;
+    text-align: center;
 }
 .eventpost_cal_loader{
-	margin-top:20px;
+    margin-top:20px;
 }
 
 .eventpost_cal_list{
-	position:absolute;
-	width:100%;
-	height:100%;
-	left:0;
-	background:#FFF;
-	padding:0.5em;
-	border:#CCC 1px soli55d;
-	top:0;
-	overflow:auto;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
+    position:absolute;
+    width:100%;
+    height:100%;
+    left:0;
+    background:#FFF;
+    padding:0.5em;
+    border:#CCC 1px soli55d;
+    top:0;
+    overflow:auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 .eventpost_cal_close{
-	position:absolute;
-	right:2px;
-	top:2px;
-	display:bock;
-	padding:1px 5px;
-	background:#555;
-	color:#FFF;
-	text-decoration: none;
+    position:absolute;
+    right:2px;
+    top:2px;
+    display:bock;
+    padding:1px 5px;
+    background:#555;
+    color:#FFF;
+    text-decoration: none;
 }
 
 .eventpost_calendar table{
-	width:100%;
-	background:#EEE;
+    width:100%;
+    background:#EEE;
 }
 .eventpost_calendar td{
-	padding:0.3em;
-	text-align: center;
+    padding:0.3em;
+    text-align: center;
 }
 .eventpost_calendar thead td{
-	background:#DEDEDE;
+    background:#DEDEDE;
 }
 .eventpost_calendar tbody tr:first-child td{
-	color:#999;
-	font-weight:900;
+    color:#999;
+    font-weight:900;
 }
 .eventpost_calendar tbody td.event_post_day_now{
-	border:#8C4 2px solid;
+    border:#8C4 2px solid;
 }
 .eventpost_calendar a{
-	cursor:pointer;
+    cursor:pointer;
 }
 .eventpost_calendar tbody a{
-	display:block;
-	margin:-0.3em;
-	padding:0.3em;
-	background:rgba(0,0,0,0.4);
-	font-weight:900;
+    display:block;
+    margin:-0.3em;
+    padding:0.3em;
+    background:rgba(0,0,0,0.4);
+    font-weight:900;
 }
 
 /*Widget MAP */

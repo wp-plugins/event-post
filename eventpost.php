@@ -133,8 +133,9 @@ class EventPost {
     //Usefull hexadecimal to decimal converter
     function hex2dec($color = '000000') {
         $tbl_color = array();
-        if (!ereg('#', $color))
+        if (!strstr('#', $color)){
             $color = '#' . $color;
+	}
         $tbl_color['R'] = hexdec(substr($color, 1, 2));
         $tbl_color['G'] = hexdec(substr($color, 3, 2));
         $tbl_color['B'] = hexdec(substr($color, 5, 2));
@@ -268,7 +269,7 @@ class EventPost {
             'imgpath' => plugins_url('/img/', __FILE__),
             'maptiles' => $this->maps,
             'defaulttile' => $this->settings['tile'],
-            'ajaxurl' => get_bloginfo('url') . '/wp-admin/admin-ajax.php'
+            'ajaxurl' => admin_url() . 'admin-ajax.php'
         ));
     }
     function load_map_scripts() {
@@ -410,10 +411,10 @@ class EventPost {
                 $vcs_url = plugins_url('export/vcs.php', __FILE__) . '?t=' . $title . '&amp;u=' . $uid . '&amp;sd=' . $d_s . '&amp;ed=' . $d_e . '&amp;a=' . $address . '&amp;d=' . $url . '&amp;tz=%3BTZID%3D' . urlencode($timezone_string);
 
                 $dates.='
-		<a href="' . $ics_url . '" class="event_link ics dashicons-before dashicons-calendar" target="_blank" title="' . __('Download ICS file', 'eventpost') . '">ical</a>
-		<a href="' . $google_url . '" class="event_link gcal dashicons-before dashicons-calendar" target="_blank" title="' . __('Add to Google calendar', 'eventpost') . '">Google</a>
-		<a href="' . $vcs_url . '" class="event_link vcs dashicons-before dashicons-calendar" target="_blank" title="' . __('Add to Outlook', 'eventpost') . '">outlook</a>
-		';
+		<a href="' . $ics_url . '" class="event_link ics" target="_blank" title="' . __('Download ICS file', 'eventpost') . '">ical</a>
+		<a href="' . $google_url . '" class="event_link gcal" target="_blank" title="' . __('Add to Google calendar', 'eventpost') . '">Google</a>
+		<a href="' . $vcs_url . '" class="event_link vcs" target="_blank" title="' . __('Add to Outlook', 'eventpost') . '">outlook</a>
+		<a class=" dashicons-before dashicons-calendar"></a>';
             }
             $dates.='</div>';
         }
@@ -442,7 +443,7 @@ class EventPost {
             }
             $location.=' itemprop="adr"><span>' . $address . '</span>';
             if (is_single() && $lat != '' && $long != '') {
-                $location.='<a class="event_link gps" href="https://www.openstreetmap.org/?lat=' . $lat.='&amp;lon=' . $long.='&amp;zoom=13" target="_blank"  itemprop="geo">' . __('Map', 'eventpost') . '</a>';
+                $location.='<a class="event_link gps dashicons-before dashicons-location-alt" href="https://www.openstreetmap.org/?lat=' . $lat.='&amp;lon=' . $long.='&amp;zoom=13" target="_blank"  itemprop="geo">' . __('Map', 'eventpost') . '</a>';
             }
             $location.='</address>';
         }
@@ -1026,6 +1027,7 @@ class EventPost {
 	$shortcodes_cal_atts=array(
             'label' => __('Events calendar','eventpost'),
             'listItemImage' => 'dashicons-calendar-alt',
+	    'post_type'=>array('page','post'),
             'attrs' => array(
                 array(
                     'label'       => __('Default date','eventpost'),
@@ -1079,7 +1081,9 @@ class EventPost {
     function add_custom_box() {
         add_meta_box('event_post_date', __('Event date', 'eventpost'), array(&$this, 'inner_custom_box_date'), 'post', $this->settings['adminpos'], 'core');
         add_meta_box('event_post_loc', __('Event location', 'eventpost'), array(&$this, 'inner_custom_box_loc'), 'post', $this->settings['adminpos'], 'core');
-        add_meta_box('event_post_sc_edit', __('Events Shortcode editor', 'eventpost'), array(&$this, 'inner_custom_box_edit'), 'page');
+        if(!function_exists('shortcode_ui_register_for_shortcode')){
+	    add_meta_box('event_post_sc_edit', __('Events Shortcode editor', 'eventpost'), array(&$this, 'inner_custom_box_edit'), 'page');
+	}
     }
 
     function inner_custom_box_date() {
