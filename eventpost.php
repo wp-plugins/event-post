@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.5.3
+  Version: 3.5.4
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -804,6 +804,11 @@ class EventPost {
                 'compare' => '!='
             ),
             array(
+                'key' => $this->META_END,
+                'value' => ':00',
+                'compare' => '!='
+            ),
+            array(
                 'key' => $this->META_START,
                 'value' => '',
                 'compare' => '!='
@@ -1318,7 +1323,9 @@ class EventPost {
         }
         // Clean date or no date
 	if ((false !== $start = filter_input(INPUT_POST, $this->META_START, FILTER_SANITIZE_STRING)) &&
-	    (false !== $end = filter_input(INPUT_POST, $this->META_END, FILTER_SANITIZE_STRING))) {
+	    (false !== $end = filter_input(INPUT_POST, $this->META_END, FILTER_SANITIZE_STRING)) &&
+	    '' != $start &&
+	    '' != $end) {
 	    update_post_meta($post_id, $this->META_START, substr($start,0,16).':00');
 	    update_post_meta($post_id, $this->META_END, substr($end,0,16).':00');
 
@@ -1330,7 +1337,9 @@ class EventPost {
 
         // Clean location or no location
 	if ((false !== $lat = filter_input(INPUT_POST, $this->META_LAT, FILTER_SANITIZE_STRING)) &&
-	    (false !== $long = filter_input(INPUT_POST, $this->META_LONG, FILTER_SANITIZE_STRING))) {
+	    (false !== $long = filter_input(INPUT_POST, $this->META_LONG, FILTER_SANITIZE_STRING)) &&
+	    '' != $lat &&
+	    '' != $long) {
 	    update_post_meta($post_id, $this->META_ADD, filter_input(INPUT_POST, $this->META_ADD, FILTER_SANITIZE_STRING));
 	    update_post_meta($post_id, $this->META_LAT, $lat);
 	    update_post_meta($post_id, $this->META_LONG, $long);

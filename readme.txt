@@ -161,6 +161,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.5.4 =
+* Fix empty date storing
+* Re-add quarters in time
 
 = 3.5.3 =
 * Improve accessibility, use of native colors from the theme for links
