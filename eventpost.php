@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.5.4
+  Version: 3.5.5
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -1748,7 +1748,6 @@ class EventPost {
     }
     function feed(){
 	if(false !== $cat=\filter_input(INPUT_GET, 'cat',FILTER_SANITIZE_STRING)){
-	    $format = \filter_input(INPUT_GET, 'format',FILTER_SANITIZE_STRING)?:'ics';
 	    $timezone_string = get_option('timezone_string');
 	    date_default_timezone_set($timezone_string);
 

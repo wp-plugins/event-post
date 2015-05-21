@@ -161,6 +161,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.5.5 =
+* Code cleanup, Retrocompatibilty to PHP<5.3
+
 = 3.5.4 =
 * Fix empty date storing
 * Re-add quarters in time
