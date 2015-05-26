@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.5.5
+  Version: 3.6.0
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -31,6 +31,8 @@ class EventPost {
     public $Week;
     public $settings;
     public $dateformat;
+
+    public $info;
 
     function EventPost() {
         load_plugin_textdomain('eventpost', false, 'event-post/languages');
@@ -84,6 +86,7 @@ class EventPost {
         include_once (plugin_dir_path(__FILE__) . 'widget.map.php');
         include_once (plugin_dir_path(__FILE__) . 'multisite.php');
 
+	$this->info = (object) get_plugin_data(__FILE__);
 
         $this->META_START = 'event_begin';
         $this->META_END = 'event_end';
@@ -256,15 +259,15 @@ class EventPost {
 
     function load_styles() {
         //CSS
-        wp_register_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false, 1.0);
-        wp_enqueue_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false, null);
-        wp_enqueue_style('openlayers', plugins_url('/css/openlayers.css', __FILE__));
+        wp_register_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->info->Version);
+        wp_enqueue_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->info->Version);
+        wp_enqueue_style('openlayers', plugins_url('/css/openlayers.css', __FILE__), false,  $this->info->Version);
         wp_enqueue_style('dashicons-css', includes_url('/css/dashicons.min.css'));
     }
     function load_scripts() {
         // JS
         wp_enqueue_script('jquery', false, false, false, true);
-        wp_enqueue_script('eventpost', plugins_url('/js/eventpost.min.js', __FILE__), false, false, true);
+        wp_enqueue_script('eventpost', plugins_url('/js/eventpost.min.js', __FILE__), false, $this->info->Version, true);
         wp_localize_script('eventpost', 'eventpost_params', array(
             'imgpath' => plugins_url('/img/', __FILE__),
             'maptiles' => $this->maps,
@@ -275,19 +278,19 @@ class EventPost {
     function load_map_scripts() {
         // JS
 	$this->load_scripts();
-        wp_enqueue_script('openlayers', plugins_url('/js/OpenLayers.js', __FILE__), false, false, true);
+        wp_enqueue_script('openlayers', plugins_url('/js/OpenLayers.js', __FILE__), false,  $this->info->Version, true);
     }
 
     function admin_head() {
-        wp_enqueue_style('jquery-ui', plugins_url('/css/jquery-ui.css', __FILE__), false, null);
-        wp_enqueue_style('eventpostadmin', plugins_url('/css/eventpostadmin.css', __FILE__), false, null);
-	wp_enqueue_style('eventpost-datetimepicker', plugins_url('/css/jquery.datetimepicker.css', __FILE__));
+        wp_enqueue_style('jquery-ui', plugins_url('/css/jquery-ui.css', __FILE__), false,  $this->info->Version);
+        wp_enqueue_style('eventpostadmin', plugins_url('/css/eventpostadmin.css', __FILE__), false,  $this->info->Version);
+	wp_enqueue_style('eventpost-datetimepicker', plugins_url('/css/jquery.datetimepicker.css', __FILE__), false,  $this->info->Version);
     }
 
     function admin_scripts() {
         wp_enqueue_script('jquery-ui-datepicker');
-        wp_enqueue_script('eventpost-admin', plugins_url('/js/osm-admin.min.js', __FILE__), false, false, true);
-	wp_enqueue_script('eventpost-datetimepicker', plugins_url('/js/jquery.datetimepicker.js', __FILE__), false, false, true);
+        wp_enqueue_script('eventpost-admin', plugins_url('/js/osm-admin.min.js', __FILE__), false,  $this->info->version, true);
+	wp_enqueue_script('eventpost-datetimepicker', plugins_url('/js/jquery.datetimepicker.js', __FILE__), false,  $this->info->Version, true);
         wp_localize_script('eventpost-admin', 'eventpost', array(
             'imgpath' => plugins_url('/img/', __FILE__),
             'date_choose' => __('Choose', 'eventpost'),
@@ -300,11 +303,6 @@ class EventPost {
             'META_LAT' => $this->META_LAT,
             'META_LONG' => $this->META_LONG,
         ));
-
-        $lang = substr(get_bloginfo('language'), 0, 2);
-        if (is_file(plugin_dir_path(__FILE__) . 'js/jquery.ui.datepicker-' . $lang . '.js')) {
-            wp_enqueue_script('jquery-ui-datepicker-' . $lang, plugins_url('/js/jquery.ui.datepicker-' . $lang . '.js', __FILE__), false, false, true);
-        }
     }
 
     function single_header() {
@@ -889,29 +887,32 @@ class EventPost {
             global $wpdb;
             $query = new WP_Query($arg);
             $events = $wpdb->get_col($query->request);
-            foreach ($events as $k => $event) {
-                $events[$k] = $this->retreive($event);
+            foreach ($events as $k => $post) {
+		$event = $this->retreive($post);
+                $events[($orderby!='meta_value' && isset($event->$orderby)?$event->$orderby:$event->time_start).'-'.$k] = $event;
             }
         }
-        if ($this->settings['cache'] == 1)
+        if ($this->settings['cache'] == 1){
             set_transient($query_md5, $events, 5 * MINUTE_IN_SECONDS);
-
+	}
         return $events;
     }
 
     function retreive($event = null) {
+	if(isset($event->start)){
+	    return $event;
+	}
         $ob = get_post($event);
         $ob->start = get_post_meta($ob->ID, $this->META_START, true);
         $ob->end = get_post_meta($ob->ID, $this->META_END, true);
-
-        if (!$this->dateisvalid($ob->start))
+        if (!$this->dateisvalid($ob->start)){
             $ob->start = '';
-        if (!$this->dateisvalid($ob->end))
+	}
+        if (!$this->dateisvalid($ob->end)){
             $ob->end = '';
-
+	}
         $ob->time_start = !empty($ob->start) ? strtotime($ob->start) : '';
         $ob->time_end = !empty($ob->end) ? strtotime($ob->end) : '';
-
         $ob->address = get_post_meta($ob->ID, $this->META_ADD, true);
         $ob->lat = get_post_meta($ob->ID, $this->META_LAT, true);
         $ob->long = get_post_meta($ob->ID, $this->META_LONG, true);
@@ -919,8 +920,9 @@ class EventPost {
         $ob->categories = get_the_category($ob->ID);
         $ob->permalink = get_permalink($ob->ID);
         $ob->blog_id = get_current_blog_id();
-        if ($ob->color == '')
+        if ($ob->color == ''){
             $ob->color = '000000';
+	}
         return apply_filters('eventpost_retreive', $ob);
     }
 
@@ -939,23 +941,23 @@ class EventPost {
             'listItemImage' => 'dashicons-calendar',
 	    'post_type'=>array('page','post'),
             'attrs' => array(
-                array(
+                0=>array(
                     'label'       => __('Number of posts','eventpost'),
                     'attr'        => 'nb',
                     'type'        => 'number',
 		    'description' => __('-1 is for: no limit','eventpost')
                 ),
-                array(
+                1=>array(
                     'label'       => __('Categories','eventpost'),
                     'attr'        => 'cat',
                     'type'        => 'text',
                 ),
-                array(
+                2=>array(
                     'label'       => __('Tags','eventpost'),
                     'attr'        => 'tag',
                     'type'        => 'text',
                 ),
-                array(
+                3=>array(
                     'label' =>  __('Future events:','eventpost'),
                     'attr'  => 'future',
                     'type'  => 'select',
@@ -964,7 +966,7 @@ class EventPost {
 			'0' => __('No','eventpost'),
 		    ),
                 ),
-                array(
+                4=>array(
                     'label' =>  __('Past events:','eventpost'),
                     'attr'  => 'past',
                     'type'  => 'select',
@@ -973,7 +975,7 @@ class EventPost {
 			'0' => __('No','eventpost'),
 		    ),
                 ),
-                array(
+                5=>array(
                     'label' =>  __('Only geotagged events:','eventpost'),
                     'attr'  => 'geo',
                     'type'  => 'select',
@@ -982,7 +984,7 @@ class EventPost {
 			'0' => __('No','eventpost'),
 		    ),
                 ),
-                array(
+                6=>array(
                     'label' =>  __('Thumbnail:','eventpost'),
                     'attr'  => 'thumbnail',
                     'type'  => 'select',
@@ -991,7 +993,7 @@ class EventPost {
 			'0' => __('No','eventpost'),
 		   ),
                 ),
-                array(
+                7=>array(
                     'label' =>  __('Thumbnail size:','eventpost'),
                     'attr'  => 'thumbnail_size',
                     'type'  => 'select',
@@ -1001,15 +1003,34 @@ class EventPost {
 			'large' => __('Large'),
 		    ),
                 ),
-
+                8=>array(
+                    'label' =>  __('Order by:','eventpost'),
+                    'attr'  => 'orderby',
+                    'type'  => 'select',
+		    'options' => array(
+			'meta_value' => __('Date'),
+			'title' => __('Title'),
+		    ),
+                ),
+                9=>array(
+                    'label' =>  __('Order:','eventpost'),
+                    'attr'  => 'order',
+                    'type'  => 'select',
+		    'options' => array(
+			'ASC' => __('Asc.'),
+			'DESC' => __('Desc.'),
+		    ),
+                ),
             ),
         );
-	shortcode_ui_register_for_shortcode('events_list', $shortcodes_list_atts);
+	shortcode_ui_register_for_shortcode('events_list', apply_filters('eventpost_shortcodeui_list',$shortcodes_list_atts));
 	/*
 	 * Map
 	 */
 	$shortcodes_map_atts = $shortcodes_list_atts;
 	unset($shortcodes_map_atts['attrs'][5]); // Remove geotagged attr
+	unset($shortcodes_map_atts['attrs'][8]); // Remove orderby attr
+	unset($shortcodes_map_atts['attrs'][9]); // Remove order attr
 	array_unshift($shortcodes_map_atts['attrs'],
 		array(
                     'label'       => __('Width','eventpost'),
@@ -1024,7 +1045,7 @@ class EventPost {
 	);
 	$shortcodes_map_atts['label']=__('Events map','eventpost');
 	$shortcodes_map_atts['listItemImage']='dashicons-location-alt';
-	shortcode_ui_register_for_shortcode('events_map', $shortcodes_map_atts);
+	shortcode_ui_register_for_shortcode('events_map', apply_filters('eventpost_shortcodeui_map',$shortcodes_map_atts));
 
 	/*
 	 * Calendar
@@ -1057,7 +1078,7 @@ class EventPost {
                 )
 	    )
 	);
-	shortcode_ui_register_for_shortcode('events_cal', $shortcodes_cal_atts);
+	shortcode_ui_register_for_shortcode('events_cal', apply_filters('eventpost_shortcodeui_cal',$shortcodes_cal_atts));
 	/*
 	 * Details
 	 */
@@ -1080,7 +1101,7 @@ class EventPost {
                 ),
 	    )
 	);
-	shortcode_ui_register_for_shortcode('event_details', $shortcodes_details_atts);
+	shortcode_ui_register_for_shortcode('event_details', apply_filters('eventpost_shortcodeui_details',$shortcodes_details_atts));
 
     }
     function add_custom_box() {
@@ -1097,7 +1118,6 @@ class EventPost {
         $event = $this->retreive($post_id);
         $start_date = $event->start;
         $end_date = $event->end;
-
         $eventcolor = $event->color;
 
         $language = get_bloginfo('language');
@@ -1135,7 +1155,7 @@ class EventPost {
 			}
                         ?>
                     </span>
-                <input type="text" class="input-datetime" data-language="<?php echo $language; ?>" value="<?php echo substr($start_date,0,16) ?>" name="<?php echo $this->META_START; ?>" id="<?php echo $this->META_START; ?>_date"/>
+                <input type="text" class="input-datetime" data-lang="<?php echo $language; ?>" value="<?php echo substr($start_date,0,16) ?>" name="<?php echo $this->META_START; ?>" id="<?php echo $this->META_START; ?>_date"/>
             </label>
 	    <br>
             <label for="<?php echo $this->META_END; ?>_date">
@@ -1150,7 +1170,7 @@ class EventPost {
 			}
                         ?>
                     </span>
-                <input type="text" class="input-datetime" data-language="<?php echo $language; ?>"  value ="<?php echo substr($end_date,0,16) ?>" name="<?php echo $this->META_END; ?>" id="<?php echo $this->META_END; ?>_date"/>
+                <input type="text" class="input-datetime" data-lang="<?php echo $language; ?>"  value ="<?php echo substr($end_date,0,16) ?>" name="<?php echo $this->META_END; ?>" id="<?php echo $this->META_END; ?>_date"/>
             </label>
         </div>
         <?php
@@ -1158,11 +1178,6 @@ class EventPost {
     function inner_custom_box_loc() {
         $post_id = get_the_ID();
         $event = $this->retreive($post_id);
-
-
-        $eventcolor = $event->color;
-
-
         ?>
         <div class="misc-pub-section">
             <p><a href="#event_address_search" id="event_address_search">
@@ -1307,7 +1322,6 @@ class EventPost {
     }
 
     /* When the post is saved, saves our custom data */
-
     function save_postdata($post_id) {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE){
             return;
@@ -1328,7 +1342,6 @@ class EventPost {
 	    '' != $end) {
 	    update_post_meta($post_id, $this->META_START, substr($start,0,16).':00');
 	    update_post_meta($post_id, $this->META_END, substr($end,0,16).':00');
-
         }
 	else {
 	    delete_post_meta($post_id, $this->META_START);
@@ -1383,7 +1396,7 @@ class EventPost {
             'cat' => '',
             'mondayfirst' => 0, //1 : weeks starts on monday
             'datepicker' => 1
-                                ), 'calendar'), $atts));
+            ), 'calendar'), $atts));
 
         $annee = substr($date, 0, 4);
         $mois = substr($date, 5);
@@ -1443,7 +1456,6 @@ class EventPost {
             $ret.='</tr>';
         }
         $ret.='</tbody></table>';
-
         return $ret;
     }
 
@@ -1506,8 +1518,9 @@ class EventPost {
 
             if (!empty($lat) && !empty($lon)) {
                 $color = get_post_meta($post_id, $this->META_COLOR, true);
-                if ($color == '')
+                if ($color == ''){
                     $color = '777777';
+		}
                 echo'<a href="https://www.openstreetmap.org/?lat=' . $lat.='&amp;lon=' . $lon.='&amp;zoom=13" target="_blank"><img src="' . plugins_url('/markers/', __FILE__) . $color . '.png" alt="' . get_post_meta($post_id, $this->META_ADD, true) . '"/></a>';
             }
         }
@@ -1554,8 +1567,7 @@ class EventPost {
     }
 
     function manage_settings() {
-        if ('options_saved'===\filter_input(INPUT_GET,'confirm',FILTER_SANITIZE_STRING)) {
-            ?>
+        if ('options_saved'===\filter_input(INPUT_GET,'confirm',FILTER_SANITIZE_STRING)) { ?>
             <div class="updated"><p><strong><?php _e('Event settings saved !', 'eventpost') ?></strong></p></div>
             <?php
         }
@@ -1729,9 +1741,6 @@ class EventPost {
                         <tr>
                             <td colspan="2"><p class="submit"><input type="submit" value="<?php _e('Apply settings', 'eventpost'); ?>" class="button button-primary" id="submit" name="submit">			</p></td>
                         </tr>
-
-
-
                     </tbody>
                 </table>
             </form>
@@ -1768,7 +1777,6 @@ class EventPost {
 	     *
 	     */
 	    $events=$this->get_events(array('cat'=>$cat,'nb'=>-1));
-	    //print_r($events);
 	    foreach ($events as $event) {
 		echo"BEGIN:VEVENT\r\n"
 			. "CREATED:".$this->ics_date(strtotime($event->post_date))."\r\n"

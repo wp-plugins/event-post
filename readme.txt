@@ -161,7 +161,11 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
-= 3.5.5 =
+= 3.6.0 =
+* Add version to static files (JS/CSS) to prevent from local cache problems
+* Add sort parameters in shortcode UI
+* Fix lang on datepicker
+* Fix bug (missing dates) for multisite functions
 * Code cleanup, Retrocompatibilty to PHP<5.3
 
 = 3.5.4 =
@@ -198,7 +202,7 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 * Add: Whole category ICS feed (link available in list widget, for future events)
 * Fix: JS was not loaded in single events since last version
 * Fix: Strict Standards warning, reported by argad
-* Fix: Depence of OpenLayer librairy not needed by calendar widget, reported by p1s1
+* Fix: Dependence of OpenLayer librairy not needed by calendar widget, reported by p1s1
 
 = 3.3.0 =
 * Add: eventpost_list_shema filter

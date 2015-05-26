@@ -170,30 +170,29 @@ jQuery(document).ready(function(){
     /*
      * Date picker
      */
-    eventpost_times=[];
-    for (h=0 ; h<=23 ; h++){
-        for(m=0 ; m<60 ; m+=15){
-            eventpost_times.push((h<10?'0':'')+h+':'+(m<10?'0':'')+m);
-        }
-    }
     eventpost_chkdate();
-    jQuery( ".input-datetime").datetimepicker({
-        format:'Y-m-d H:i',
-        allowTimes:eventpost_times,
-        value:jQuery(this).val(),
-        onSelectDate:function(ct,$i){
-          eventpost_chkdate();
-        },
-        onSelectTime:function(ct,$i){
-          eventpost_chkdate();
-        }
+    jQuery( ".input-datetime").each(function(){
+        var datepick  ={
+            format:'Y-m-d H:i',
+            lang: jQuery(this).data('lang'),
+            step:15,
+            value:jQuery(this).val(),
+            onSelectDate:function(ct,$i){
+              eventpost_chkdate();
+            },
+            onSelectTime:function(ct,$i){
+              eventpost_chkdate();
+            }
+        };
+        console.log(datepick);
+        jQuery(this).datetimepicker(datepick);
     }).css({
         visibility:'hidden',
         height:'1px'
     }).change(function(){
         var date_id = jQuery(this).attr('id');
         var hd = jQuery('#'+date_id+'_human');
-        if(jQuery(this).val()!=''){
+        if(jQuery(this).val()!==''){
             jQuery.post(ajaxurl, {  action: 'EventPostHumanDate',date: jQuery(this).val()}, function(data) {
                 hd.html(data);
                 eventpost_chkdate();
