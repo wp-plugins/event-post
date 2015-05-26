@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.6.0
+  Version: 3.6.1
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -70,7 +70,7 @@ class EventPost {
         add_action('manage_post_posts_custom_column', array(&$this, 'columns_content'), 10, 2);
 
         //Shortcodes
-	add_action('init',array($this,'shortcode_ui'));
+	add_action('init',array($this,'init'));
         add_shortcode('events_list', array(&$this, 'shortcode_list'));
         add_shortcode('events_map', array(&$this, 'shortcode_map'));
         add_shortcode('events_cal', array(&$this, 'shortcode_cal'));
@@ -85,8 +85,6 @@ class EventPost {
         include_once (plugin_dir_path(__FILE__) . 'widget.cal.php');
         include_once (plugin_dir_path(__FILE__) . 'widget.map.php');
         include_once (plugin_dir_path(__FILE__) . 'multisite.php');
-
-	$this->info = (object) get_plugin_data(__FILE__);
 
         $this->META_START = 'event_begin';
         $this->META_END = 'event_end';
@@ -131,6 +129,10 @@ class EventPost {
         );
 	$this->list_shema = apply_filters('eventpost_list_shema',$this->default_list_shema);
 
+    }
+    function init(){
+	$this->info = (object) get_plugin_data(__FILE__);
+	$this->shortcode_ui();
     }
 
     //Usefull hexadecimal to decimal converter

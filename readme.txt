@@ -161,6 +161,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.6.1 =
+* Fix "get_plugin_data" error
+
 = 3.6.0 =
 * Add version to static files (JS/CSS) to prevent from local cache problems
 * Add sort parameters in shortcode UI
