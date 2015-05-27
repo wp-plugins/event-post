@@ -391,6 +391,9 @@ available maps : default@osm.org, OpenCycleMap, mapquest, osmfr, 2u
 
 == Upgrade notice ==
 
+= 3.6.2 =
+* Fix "get_plugin_data" error.
+
 = 3.5.0 =
 * New options are available for: icons in the loop, default position of the admin boxes
 * New shortcode [event_details] is available
