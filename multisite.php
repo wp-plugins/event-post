@@ -71,13 +71,12 @@ class EventPostMU{
             $events =  $wpdb->get_col($query->request);
             foreach($events as $k=>$post){
 		$event = $EventPost->retreive($post);
-                $all_events[$event->time_start.'-'.$k]=$event;
-                $events[($arg['orderby']!='meta_value' && isset($event->$arg['orderby'])?$event->$arg['orderby']:$event->time_start).'-'.$blog_id.'-'.$k] = $event;
+                $all_events[($arg['orderby']!='meta_value' && isset($event->$arg['orderby'])?$event->$arg['orderby']:$event->time_start).'-'.$blog_id.'-'.$event->ID]=$event;
             }
             restore_current_blog();
         }
 	if($arg['order']!=''){
-	    $sort = $arg['order']=='DESC'?'rsort':'sort';
+	    $sort = $arg['order']=='DESC'?'krsort':'ksort';
 	    $sort($all_events);
 	}
         return $all_events;

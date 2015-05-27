@@ -161,6 +161,11 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.6.3 =
+* Better multisite sort
+* Fix multiple dates
+* Fix CSS issue between ical export buttons and category
+
 = 3.6.2 =
 * Fix "get_plugin_data" error, finally remove the function.
 
