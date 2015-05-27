@@ -161,6 +161,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.6.2 =
+* Fix "get_plugin_data" error, finally remove the function.
+
 = 3.6.1 =
 * Fix "get_plugin_data" error
 

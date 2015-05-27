@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.6.1
+  Version: 3.6.2
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -32,7 +32,7 @@ class EventPost {
     public $settings;
     public $dateformat;
 
-    public $info;
+    public $version = '3.6.3';
 
     function EventPost() {
         load_plugin_textdomain('eventpost', false, 'event-post/languages');
@@ -131,7 +131,6 @@ class EventPost {
 
     }
     function init(){
-	$this->info = (object) get_plugin_data(__FILE__);
 	$this->shortcode_ui();
     }
 
@@ -261,15 +260,15 @@ class EventPost {
 
     function load_styles() {
         //CSS
-        wp_register_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->info->Version);
-        wp_enqueue_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->info->Version);
-        wp_enqueue_style('openlayers', plugins_url('/css/openlayers.css', __FILE__), false,  $this->info->Version);
+        wp_register_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->version);
+        wp_enqueue_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->version);
+        wp_enqueue_style('openlayers', plugins_url('/css/openlayers.css', __FILE__), false,  $this->version);
         wp_enqueue_style('dashicons-css', includes_url('/css/dashicons.min.css'));
     }
     function load_scripts() {
         // JS
         wp_enqueue_script('jquery', false, false, false, true);
-        wp_enqueue_script('eventpost', plugins_url('/js/eventpost.min.js', __FILE__), false, $this->info->Version, true);
+        wp_enqueue_script('eventpost', plugins_url('/js/eventpost.min.js', __FILE__), false, $this->version, true);
         wp_localize_script('eventpost', 'eventpost_params', array(
             'imgpath' => plugins_url('/img/', __FILE__),
             'maptiles' => $this->maps,
@@ -280,19 +279,19 @@ class EventPost {
     function load_map_scripts() {
         // JS
 	$this->load_scripts();
-        wp_enqueue_script('openlayers', plugins_url('/js/OpenLayers.js', __FILE__), false,  $this->info->Version, true);
+        wp_enqueue_script('openlayers', plugins_url('/js/OpenLayers.js', __FILE__), false,  $this->version, true);
     }
 
     function admin_head() {
-        wp_enqueue_style('jquery-ui', plugins_url('/css/jquery-ui.css', __FILE__), false,  $this->info->Version);
-        wp_enqueue_style('eventpostadmin', plugins_url('/css/eventpostadmin.css', __FILE__), false,  $this->info->Version);
-	wp_enqueue_style('eventpost-datetimepicker', plugins_url('/css/jquery.datetimepicker.css', __FILE__), false,  $this->info->Version);
+        wp_enqueue_style('jquery-ui', plugins_url('/css/jquery-ui.css', __FILE__), false,  $this->version);
+        wp_enqueue_style('eventpostadmin', plugins_url('/css/eventpostadmin.css', __FILE__), false,  $this->version);
+	wp_enqueue_style('eventpost-datetimepicker', plugins_url('/css/jquery.datetimepicker.css', __FILE__), false,  $this->version);
     }
 
     function admin_scripts() {
         wp_enqueue_script('jquery-ui-datepicker');
         wp_enqueue_script('eventpost-admin', plugins_url('/js/osm-admin.min.js', __FILE__), false,  $this->info->version, true);
-	wp_enqueue_script('eventpost-datetimepicker', plugins_url('/js/jquery.datetimepicker.js', __FILE__), false,  $this->info->Version, true);
+	wp_enqueue_script('eventpost-datetimepicker', plugins_url('/js/jquery.datetimepicker.js', __FILE__), false,  $this->version, true);
         wp_localize_script('eventpost-admin', 'eventpost', array(
             'imgpath' => plugins_url('/img/', __FILE__),
             'date_choose' => __('Choose', 'eventpost'),
