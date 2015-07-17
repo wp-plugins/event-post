@@ -161,6 +161,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.6.4 =
+* Fix displaying of dates in map
+
 = 3.6.3 =
 * Better multisite sort
 * Fix multiple dates

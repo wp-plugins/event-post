@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.6.3
+  Version: 3.6.4
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -363,22 +363,23 @@ class EventPost {
             }
             //Display dates
             $dates.='<div class="event_date" data-start="' . $this->human_date($event->time_start) . '" data-end="' . $this->human_date($event->time_end) . '">';
-
             if (date('d/m/Y', $event->time_start) == date('d/m/Y', $event->time_end)) {
-                $dates.= '<span class="date">' . $this->human_date($event->time_end) . "</span>";
+                $dates.= '<time itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">'
+                        . '<span class="date">' . $this->human_date($event->time_end) . "</span>";
                 if (date('H:i', $event->time_start) != date('H:i', $event->time_end) && date('H:i', $event->time_start) != '00:00' && date('H:i', $event->time_end) != '00:00') {
                     $dates.='<span class="linking_word">, ' . __('from:', 'eventpost') . '</span>
-					<time class="time" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . date('H:i', $event->time_start) . '</time>
+					<span class="time">' . date('H:i', $event->time_start) . '</span>
 					<span class="linking_word">' . __('to:', 'eventpost') . '</span>
-					<time class="time" itemprop="dtend" datetime="' . date('c', $event->time_end) . '">' . date('H:i', $event->time_end) . '</time>';
+					<span class="time">' . date('H:i', $event->time_end) . '</span>';
                 } elseif (date('H:i', $event->time_start) != '00:00') {
                     $dates.='<span class="linking_word">,' . __('at:', 'eventpost') . '</span>
-					<time class="time" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . date('H:i', $event->time_start) . '</time>';
+					<span class="time" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . date('H:i', $event->time_start) . '</span>';
                 }
+                        $dates.='</time>';
             } else {
                 $dates.= '
 		<span class="linking_word">' . __('from:', 'eventpost') . '</span>
-		<time class="date" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . $this->human_date($event->time_start, $this->settings['dateformat']) . '</time>
+		<san class="date" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . $this->human_date($event->time_start, $this->settings['dateformat']) . '</time>
 		<span class="linking_word">' . __('to:', 'eventpost') . '</span>
 		<time class="date" itemprop="dtend" datetime="' . date('c', $event->time_end) . '">' . $this->human_date($event->time_end, $this->settings['dateformat']) . '</time>
 		';
