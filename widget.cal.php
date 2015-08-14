@@ -3,7 +3,7 @@
 /** Articles de catgorie **/
 class eventpostcal_widget extends WP_Widget {
    function eventpostcal_widget() {
-  	  parent::WP_Widget(false, __( 'Events calendar', 'eventpost' ),array('description'=>__( 'Calendar presentation of events posts', 'eventpost' )));
+  	  parent::__construct(false, __( 'Events calendar', 'eventpost' ),array('description'=>__( 'Calendar presentation of events posts', 'eventpost' )));
    }
    function widget($args, $instance) {
        extract( $args );

@@ -10,14 +10,13 @@
   License: GPLv2
   Text Domain: eventpost
   Domain Path: /languages/
-  Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap, EELV
+  Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,EELV,calendar,agenda
  */
 
 
 $EventPost = new EventPost();
 
 class EventPost {
-
     const META_START = 'event_begin';
     const META_END = 'event_end';
     const META_COLOR = 'event_color';
@@ -32,9 +31,9 @@ class EventPost {
     public $settings;
     public $dateformat;
 
-    public $version = '3.6.3';
+    public $version = '3.6.4';
 
-    function EventPost() {
+    public function __construct() {
         load_plugin_textdomain('eventpost', false, 'event-post/languages');
 
         add_action('save_post', array(&$this, 'save_postdata'));
@@ -130,12 +129,27 @@ class EventPost {
 	$this->list_shema = apply_filters('eventpost_list_shema',$this->default_list_shema);
 
     }
-    function init(){
+    
+    /**
+     * PHP4 constructor
+     */
+    public function EventPost(){
+        $this->__construct();
+    }
+    
+    /**
+     * Call functions when WP is ready
+     */
+    private function init(){
 	$this->shortcode_ui();
     }
 
-    //Usefull hexadecimal to decimal converter
-    function hex2dec($color = '000000') {
+    /**
+     * @desc Usefull hexadecimal to decimal converter
+     * @param string $color
+     * @return array $color($R, $G, $B)
+     */
+    public function hex2dec($color = '000000') {
         $tbl_color = array();
         if (!strstr('#', $color)){
             $color = '#' . $color;
@@ -146,12 +160,19 @@ class EventPost {
         return $tbl_color;
     }
 
-    function no_use() {
+    /**
+     * Just for localisation
+     */
+    private function no_use() {
         __('Add calendar and/or geolocation metadata on posts', 'eventpost');
         __('Event Post', 'eventpost');
     }
 
-    function get_settings() {
+    /**
+     * @desc get blog settings, load and saves default settings id needed
+     * @return array
+     */
+    public function get_settings() {
         $ep_settings = get_option('ep_settings');
         $reg_settings=false;
 	if(!is_array($ep_settings)){
@@ -210,7 +231,13 @@ class EventPost {
         }
         return $ep_settings;
     }
-    function custom_shema($shema){
+    
+    /**
+     * 
+     * @param array $shema
+     * @return array
+     */
+    public function custom_shema($shema){
 	if(!empty($this->settings['container_shema'])){
 	    $shema['container']=$this->settings['container_shema'];
 	}
@@ -219,7 +246,12 @@ class EventPost {
 	}
 	return $shema;
     }
-    function get_maps() {
+    
+    /**
+     * 
+     * @return array
+     */
+    public function get_maps() {
         $maps = array();
         if (is_file(plugin_dir_path(__FILE__) . 'maps.csv')) {
             $map_f = fopen(plugin_dir_path(__FILE__) . 'maps.csv', 'r');
@@ -238,7 +270,11 @@ class EventPost {
         return $maps;
     }
 
-    function get_colors() {
+    /**
+     * 
+     * @return array
+     */
+    public function get_colors() {
         $colors = array();
         if (is_dir($this->markpath)) {
             $files = scandir($this->markpath);
@@ -251,21 +287,33 @@ class EventPost {
         return $colors;
     }
 
-    function get_marker($color) {
+    /**
+     * 
+     * @param string $color
+     * @return sring
+     */
+    public function get_marker($color) {
         if (is_file($this->markpath . $color . '.png')) {
             return $this->markurl . $color . '.png';
         }
         return plugins_url('/markers/ffffff.png', __FILE__);
     }
 
-    function load_styles() {
+    /**
+     * Enqueue CSS files
+     */
+    public function load_styles() {
         //CSS
         wp_register_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->version);
         wp_enqueue_style('eventpost', plugins_url('/css/eventpost.min.css', __FILE__), false,  $this->version);
         wp_enqueue_style('openlayers', plugins_url('/css/openlayers.css', __FILE__), false,  $this->version);
         wp_enqueue_style('dashicons-css', includes_url('/css/dashicons.min.css'));
     }
-    function load_scripts() {
+    
+    /**
+     * Enqueue JS files
+     */
+    public function load_scripts() {
         // JS
         wp_enqueue_script('jquery', false, false, false, true);
         wp_enqueue_script('eventpost', plugins_url('/js/eventpost.min.js', __FILE__), false, $this->version, true);
@@ -276,19 +324,28 @@ class EventPost {
             'ajaxurl' => admin_url() . 'admin-ajax.php'
         ));
     }
-    function load_map_scripts() {
+    /**
+     * Enqueue JS files for maps
+     */
+    public function load_map_scripts() {
         // JS
 	$this->load_scripts();
         wp_enqueue_script('openlayers', plugins_url('/js/OpenLayers.js', __FILE__), false,  $this->version, true);
     }
 
-    function admin_head() {
+    /**
+     * Enqueue CSS files in admin
+     */
+    public function admin_head() {
         wp_enqueue_style('jquery-ui', plugins_url('/css/jquery-ui.css', __FILE__), false,  $this->version);
         wp_enqueue_style('eventpostadmin', plugins_url('/css/eventpostadmin.css', __FILE__), false,  $this->version);
 	wp_enqueue_style('eventpost-datetimepicker', plugins_url('/css/jquery.datetimepicker.css', __FILE__), false,  $this->version);
     }
 
-    function admin_scripts() {
+    /**
+     * Enqueue JS files in admin
+     */
+    public function admin_scripts() {
         wp_enqueue_script('jquery-ui-datepicker');
         wp_enqueue_script('eventpost-admin', plugins_url('/js/osm-admin.min.js', __FILE__), false,  $this->info->version, true);
 	wp_enqueue_script('eventpost-datetimepicker', plugins_url('/js/jquery.datetimepicker.js', __FILE__), false,  $this->version, true);
@@ -306,7 +363,10 @@ class EventPost {
         ));
     }
 
-    function single_header() {
+    /**
+     * @desc Add custom header meta for single events
+     */
+    public function single_header() {
         if (is_single()) {
 	    $event = $this->retreive();
             if ($event->address != '' || ($event->lat != '' && $event->long != '')) {
@@ -325,11 +385,22 @@ class EventPost {
         }
     }
 
-    function dateisvalid($str) {
+    /**
+     * 
+     * @param string $str
+     * @return boolean
+     */
+    public function dateisvalid($str) {
         return is_string($str) && trim(str_replace(array(':', '0'), '', $str)) != '';
     }
 
-    function parsedate($date, $sep = '') {
+    /**
+     * 
+     * @param string $date
+     * @param string $sep
+     * @return string
+     */
+    public function parsedate($date, $sep = '') {
         if (!empty($date)) {
             return substr($date, 0, 10) . $sep . substr($date, 11, 8);
         } else {
@@ -337,7 +408,13 @@ class EventPost {
         }
     }
 
-    function human_date($date, $format = 'l j F Y') {
+    /**
+     * 
+     * @param mixed $date
+     * @param string $format
+     * @return type
+     */
+    public function human_date($date, $format = 'l j F Y') {
         if (is_numeric($date) && date('d/m/Y', $date) == date('d/m/Y')) {
             return __('today', 'eventpost');
         } elseif (is_numeric($date) && date('d/m/Y', $date) == date('d/m/Y', strtotime('+1 day'))) {
@@ -348,7 +425,13 @@ class EventPost {
         return date_i18n($format, $date);
     }
 
-    function print_date($post = null, $links = 'deprecated') {
+    /**
+     * 
+     * @param WP_Post object $post
+     * @param mixed $links
+     * @return string
+     */
+    public function print_date($post = null, $links = 'deprecated') {
         $dates = '';
         $event = $this->retreive($post);
         $start_date = $event->start;
@@ -379,9 +462,9 @@ class EventPost {
             } else {
                 $dates.= '
 		<span class="linking_word">' . __('from:', 'eventpost') . '</span>
-		<san class="date" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . $this->human_date($event->time_start, $this->settings['dateformat']) . '</time>
+		<span class="date" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . $this->human_date($event->time_start, $this->settings['dateformat']) . '</span>
 		<span class="linking_word">' . __('to:', 'eventpost') . '</span>
-		<time class="date" itemprop="dtend" datetime="' . date('c', $event->time_end) . '">' . $this->human_date($event->time_end, $this->settings['dateformat']) . '</time>
+		<span class="date" itemprop="dtend" datetime="' . date('c', $event->time_end) . '">' . $this->human_date($event->time_end, $this->settings['dateformat']) . '</span>
 		';
             }
 
@@ -421,7 +504,12 @@ class EventPost {
         return apply_filters('eventpost_printdate', $dates);
     }
 
-    function print_location($post = null) {
+    /**
+     * 
+     * @param WP_Post object $post
+     * @return string
+     */
+    public function print_location($post = null) {
         $location = '';
         if ($post == null)
             $post = get_post();
@@ -451,7 +539,12 @@ class EventPost {
         return apply_filters('eventpost_printlocation', $location);
     }
 
-    function print_categories($post = null) {
+    /**
+     * 
+     * @param WP_Post object $post
+     * @return string
+     */
+    public function print_categories($post = null) {
         if ($post == null)
             $post = get_post();
         elseif (is_numeric($post)) {
@@ -477,8 +570,13 @@ class EventPost {
         return $cats;
     }
 
-    // Generate, return or output date event datas
-    function get_single($post = null, $class = '') {
+    /**
+     * @desc Generate, return or output date event datas
+     * @param WP_Post object $post
+     * @param string $class
+     * @return string
+     */
+    public function get_single($post = null, $class = '') {
         if ($post == null) {
             $post = $this->retreive();
         }
@@ -492,19 +590,42 @@ class EventPost {
         return '';
     }
 
-    function get_singledate($post = null, $class = '') {
+    /**
+     * 
+     * @param WP_Post object $post
+     * @param string $class
+     * @return string
+     */
+    public function get_singledate($post = null, $class = '') {
         return '<div class="event_data event_date ' . $class . '" itemscope itemtype="http://microformats.org/profile/hcard">' . $this->print_date($post) . '</div>';
     }
 
-    function get_singlecat($post = null, $class = '') {
+    /**
+     * 
+     * @param WP_Post object $post
+     * @param string $class
+     * @return string
+     */
+    public function get_singlecat($post = null, $class = '') {
         return '<div class="event_data event_category ' . $class . '" itemscope itemtype="http://microformats.org/profile/hcard">' . $this->print_categories($post) . '</div>';
     }
 
-    function get_singleloc($post = null, $class = '') {
+    /**
+     * 
+     * @param WP_Post object $post
+     * @param string $class
+     * @return string
+     */
+    public function get_singleloc($post = null, $class = '') {
         return '<div class="event_data event_location ' . $class . '" itemscope itemtype="http://microformats.org/profile/hcard">' . $this->print_location($post) . '</div>';
     }
 
-    function display_single($content) {
+    /**
+     * 
+     * @param string $content
+     * @return string
+     */
+    public function display_single($content) {
         if (is_page() || !is_single() || is_home())
             return $content;
         $post = get_queried_object();
@@ -525,14 +646,23 @@ class EventPost {
         return $content;
     }
 
-    function print_single($post = null) {
+    /**
+     * 
+     * @param WP_Post object $post
+     * @echoes string
+     * @return void
+     */
+    public function print_single($post = null) {
         echo $this->get_single($post);
     }
-    /*
+    
+    /**
      * the_title
-     * alter the post title in order to add icons if needed
+     * @desc alter the post title in order to add icons if needed
+     * @param string $title
+     * @return string
      */
-    function the_title($title){
+    public function the_title($title){
 	if(!in_the_loop() || !$this->settings['loopicons']){
 	    return $title;
 	}
@@ -546,11 +676,13 @@ class EventPost {
 	return $title;
     }
 
-    /*
+    /**
      * shortcode_single
+     * @param array $atts
      * @filter : eventpost_params
+     * @return string
      */
-    function shortcode_single($atts){
+    public function shortcode_single($atts){
 	extract(shortcode_atts(apply_filters('eventpost_params', array(
             'attribute' => '',
                         ), 'shortcode_single'), $atts));
@@ -570,9 +702,14 @@ class EventPost {
 		return $this->get_single($event);
 	}
     }
-    // Shortcode to display a list of events
-    // uses filter : eventpost_params
-    function shortcode_list($atts) {
+    
+    /**
+     * @desc Shortcode to display a list of events
+     * @param array $atts
+     * @filter eventpost_params
+     * @return string
+     */
+    public function shortcode_list($atts) {
         $atts = shortcode_atts(apply_filters('eventpost_params', array(
             'nb' => 0,
             'type' => 'div',
@@ -603,9 +740,13 @@ class EventPost {
         return $this->list_events($atts);
     }
 
-    // Shortcode to display a map of events
-    // uses filter : eventpost_params
-    function shortcode_map($atts) {
+    /**
+     * @desc Shortcode to display a map of events
+     * @param array $atts
+     * @filter eventpost_params
+     * @return string
+     */
+    public function shortcode_map($atts) {
         $ep_settings = $this->settings;
         $atts = shortcode_atts(apply_filters('eventpost_params', array(
             'nb' => 0,
@@ -630,9 +771,13 @@ class EventPost {
         return $this->list_events($atts, 'event_geolist'); //$nb,'div',$future,$past,1,'event_geolist');
     }
 
-    // Shortcode to display a calendar of events
-    // uses filter : eventpost_params
-    function shortcode_cal($atts) {
+    /**
+     * @desc Shortcode to display a calendar of events
+     * @param array $atts
+     * @filter eventpost_params
+     * @return string
+     */
+    public function shortcode_cal($atts) {
 	$this->load_scripts();
         $ep_settings = $this->settings;
         $atts = shortcode_atts(apply_filters('eventpost_params', array(
@@ -645,9 +790,13 @@ class EventPost {
         return '<div class="eventpost_calendar" data-cat="' . $cat . '" data-date="' . $date . '" data-mf="' . $mondayfirst . '" data-dp="' . $datepicker . '">' . $this->calendar($atts) . '</div>';
     }
 
-    // Return an HTML list of events
-    // uses filter : eventpost_params
-    function list_events($atts, $id = 'event_list') {
+    /**
+     * @desc Return an HTML list of events
+     * @param array $atts
+     * @filter eventpost_params
+     * @return string
+     */
+    public function list_events($atts, $id = 'event_list') {
 	$ep_settings = $this->settings;
         $atts = shortcode_atts(apply_filters('eventpost_params', array(
             'nb' => 0,
@@ -748,13 +897,13 @@ class EventPost {
         return $ret;
     }
 
-    /* get_events
-     * @param: $attr (array)
-     * @filter:  eventpost_params
-     * @return: array of post_ids wich are events
+    /**
+     * get_events
+     * @param array $attr
+     * @filter  eventpost_params
+     * @return array of post_ids wich are events
      */
-
-    function get_events($atts) {
+    public function get_events($atts) {
         $requete = (shortcode_atts(apply_filters('eventpost_params', array(
                     'nb' => 5,
                     'future' => true,
@@ -767,8 +916,6 @@ class EventPost {
                     'order' => 'ASC'
                                 ), 'get_events'), $atts));
         extract($requete);
-
-
         wp_reset_query();
 
         $arg = array(
@@ -899,7 +1046,12 @@ class EventPost {
         return $events;
     }
 
-    function retreive($event = null) {
+    /**
+     * 
+     * @param object $event
+     * @return object
+     */
+    public function retreive($event = null) {
 	if(isset($event->start)){
 	    return $event;
 	}
@@ -928,12 +1080,13 @@ class EventPost {
     }
 
     /** ADMIN ISSUES * */
-    /*
+    
+    /**
      * set_shortcode_ui
      * needs Shortcake (shortcode UI) plugin
      * https://wordpress.org/plugins/shortcode-ui/
      */
-    function shortcode_ui(){
+    public function shortcode_ui(){
 	if(!function_exists('shortcode_ui_register_for_shortcode')){
 	    return;
 	}
@@ -1105,15 +1258,21 @@ class EventPost {
 	shortcode_ui_register_for_shortcode('event_details', apply_filters('eventpost_shortcodeui_details',$shortcodes_details_atts));
 
     }
-    function add_custom_box() {
+    
+    /**
+     * @desc add custom boxes in posts edit page
+     */
+    public function add_custom_box() {
         add_meta_box('event_post_date', __('Event date', 'eventpost'), array(&$this, 'inner_custom_box_date'), 'post', $this->settings['adminpos'], 'core');
         add_meta_box('event_post_loc', __('Event location', 'eventpost'), array(&$this, 'inner_custom_box_loc'), 'post', $this->settings['adminpos'], 'core');
         if(!function_exists('shortcode_ui_register_for_shortcode')){
 	    add_meta_box('event_post_sc_edit', __('Events Shortcode editor', 'eventpost'), array(&$this, 'inner_custom_box_edit'), 'page');
 	}
     }
-
-    function inner_custom_box_date() {
+    /**
+     * @desc disokay the date custom box
+     */
+    public function inner_custom_box_date() {
         wp_nonce_field(plugin_basename(__FILE__), 'eventpost_nonce');
         $post_id = get_the_ID();
         $event = $this->retreive($post_id);
@@ -1176,7 +1335,10 @@ class EventPost {
         </div>
         <?php
     }
-    function inner_custom_box_loc() {
+    /**
+     * @desc displays the location custom box
+     */
+    public function inner_custom_box_loc() {
         $post_id = get_the_ID();
         $event = $this->retreive($post_id);
         ?>
@@ -1207,8 +1369,11 @@ class EventPost {
         </div>
         <?php
     }
-
-    function inner_custom_box_edit() {
+    
+    /**
+     * @desc display custombox containing shortcode wizard
+     */
+    public function inner_custom_box_edit() {
         $ep_settings = $this->settings;
         ?>
         <?php do_action('before_eventpost_generator'); ?>
@@ -1322,8 +1487,12 @@ class EventPost {
         <?php
     }
 
-    /* When the post is saved, saves our custom data */
-    function save_postdata($post_id) {
+    /**
+     * @desc When the post is saved, saves our custom data
+     * @param int $post_id
+     * @return void
+     */
+    public function save_postdata($post_id) {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE){
             return;
 	}
@@ -1365,7 +1534,14 @@ class EventPost {
 	}
     }
 
-    function display_caldate($date, $cat = '', $display = false) {
+    /**
+     * 
+     * @param string $date
+     * @param string $cat
+     * @param boolean $display
+     * @return boolean
+     */
+    public function display_caldate($date, $cat = '', $display = false) {
         $events = $this->get_events(array('nb' => -1, 'date' => $date, 'cat' => $cat, 'retreive' => true));
         $nb = count($events);
         if ($display) {
@@ -1390,8 +1566,13 @@ class EventPost {
         }
     }
 
-    // uses filter : eventpost_params
-    function calendar($atts) {
+    
+    /**
+     * @param array $atts
+     * @filter eventpost_params
+     * @return string
+     */
+    public function calendar($atts) {
         extract(shortcode_atts(apply_filters('eventpost_params', array(
             'date' => date('Y-n'),
             'cat' => '',
@@ -1460,7 +1641,10 @@ class EventPost {
         return $ret;
     }
 
-    function ajaxcal() {
+    /**
+     * @desc echoes the content of the calendar in ajax context
+     */
+    public function ajaxcal() {
         echo $this->calendar(array(
             'date' => $_REQUEST['date'],
             'cat' => $_REQUEST['cat'],
@@ -1470,12 +1654,18 @@ class EventPost {
         exit();
     }
 
-    function ajaxdate() {
+    /**
+     * @desc echoes the date of the calendar in ajax context
+     */
+    public function ajaxdate() {
         echo $this->display_caldate(strtotime($_REQUEST['date']), $_REQUEST['cat'], true);
         exit();
     }
 
-    function HumanDate() {
+    /**
+     * @desc echoes a date in ajax context
+     */
+    public function HumanDate() {
         if (isset($_REQUEST['date']) && !empty($_REQUEST['date'])) {
             $date = strtotime($_REQUEST['date']);
             echo $this->human_date($date) . date(' H:i', $date);
@@ -1483,8 +1673,10 @@ class EventPost {
         }
     }
 
-    /** AJAX Get lat long from address */
-    function GetLatLong() {
+    /**
+     * @desc AJAX Get lat long from address
+     */
+    public function GetLatLong() {
         if (isset($_REQUEST['q']) && !empty($_REQUEST['q'])) {
             // verifier le cache
             $q = $_REQUEST['q'];
@@ -1504,15 +1696,23 @@ class EventPost {
         }
     }
 
-    // ADD COLUMNS
-    function columns_head($defaults) {
+    /**
+     * @desc alters columns
+     * @param array $defaults
+     * @return array
+     */
+    public function columns_head($defaults) {
         $defaults['event'] = __('Event', 'eventpost');
         $defaults['location'] = __('Location', 'eventpost');
         return $defaults;
     }
 
-    // COLUMN CONTENT  (ARCHIVES)
-    function columns_content($column_name, $post_id) {
+    /**
+     * @desc echoes content of a row in a given column
+     * @param string $column_name
+     * @param int $post_id
+     */
+    public function columns_content($column_name, $post_id) {
         if ($column_name == 'location') {
             $lat = get_post_meta($post_id, $this->META_LAT, true);
             $lon = get_post_meta($post_id, $this->META_LONG, true);
@@ -1530,8 +1730,13 @@ class EventPost {
         }
     }
 
-    /** ADMIN PAGES * */
-    function save_settings(){
+    /** ADMIN PAGES **/
+    
+    /**
+     * @desc save settings end redirect
+     * @return void
+     */
+    public function save_settings(){
 	if (!current_user_can('manage_options')){
 	    return;
 	}
@@ -1558,16 +1763,27 @@ class EventPost {
 	wp_redirect('options-general.php?page=event-settings&confirm=options_saved');
 	exit;
     }
-    function manage_options() {
+    /**
+     * @desc adds menu items
+     */
+    public function manage_options() {
         add_submenu_page('options-general.php', __('Event settings', 'eventpost'), __('Event settings', 'eventpost'), 'manage_options', 'event-settings', array(&$this, 'manage_settings'));
     }
-    function dashboard_right_now($elements){
+    /**
+     * @desc adds items to the native "right now" dashboard widget
+     * @param array $elements
+     * @return array
+     */
+    public function dashboard_right_now($elements){
 	array_push($elements, '<i class="dashicons dashicons-calendar"></i> <i href="edit.php?post_type=post">'.sprintf(__('%d Events','eventpost'), count($this->get_events(array('future'=>1, 'past'=>1, 'nb'=>-1))))."</i>");
 	array_push($elements, '<i class="dashicons dashicons-location"></i> <i href="edit.php?post_type=post">'.sprintf(__('%d Geolocalized events','eventpost'), count($this->get_events(array('future'=>1, 'past'=>1, 'geo'=>1, 'nb'=>-1))))."</i>");
 	return $elements;
     }
 
-    function manage_settings() {
+    /**
+     * @desc output content of the setting page
+     */
+    public function manage_settings() {
         if ('options_saved'===\filter_input(INPUT_GET,'confirm',FILTER_SANITIZE_STRING)) { ?>
             <div class="updated"><p><strong><?php _e('Event settings saved !', 'eventpost') ?></strong></p></div>
             <?php
@@ -1753,10 +1969,20 @@ class EventPost {
      * feed
      * generate ICS or VCS files from a category
      */
-    function ics_date($timestamp){
+    
+    /**
+     * 
+     * @param timestamp $timestamp
+     * @return string
+     */
+    public function ics_date($timestamp){
 	return date("Ymd",$timestamp).'T'.date("His",$timestamp).'Z';
     }
-    function feed(){
+    
+    /**
+     * @desc outputs an RSS document
+     */
+    public function feed(){
 	if(false !== $cat=\filter_input(INPUT_GET, 'cat',FILTER_SANITIZE_STRING)){
 	    $timezone_string = get_option('timezone_string');
 	    date_default_timezone_set($timezone_string);
@@ -1794,5 +2020,4 @@ class EventPost {
 	    exit;
 	}
     }
-
 }

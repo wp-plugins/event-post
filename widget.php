@@ -3,7 +3,7 @@
 /** Articles de catgorie **/
 class eventpost_widget extends WP_Widget {
    function eventpost_widget() {
-  	  parent::WP_Widget(false, __( 'Events', 'eventpost' ),array('description'=>__( 'List of future events posts', 'eventpost' )));
+  	  parent::__construct(false, __( 'Events', 'eventpost' ),array('description'=>__( 'List of future events posts', 'eventpost' )));
    }
    function widget($args, $instance) {
        extract( $args );
