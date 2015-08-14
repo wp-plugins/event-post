@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.6.5
+  Version: 3.6.6
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -69,7 +69,7 @@ class EventPost {
         add_action('manage_post_posts_custom_column', array(&$this, 'columns_content'), 10, 2);
 
         //Shortcodes
-	add_action('init',array($this,'init'));
+	add_action('init', array(&$this,'init'));
         add_shortcode('events_list', array(&$this, 'shortcode_list'));
         add_shortcode('events_map', array(&$this, 'shortcode_map'));
         add_shortcode('events_cal', array(&$this, 'shortcode_cal'));
@@ -140,7 +140,7 @@ class EventPost {
     /**
      * Call functions when WP is ready
      */
-    private function init(){
+    public function init(){
 	$this->shortcode_ui();
     }
 

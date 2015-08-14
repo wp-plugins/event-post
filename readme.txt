@@ -161,6 +161,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.6.6 =
+release date: aug. 14 2015
+Fix PHP warnings
+
 = 3.6.5 =
 release date: aug. 14 2015
 * Fix bad html syntax
