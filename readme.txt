@@ -163,10 +163,12 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 = 3.6.6 =
 release date: aug. 14 2015
-Fix PHP warnings
+
+* Fix PHP warnings
 
 = 3.6.5 =
 release date: aug. 14 2015
+
 * Fix bad html syntax
 * Make plugin WP 4.3 compliant
 * Add lot of comments
