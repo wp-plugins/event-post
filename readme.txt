@@ -161,9 +161,10 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
-= 3.6.6 =
-release date: aug. 14 2015
+= 3.6.7 =
+* more WP 4.3 compliant
 
+= 3.6.6 =
 * Fix PHP warnings
 
 = 3.6.5 =

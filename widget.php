@@ -2,8 +2,11 @@
 
 /** Articles de catgorie **/
 class eventpost_widget extends WP_Widget {
-   function eventpost_widget() {
-  	  parent::__construct(false, __( 'Events', 'eventpost' ),array('description'=>__( 'List of future events posts', 'eventpost' )));
+   function __construct() {
+  	parent::__construct(false, __( 'Events', 'eventpost' ),array('description'=>__( 'List of future events posts', 'eventpost' )));
+   }
+   function eventpost_widget(){
+       $this->__construct();
    }
    function widget($args, $instance) {
        extract( $args );

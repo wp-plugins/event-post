@@ -2,8 +2,11 @@
 
 /** Articles de catgorie **/
 class eventpostmap_widget extends WP_Widget {
-   function eventpostmap_widget() {
+   function __construct() {
   	  parent::__construct(false, __( 'Events map', 'eventpost' ),array('description'=>__( 'Map of events posts', 'eventpost' )));
+   }
+   public function eventpostmap_widget(){
+       $this->__construct();
    }
    function widget($args, $instance) {
        global $EventPost;

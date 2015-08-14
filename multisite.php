@@ -9,11 +9,14 @@ if(is_multisite()){
 }
 
 class EventPostMU{
-    function EventPostMU(){
+    function __construct(){
         add_filter('eventpost_params',array(&$this,'params'),1,2);
         add_filter('eventpost_get',array(&$this,'get'),1,3);
         add_filter('eventpost_shortcodeui_list',array(&$this,'shortcode_ui'),1,1);
         add_filter('eventpost_shortcodeui_map',array(&$this,'shortcode_ui'),1,1);
+    }
+    function EventPostMU(){
+        $this->__construct();
     }
     function no_use(){
         __('Extends Event post to multisite networks','eventpost');
