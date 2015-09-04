@@ -161,6 +161,9 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.6.8 =
+* update french translation
+
 = 3.6.7 =
 * more WP 4.3 compliant
 
