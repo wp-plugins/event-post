@@ -20,6 +20,14 @@ function eventpost_getdate(field){
 function eventpost_getdate_sql(field){
     return jQuery('#'+field+'_date').val();
 }
+function eventpost_concat_time(){
+    jQuery('.eventpost-datepicker-separate-wrap').each(function(){
+        d=jQuery(this).find('.eventpost-datepicker-separate-date').val()+' '
+        +jQuery(this).find('.eventpost-datepicker-separate-hour').val()+':'
+        +jQuery(this).find('.eventpost-datepicker-separate-time').val()+':00';
+        jQuery(this).find('.eventpost-datepicker-separate').val(d);
+    });
+}
 function eventpost_chkdate(){
     //console.log('change date');
     var date_start=eventpost_getdate(eventpost.META_START);
@@ -168,10 +176,10 @@ jQuery(document).ready(function(){
         jQuery('#event-color-section-more').toggle(300);
     });
     /*
-     * Date picker
+     * Date picker Dual
      */
     eventpost_chkdate();
-    jQuery( ".input-datetime").each(function(){
+    jQuery( ".eventpost-datepicker-dual").each(function(){
         var datepick  ={
             format:'Y-m-d H:i',
             lang: jQuery(this).data('lang'),
@@ -211,6 +219,74 @@ jQuery(document).ready(function(){
         jQuery( "#"+date_id).val('');
         jQuery( "#"+date_id+'_human').text(eventpost.pick_a_date);
         eventpost_chkdate();
+    });
+    /*
+     * Date picker Separate
+     */
+    jQuery(".eventpost-datepicker-separate").each(function(){
+        current_date = jQuery(this).val();
+        current_id = jQuery(this).attr('id');
+        jQuery(this).wrap('<span class="eventpost-datepicker-separate-wrap">');
+        jQuery(this).after('<input class="eventpost-datepicker-separate-date" value="'+current_date.substr(0, 10)+'" data-id="'+current_id+'">'
+                +'<select class="eventpost-datepicker-separate-hour" data-id="'+current_id+'"></select>'
+                +'<select class="eventpost-datepicker-separate-time" data-id="'+current_id+'"></select>');
+        jQuery(this).hide();  
+        for(h=0 ; h<24 ; h++){
+            h0 = h>9 ? h : '0'+h;
+            h0h = h0;
+            if(eventpost.lang==='en'){
+                if(h<=12){
+                    h0h = h+' AM'
+                }
+                else{
+                    h0h = (h-12)+' PM'
+                }
+            }
+            jQuery(".eventpost-datepicker-separate-hour").append('<option value="'+h0+'"'+(h===parseInt(current_date.substr(11, 2))?' selected':'')+'>'+h0h+'</option>');
+        }
+        m_sel=false;
+        for(m=0 ; m<60 ; m+=15){
+            m0 = m>9 ? m : '0'+m;
+            selected = '';
+            if(!m_sel && Math.abs(m-parseInt(current_date.substr(14, 2)))<=7){
+                selected=' selected';
+                m_sel=true;
+            }
+            jQuery(".eventpost-datepicker-separate-time").append('<option value="'+m0+'"'+selected+'>'+m0+'</option>');
+        }
+    });
+    if (jQuery.datepicker) {
+        jQuery(".eventpost-datepicker-separate-date").datepicker({
+            firstDay: 1,
+            changeYear: true,
+            changeMonth: true,
+            showMonthAfterYear: true,
+            yearRange: "c-5:+5",
+            buttonText: eventpost.date_choose,
+            showOn: "both",
+            dateFormat: "yy-mm-dd",
+            autoSize: true
+        }).change(function () {
+            var date_id = jQuery(this).attr('id').replace('_date', '');
+            var hd = jQuery('#' + date_id + '_date_human');
+            if (jQuery(this).val() != '') {
+                jQuery.post(ajaxurl, {action: 'EventPostHumanDate', date: eventpost_getdate_sql(date_id)}, function (data) {
+                    hd.html(data);
+                    eventpost_chkdate();
+                });
+            }
+        });
+    }
+    jQuery(".eventpost-datepicker-separate-date, .eventpost-datepicker-separate-hour, .eventpost-datepicker-separate-time").change(function () {
+        eventpost_concat_time();
+        var date_id = jQuery(this).data('id').replace('_date','');
+        var hd = jQuery('#' + date_id + '_date_human');
+        if (jQuery(this).val() != '') {
+            jQuery.post(ajaxurl, {action: 'EventPostHumanDate', date: eventpost_getdate_sql(date_id)}, function (data) {
+                hd.html(data);
+                eventpost_chkdate();
+            });
+        }
     });
     /*
      * Widgets stylish with icons

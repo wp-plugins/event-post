@@ -2,8 +2,25 @@
 
 /** Articles de catgorie **/
 class eventpostmap_widget extends WP_Widget {
+    var $defaults;
    function __construct() {
-  	  parent::__construct(false, __( 'Events map', 'eventpost' ),array('description'=>__( 'Map of events posts', 'eventpost' )));
+        global $EventPost;
+        parent::__construct(false, __( 'Events map', 'eventpost' ),array('description'=>__( 'Map of events posts', 'eventpost' )));
+        $this->defaults = array(
+                'numberposts'   => '',
+                'widgettitle'   => '',
+                'cat'           => '',
+                'tag'           => '',
+                'future'        => 0,
+                'past'          => 0,
+                'thumbnail'     => 0,
+                'excerpt'       => 0,
+                'tile'          => $EventPost->settings['tile'],
+        );
+          // UI options
+        foreach($EventPost->map_interactions as $int_key=>$int_name){
+            $this->defaults[$int_key]=true;
+        }
    }
    public function eventpostmap_widget(){
        $this->__construct();
@@ -11,107 +28,91 @@ class eventpostmap_widget extends WP_Widget {
    function widget($args, $instance) {
        global $EventPost;
        extract( $args );
-	/* Number of posts to display */
-	$numberposts = isset($instance['numberposts']) && !empty($instance['numberposts'])?esc_attr($instance['numberposts']):'';
-        /* The Widget Title Itself */
-	$widgettitle = isset($instance['widgettitle']) && !empty($instance['widgettitle'])?esc_attr($instance['widgettitle']):'';
-        /* Filter by category */
-	$cat = isset($instance['cat']) && !empty($instance['cat'])?esc_attr($instance['cat']):'';
-	/* Filter by tag */
-	$tag = isset($instance['tag']) && !empty($instance['tag'])?esc_attr($instance['tag']):''; 
-        /*Search for future */
-        $future=isset($instance['future']) && is_numeric($instance['future'])?esc_attr($instance['future']):0;
-        /*Search for past */
-        $past=isset($instance['past']) && is_numeric($instance['past'])?esc_attr($instance['past']):0;
-        /*Display thumbnails */
-        $thumbnail=isset($instance['thumbnail']) && is_numeric($instance['thumbnail'])?esc_attr($instance['thumbnail']):0;    
-        /*Display excerpt */
-        $excerpt=isset($instance['excerpt']) && is_numeric($instance['excerpt'])?esc_attr($instance['excerpt']):0;
-	/*Background tile */
-        $tile=isset($instance['tile']) && !empty($instance['tile'])?esc_attr($instance['tile']):$EventPost->settings['tile'];
-	
-		global $EventPost;
-		$events = $EventPost->get_events(
-			array(
-				'nb'=>$numberposts,
-				'future'=>$future,
-				'past'=>$past,
-				'geo'=>1,
-				'cat'=>$cat,
-				'tag'=>$tag
-			)
-		);
-		if(sizeof($events)>0){
-			echo $args['before_widget'];
-			if(!empty($widgettitle)){
-				echo $args['before_title'];
-				echo $widgettitle;
-				echo $args['after_title'];
-			}			
-            $atts=array(
-                'events'=>$events,
-                'width'=>'',
-                'height'=>'',
-                'geo'=>1,
-                'class'=>'eventpost_widget',
-                'thumbnail'=>$thumbnail,
-                'excerpt'=>$excerpt,
-                'tile'=>$tile
+       $instance = wp_parse_args((array) $instance, $this->defaults);
+
+        global $EventPost;
+        $events = $EventPost->get_events(
+                array(
+                    'nb' => $instance['numberposts'],
+                    'future' => $instance['future'],
+                    'past' => $instance['past'],
+                    'geo' => 1,
+                    'cat' => $instance['cat'],
+                    'tag' => $instance['tag']
+                )
+        );
+        if (sizeof($events) > 0) {
+            echo $args['before_widget'];
+            if (!empty($instance['widgettitle'])) {
+                echo $args['before_title'];
+                echo $instance['widgettitle'];
+                echo $args['after_title'];
+            }
+            $atts = array(
+                'events' => $events,
+                'width' => '',
+                'height' => '',
+                'geo' => 1,
+                'class' => 'eventpost_widget',
+                'thumbnail' => $instance['thumbnail'],
+                'excerpt' => $instance['excerpt'],
+                'tile' => $instance['tile']
             );
-			echo $EventPost->list_events($atts,'event_geolist');
-			echo $args['after_widget'];		
-		}		    
-   }
-   
+            foreach($EventPost->map_interactions as $int_key=>$int_name){
+                $atts[$int_key]=$instance[$int_key];
+            }
+            echo $EventPost->list_events($atts, 'event_geolist');
+            echo $args['after_widget'];
+        }
+    }
+   /**
+    * 
+    * @global object $EventPost
+    * @param array $new_instance
+    * @param array $old_instance
+    * @return array
+    */
    function update($new_instance, $old_instance) {
+       global $EventPost; 
+       foreach($EventPost->map_interactions as $int_key=>$int_name){
+            if(!isset($new_instance[$int_key])){
+                $new_instance[$int_key]=false;
+            }
+        }
        return $new_instance;
    }
-
+   /**
+    * 
+    * @global object $EventPost
+    * @param array $instance
+    */
    function form($instance) {
- 	global $EventPost;    
-	/* Number of posts to display */
-	$numberposts = isset($instance['numberposts']) && !empty($instance['numberposts'])?esc_attr($instance['numberposts']):'';
-        /* The Widget Title Itself */
-	$widgettitle = isset($instance['widgettitle']) && !empty($instance['widgettitle'])?esc_attr($instance['widgettitle']):'';
-        /* Filter by category */
-	$cat = isset($instance['cat']) && !empty($instance['cat'])?esc_attr($instance['cat']):'';
-	/* Filter by tag */
-	$tag = isset($instance['tag']) && !empty($instance['tag'])?esc_attr($instance['tag']):''; 
-        /*Search for future */
-        $future=isset($instance['future']) && is_numeric($instance['future'])?esc_attr($instance['future']):0;
-        /*Search for past */
-        $past=isset($instance['past']) && is_numeric($instance['past'])?esc_attr($instance['past']):0;
-        /*Display thumbnails */
-        $thumbnail=isset($instance['thumbnail']) && is_numeric($instance['thumbnail'])?esc_attr($instance['thumbnail']):0;    
-        /*Display excerpt */
-        $excerpt=isset($instance['excerpt']) && is_numeric($instance['excerpt'])?esc_attr($instance['excerpt']):0;
-        /*Background tile */
-        $tile=isset($instance['tile']) && !empty($instance['tile'])?esc_attr($instance['tile']):$EventPost->settings['tile'];
-
+ 	global $EventPost;            
+        $instance = wp_parse_args( (array) $instance, $this->defaults );
        ?>
-       <input type="hidden" id="<?php echo $this->get_field_id('widgettitle'); ?>-title" value="<?php echo $widgettitle; ?>">
+       <input type="hidden" id="<?php echo $this->get_field_id('widgettitle'); ?>-title" value="<?php echo $instance['widgettitle']; ?>">
        <p>
        <label for="<?php echo $this->get_field_id('widgettitle'); ?>"><?php _e('Title','eventpost'); ?>
-       <input class="widefat" id="<?php echo $this->get_field_id('widgettitle'); ?>" name="<?php echo $this->get_field_name('widgettitle'); ?>" type="text" value="<?php echo $widgettitle; ?>" />
+       <input class="widefat" id="<?php echo $this->get_field_id('widgettitle'); ?>" name="<?php echo $this->get_field_name('widgettitle'); ?>" type="text" value="<?php echo $instance['widgettitle']; ?>" />
        </label>
        </p>       
      
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('numberposts'); ?>"><?php _e('Number of posts','eventpost'); ?>
-       <input id="<?php echo $this->get_field_id('numberposts'); ?>" name="<?php echo $this->get_field_name('numberposts'); ?>" type="number" value="<?php echo $numberposts; ?>" />
+       <input id="<?php echo $this->get_field_id('numberposts'); ?>" name="<?php echo $this->get_field_name('numberposts'); ?>" type="number" value="<?php echo $instance['numberposts']; ?>" />
        </label> <?php _e('(-1 is no limit)','eventpost'); ?>
        </p>
        
        
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('future'); ?>">
-       <input id="<?php echo $this->get_field_id('future'); ?>" name="<?php echo $this->get_field_name('future'); ?>" type="checkbox" value="1" <?=($future==true?'checked':'')?> />
+       <input id="<?php echo $this->get_field_id('future'); ?>" name="<?php echo $this->get_field_name('future'); ?>" type="checkbox" value="1" <?php checked($instance['future'], true , true); ?> />
        <?php _e('Display future events','eventpost'); ?>
        </label>
        </p>
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('past'); ?>">
-       <input id="<?php echo $this->get_field_id('past'); ?>" name="<?php echo $this->get_field_name('past'); ?>" type="checkbox" value="1" <?=($past==true?'checked':'')?> />
+       <input id="<?php echo $this->get_field_id('past'); ?>" name="<?php echo $this->get_field_name('past'); ?>" type="checkbox" value="1" <?php checked($instance['past'], true , true); ?> />
        <?php _e('Display past events','eventpost'); ?>
        </label>
        </p>
@@ -125,7 +126,7 @@ class eventpostmap_widget extends WP_Widget {
        <?php 
 	   	$cats = get_categories();
 		foreach($cats as $_cat){ ?>
-       	<option value="<?=$_cat->slug?>" <?php if($_cat->slug==$cat){ echo'selected';} ?>><?=$_cat->cat_name?></option>
+                <option value="<?=$_cat->slug?>" <?php selected($instance['cat'], $_cat->slug , true); ?>><?=$_cat->cat_name?></option>
        <?php  }  ?>
        </select>
        </label>
@@ -140,7 +141,7 @@ class eventpostmap_widget extends WP_Widget {
        <?php 
 	   	$tags = get_tags();
 		foreach($tags as $_tag){?>
-       	<option value="<?=$_tag->slug?>" <?php if($_tag->slug==$tag){ echo'selected';} ?>><?=$_tag->name?></option>
+                <option value="<?=$_tag->slug?>" <?php selected($instance['tag'], $_tag->slug , true); ?>><?=$_tag->name?></option>
        <?php  }  ?>
        </select>
        </label>
@@ -149,13 +150,13 @@ class eventpostmap_widget extends WP_Widget {
        <hr>
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('thumbnail'); ?>">
-       <input id="<?php echo $this->get_field_id('thumbnail'); ?>" name="<?php echo $this->get_field_name('thumbnail'); ?>" type="checkbox" value="1" <?=($thumbnail==true?'checked':'')?> />
+       <input id="<?php echo $this->get_field_id('thumbnail'); ?>" name="<?php echo $this->get_field_name('thumbnail'); ?>" type="checkbox" value="1" <?php checked($instance['thumbnail'], true , true); ?>/>
        <?php _e('Show thumbnails','eventpost'); ?>
        </label>
        </p>
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('excerpt'); ?>">
-       <input id="<?php echo $this->get_field_id('excerpt'); ?>" name="<?php echo $this->get_field_name('excerpt'); ?>" type="checkbox" value="1" <?=($excerpt==true?'checked':'')?> />
+       <input id="<?php echo $this->get_field_id('excerpt'); ?>" name="<?php echo $this->get_field_name('excerpt'); ?>" type="checkbox" value="1" <?php checked($instance['excerpt'], true , true); ?> />
        <?php _e('Show excerpt','eventpost'); ?>
        </label>
        </p>
@@ -186,8 +187,15 @@ class eventpostmap_widget extends WP_Widget {
                         </select>
         </label>
         </p>
-       
-       
+        <hr>
+        <?php foreach($EventPost->map_interactions as $int_key=>$int_name): ?>
+        <p>
+            <label for="<?php echo $this->get_field_id($int_key); ?>">
+            <input id="<?php echo $this->get_field_id($int_key); ?>" name="<?php echo $this->get_field_name($int_key); ?>" type="checkbox" value="1" <?php checked($instance[$int_key], true , true); ?>/>
+            <?php printf(__('Activate %s interaction','eventpost'), $int_name); ?>
+            </label>
+        </p>
+       <?php  endforeach; ?>
        <?php
    }
 

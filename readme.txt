@@ -1,7 +1,7 @@
 === Event post ===
 Contributors: bastho, n4thaniel, ecolosites
 Donate link: http://ba.stienho.fr/#don
-Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar
+Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar,agenda
 Requires at least: 3.8
 Tested up to: 4.3
 Stable tag: /trunk
@@ -160,6 +160,16 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.7.0 =
+release date: sept. 15 2015
+
+* Update OpenLayer to version 3.9
+* Add Map interaction options (MouseWheelZoom, PinchZoom...)
+* Add option for datepicker UI
+* Add eligible post types option
+* Better performances
+* Fix PHP Warnings
 
 = 3.6.8 =
 * update french translation

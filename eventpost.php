@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.6.8
+  Version: 3.7.0
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -31,7 +31,9 @@ class EventPost {
     public $settings;
     public $dateformat;
 
-    public $version = '3.6.5';
+    public $version = '3.7.0';
+    
+    public $map_interactions;
 
     public function __construct() {
         load_plugin_textdomain('eventpost', false, 'event-post/languages');
@@ -63,11 +65,6 @@ class EventPost {
         add_action('wp_ajax_EventPostFeed', array(&$this, 'feed'));
         add_action('wp_ajax_nopriv_EventPostFeed', array(&$this, 'feed'));
 
-        // Edit
-        add_action('add_meta_boxes', array(&$this, 'add_custom_box'));
-        add_filter('manage_post_posts_columns', array(&$this, 'columns_head'), 2);
-        add_action('manage_post_posts_custom_column', array(&$this, 'columns_content'), 10, 2);
-
         //Shortcodes
 	add_action('init', array(&$this,'init'));
         add_shortcode('events_list', array(&$this, 'shortcode_list'));
@@ -98,6 +95,16 @@ class EventPost {
 
         $this->maps = $this->get_maps();
 	$this->settings = $this->get_settings();
+        
+        
+        // Edit
+        add_action('add_meta_boxes', array(&$this, 'add_custom_box'));
+        foreach($this->settings['posttypes'] as $posttype){
+            add_filter('manage_'.$posttype.'_posts_columns', array(&$this, 'columns_head'), 2);
+            add_action('manage_'.$posttype.'_posts_custom_column', array(&$this, 'columns_content'), 10, 2);
+        }
+        
+        
         if (!empty($this->settings['markpath']) && !empty($this->settings['markurl'])) {
             $this->markpath = ABSPATH.'/'.$this->settings['markpath'];
             $this->markurl = $this->settings['markurl'];
@@ -105,7 +112,6 @@ class EventPost {
             $this->markpath = plugin_dir_path(__FILE__) . 'markers/';
             $this->markurl = plugins_url('/markers/', __FILE__);
         }
-
 
         $this->dateformat = str_replace(array('yy', 'mm', 'dd'), array('Y', 'm', 'd'), __('yy-mm-dd', 'eventpost'));
 
@@ -127,6 +133,18 @@ class EventPost {
 		      </%child%>'
         );
 	$this->list_shema = apply_filters('eventpost_list_shema',$this->default_list_shema);
+        
+        $this->map_interactions=array(
+            'DragRotate'=>__('Drag Rotate', 'eventpost'),
+            'DoubleClickZoom'=>__('Double Click Zoom', 'eventpost'),
+            'DragPan'=>__('Drag Pan', 'eventpost'),
+            'PinchRotate'=>__('Pinch Rotate', 'eventpost'),
+            'PinchZoom'=>__('Pinch Zoom', 'eventpost'),
+            'KeyboardPan'=>__('Keyboard Pan', 'eventpost'),
+            'KeyboardZoom'=>__('Keyboard Zoom', 'eventpost'),
+            'MouseWheelZoom'=>__('Mouse Wheel Zoom', 'eventpost'),
+            'DragZoom'=>__('Drag Zoom', 'eventpost'),
+        );
 
     }
     
@@ -222,6 +240,16 @@ class EventPost {
 
 	if (!isset($ep_settings['item_shema']) ) {
             $ep_settings['item_shema'] = '';
+            $reg_settings=true;
+        }
+        
+        if(!isset($ep_settings['datepicker'])){
+            $ep_settings['datepicker']='dual';
+            $reg_settings=true;
+        }
+        
+        if(!isset($ep_settings['posttypes']) || !is_array($ep_settings['posttypes'])){
+            $ep_settings['posttypes']=array('post');
             $reg_settings=true;
         }
 
@@ -321,7 +349,8 @@ class EventPost {
             'imgpath' => plugins_url('/img/', __FILE__),
             'maptiles' => $this->maps,
             'defaulttile' => $this->settings['tile'],
-            'ajaxurl' => admin_url() . 'admin-ajax.php'
+            'ajaxurl' => admin_url() . 'admin-ajax.php',
+            'map_interactions'=>$this->map_interactions,
         ));
     }
     /**
@@ -339,16 +368,27 @@ class EventPost {
     public function admin_head() {
         wp_enqueue_style('jquery-ui', plugins_url('/css/jquery-ui.css', __FILE__), false,  $this->version);
         wp_enqueue_style('eventpostadmin', plugins_url('/css/eventpostadmin.css', __FILE__), false,  $this->version);
-	wp_enqueue_style('eventpost-datetimepicker', plugins_url('/css/jquery.datetimepicker.css', __FILE__), false,  $this->version);
+        if($this->settings['datepicker']=='dual' || (isset($_GET['page']) && $_GET['page']=='event-settings')){
+            wp_enqueue_style('eventpost-datetimepicker', plugins_url('/css/jquery.datetimepicker.css', __FILE__), false,  $this->version);
+        }
     }
 
     /**
      * Enqueue JS files in admin
      */
     public function admin_scripts() {
-        wp_enqueue_script('jquery-ui-datepicker');
-        wp_enqueue_script('eventpost-admin', plugins_url('/js/osm-admin.min.js', __FILE__), false,  $this->info->version, true);
-	wp_enqueue_script('eventpost-datetimepicker', plugins_url('/js/jquery.datetimepicker.js', __FILE__), false,  $this->version, true);
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('eventpost-admin', plugins_url('/js/osm-admin.min.js', __FILE__), false,  $this->version, true);
+        if($this->settings['datepicker']=='dual' || (isset($_GET['page']) && $_GET['page']=='event-settings')){
+            wp_enqueue_script('eventpost-datetimepicker', plugins_url('/js/jquery.datetimepicker.js', __FILE__), false,  $this->version, true);
+        }
+        if($this->settings['datepicker']=='separate' || (isset($_GET['page']) && $_GET['page']=='event-settings')){
+            wp_enqueue_script('jquery-ui-datepicker');
+        }
+        $language = get_bloginfo('language');
+        if (strpos($language, '-') > -1) {
+            $language = strtolower(substr($language, 0, 2));
+        }
         wp_localize_script('eventpost-admin', 'eventpost', array(
             'imgpath' => plugins_url('/img/', __FILE__),
             'date_choose' => __('Choose', 'eventpost'),
@@ -360,6 +400,7 @@ class EventPost {
             'META_ADD' => $this->META_ADD,
             'META_LAT' => $this->META_LAT,
             'META_LONG' => $this->META_LONG,
+            'lang'=>$language,
         ));
     }
 
@@ -748,24 +789,44 @@ class EventPost {
      */
     public function shortcode_map($atts) {
         $ep_settings = $this->settings;
-        $atts = shortcode_atts(apply_filters('eventpost_params', array(
-            'nb' => 0,
-            'future' => true,
-            'past' => false,
+        
+        $defaults = array(
+            // Display
             'width' => '',
             'height' => '',
             'tile' => $ep_settings['tile'],
             'title' => '',
             'before_title' => '<h3>',
             'after_title' => '</h3>',
-            'cat' => '',
-            'tag' => '',
             'style' => '',
             'thumbnail' => '',
             'excerpt' => '',
+            // Filters
+            'nb' => 0,
+            'future' => true,
+            'past' => false,
+            'cat' => '',
+            'tag' => '',
             'orderby' => 'meta_value',
-            'order' => 'ASC'
-                        ), 'shortcode_map'), $atts);
+            'order' => 'ASC',
+        );
+            // UI options
+        foreach($this->map_interactions as $int_key=>$int_name){
+            $defaults[$int_key]=true;
+        }
+            // - UI options
+        foreach($this->map_interactions as $int_key=>$int_name){
+            $defaults['disable_'.strtolower($int_key)]=false;
+        }
+        
+        $atts = shortcode_atts(apply_filters('eventpost_params', $defaults, 'shortcode_map'), $atts);
+            // UI options
+        foreach($this->map_interactions as $int_key=>$int_name){
+            if($atts['disable_'.strtolower($int_key)]==true){
+                $atts[$int_key]=false;
+            }
+            unset($atts['disable_'.strtolower($int_key)]);
+        }
         $atts['geo'] = 1;
         $atts['type'] = 'div';
         return $this->list_events($atts, 'event_geolist'); //$nb,'div',$future,$past,1,'event_geolist');
@@ -798,7 +859,7 @@ class EventPost {
      */
     public function list_events($atts, $id = 'event_list') {
 	$ep_settings = $this->settings;
-        $atts = shortcode_atts(apply_filters('eventpost_params', array(
+        $defaults = array(
             'nb' => 0,
             'type' => 'div',
             'future' => true,
@@ -822,7 +883,12 @@ class EventPost {
             'class' => '',
             'container_schema' => $this->list_shema['container'],
             'item_schema' => $this->list_shema['item'],
-                        ), 'list_events'), $atts);
+                        );
+        // Map UI options
+        foreach($this->map_interactions as $int_key=>$int_name){
+            $defaults[$int_key]=true;
+        }
+        $atts = shortcode_atts(apply_filters('eventpost_params', $defaults, 'list_events'), $atts);
 
         extract($atts);
         if (!is_array($events)) {
@@ -874,6 +940,14 @@ class EventPost {
                         ), $item_schema
                 );
             }
+            $attributes = '';
+            if($id == 'event_geolist'){
+                $attributes = 'data-tile="'.$tile.'" data-width="'.$width.'" data-height="'.$height.'" data-disabled-interactions="';
+                foreach($this->map_interactions as $int_key=>$int_name){
+                    $attributes.=$atts[$int_key]==false ? $int_key.', ' : '';
+                }
+                $attributes.='"';
+            }
             $ret.=str_replace(
                     array(
                 '%type%',
@@ -889,7 +963,7 @@ class EventPost {
                 $class,
                 $id . $this->list_id,
                 (!empty($width) ? 'width:' . $width . ';' : '') . (!empty($height) ? 'height:' . $height . ';' : '') . $style,
-                $id == 'event_geolist' ? 'data-tile="' . $tile . '" data-width="' . $width . '" data-height="' . $height . '"' : '',
+                $attributes,
                 $list
                     ), $container_schema
             );
@@ -913,13 +987,14 @@ class EventPost {
                     'tag' => '',
                     'date' => '',
                     'orderby' => 'meta_value',
-                    'order' => 'ASC'
-                                ), 'get_events'), $atts));
+                    'order' => 'ASC',
+                    'post_type'=> $this->settings['posttypes']
+                    ), 'get_events'), $atts));
         extract($requete);
         wp_reset_query();
 
         $arg = array(
-            'post_type' => 'post',
+            'post_type' => $post_type,
             'posts_per_page' => $nb,
             'meta_key' => $this->META_START,
             'orderby' => $orderby,
@@ -1177,7 +1252,6 @@ class EventPost {
                 ),
             ),
         );
-	shortcode_ui_register_for_shortcode('events_list', apply_filters('eventpost_shortcodeui_list',$shortcodes_list_atts));
 	/*
 	 * Map
 	 */
@@ -1199,6 +1273,14 @@ class EventPost {
 	);
 	$shortcodes_map_atts['label']=__('Events map','eventpost');
 	$shortcodes_map_atts['listItemImage']='dashicons-location-alt';
+        foreach($this->map_interactions as $int_key=>$int_name){
+            $shortcodes_map_atts['attrs'][]=array(
+                'label' => sprintf(__('Disable %s interaction','eventpost'), $int_name),
+                'attr'  => 'disable_'.$int_key,
+                'type'  => 'checkbox'
+            );
+        }
+	shortcode_ui_register_for_shortcode('events_list', apply_filters('eventpost_shortcodeui_list',$shortcodes_list_atts));
 	shortcode_ui_register_for_shortcode('events_map', apply_filters('eventpost_shortcodeui_map',$shortcodes_map_atts));
 
 	/*
@@ -1263,8 +1345,10 @@ class EventPost {
      * @desc add custom boxes in posts edit page
      */
     public function add_custom_box() {
-        add_meta_box('event_post_date', __('Event date', 'eventpost'), array(&$this, 'inner_custom_box_date'), 'post', $this->settings['adminpos'], 'core');
-        add_meta_box('event_post_loc', __('Event location', 'eventpost'), array(&$this, 'inner_custom_box_loc'), 'post', $this->settings['adminpos'], 'core');
+        foreach($this->settings['posttypes'] as $posttype){
+            add_meta_box('event_post_date', __('Event date', 'eventpost'), array(&$this, 'inner_custom_box_date'), $posttype, $this->settings['adminpos'], 'core');
+            add_meta_box('event_post_loc', __('Event location', 'eventpost'), array(&$this, 'inner_custom_box_loc'), $posttype, $this->settings['adminpos'], 'core');
+        }
         if(!function_exists('shortcode_ui_register_for_shortcode')){
 	    add_meta_box('event_post_sc_edit', __('Events Shortcode editor', 'eventpost'), array(&$this, 'inner_custom_box_edit'), 'page');
 	}
@@ -1315,7 +1399,7 @@ class EventPost {
 			}
                         ?>
                     </span>
-                <input type="text" class="input-datetime" data-lang="<?php echo $language; ?>" value="<?php echo substr($start_date,0,16) ?>" name="<?php echo $this->META_START; ?>" id="<?php echo $this->META_START; ?>_date"/>
+                <input type="<?php echo ($this->settings['datepicker']=='browser'?'datetime':''); ?>" class="eventpost-datepicker-<?php echo $this->settings['datepicker']; ?>" data-lang="<?php echo $language; ?>" value="<?php echo substr($start_date,0,16) ?>" name="<?php echo $this->META_START; ?>" id="<?php echo $this->META_START; ?>_date"/>
             </label>
 	    <br>
             <label for="<?php echo $this->META_END; ?>_date">
@@ -1330,7 +1414,7 @@ class EventPost {
 			}
                         ?>
                     </span>
-                <input type="text" class="input-datetime" data-lang="<?php echo $language; ?>"  value ="<?php echo substr($end_date,0,16) ?>" name="<?php echo $this->META_END; ?>" id="<?php echo $this->META_END; ?>_date"/>
+                <input type="<?php echo ($this->settings['datepicker']=='browser'?'datetime':''); ?>" class="eventpost-datepicker-<?php echo $this->settings['datepicker']; ?>" data-lang="<?php echo $language; ?>"  value ="<?php echo substr($end_date,0,16) ?>" name="<?php echo $this->META_END; ?>" id="<?php echo $this->META_END; ?>_date"/>
             </label>
         </div>
         <?php
@@ -1754,10 +1838,19 @@ class EventPost {
 	foreach ($this->settings as $item_name=>$item_value){
 	    $valid_post['ep_settings'][$item_name] = FILTER_SANITIZE_STRING;
 	}
+        
+        $post_types=(array) $_POST['ep_settings']['posttypes'];
+        $posttypes = get_post_types(); 
+        foreach($post_types as $posttype){
+            if(!in_array($posttype, $posttypes)){
+                unset($post_types[$posttype]);
+            }
+        }
 
 	if (false !== $settings = \filter_input_array(INPUT_POST,$valid_post)) {
 	    $settings['ep_settings']['container_shema']=stripslashes($_POST['ep_settings']['container_shema']);
 	    $settings['ep_settings']['item_shema']=  stripslashes($_POST['ep_settings']['item_shema']);
+	    $settings['ep_settings']['posttypes']=  array_values($post_types);
 	    update_option('ep_settings', $settings['ep_settings']);
 	}
 	wp_redirect('options-general.php?page=event-settings&confirm=options_saved');
@@ -1916,7 +2009,8 @@ class EventPost {
 					<?php _e('After the content', 'eventpost'); ?>
 				    </option>
                                 </select></td>
-                        </tr>                        <tr>
+                        </tr>                        
+                        <tr>
                             <th><label for="ep_loopicons">
         <?php _e('Add icons for events in the loop', 'eventpost') ?>
                                 </label></th>
@@ -1926,10 +2020,6 @@ class EventPost {
                                     <option value="0" <?php selected($ep_settings['loopicons'],'0', true) ?>>
 				        <?php _e('No', 'eventpost'); ?></option>
                                 </select></td>
-                        </tr>
-			<tr><td colspan="2">
-                                <h3><?php _e('Admin UI settings', 'eventpost'); ?></h3>
-                            </td>
                         </tr>
 			<tr>
                             <th><label for="ep_adminpos">
@@ -1943,6 +2033,57 @@ class EventPost {
                                 </select></td>
                         </tr>
 
+			<tr><td colspan="2">
+                                <h3><?php _e('Admin UI settings', 'eventpost'); ?></h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="ep_posttypes">
+        <?php _e('Wich post types can be events ?', 'eventpost') ?>
+                                </label></th>
+                            <td><?php $posttypes = get_post_types(array(), 'objects'); ?>
+                                <?php foreach($posttypes as $posttype): ?>
+                                <p><label>
+                                    <input type="checkbox" name="ep_settings[posttypes][<?php echo $posttype->name; ?>]" value="<?php echo $posttype->name; ?>" <?php checked(in_array($posttype->name, $ep_settings['posttypes']),true, true) ?>>
+					<?php echo $posttype->labels->name; ?></option>
+                                </label></p>
+                                <?php endforeach; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+        <?php _e('Datepicker style', 'eventpost') ?>
+                                <?php $now = date('Y-m-d H:i:s'); ?>
+                                <?php $human_date = $this->human_date(time()) . date(' H:i'); ?>
+                            </th>
+                            <td>
+                                <p>
+                                    <label><input type="radio" name="ep_settings[datepicker]" id="ep_datepicker_dual" value="dual" <?php checked($ep_settings['datepicker'],'dual', true) ?>>
+                                        <?php _e('Dual', 'eventpost'); ?></option>
+                                    </label>
+                                    <span id="eventpost_dual_date_human" class="human_date">
+                                         <?php echo $human_date; ?>
+                                    </span>
+                                    <input type="text" class="eventpost-datepicker-dual" id="eventpost_dual_date" value="<?php echo $now; ?>">
+                                </p>
+                                <p>
+                                    <label><input type="radio" name="ep_settings[datepicker]" id="ep_datepicker_dual" value="separate" <?php checked($ep_settings['datepicker'],'separate', true) ?>>
+                                        <?php _e('Separate', 'eventpost'); ?></option>
+                                    </label>
+                                    <span id="eventpost_separate_date_human" class="human_date">
+                                         <?php echo $human_date; ?>
+                                    </span>
+                                    <input type="text" class="eventpost-datepicker-separate"  id="eventpost_separate_date" value="<?php echo $now; ?>">
+                                </p>
+                                <p>
+                                    <label><input type="radio" name="ep_settings[datepicker]" id="ep_datepicker_dual" value="browser" <?php checked($ep_settings['datepicker'],'browser', true) ?>>
+                                        <?php _e('Browser\'s style', 'eventpost'); ?></option>
+                                    </label>
+                                    <input type="datetime" class="eventpost-datepicker-browser" value="<?php echo $now; ?>">
+                                </p>                                
+                            </td>
+                        </tr>
+                        
                         <tr><td colspan="2">
                                 <h3><?php _e('Performances settings', 'eventpost'); ?></h3>
                             </td>
@@ -1951,7 +2092,7 @@ class EventPost {
                             <td colspan="2">
                                 <label for="ep_cache">
                                     <input type="checkbox" name="ep_settings[cache]" id="ep_cache" <?php if($ep_settings['cache']=='1'){ echo'checked';} ?> value="1">
-                                    <?php _e('Cache results','eventpost')?>
+                                    <?php _e('Use cache for results','eventpost')?>
                                 </label>
                             </td>
                         </tr>

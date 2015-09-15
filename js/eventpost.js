@@ -1,13 +1,14 @@
 jQuery(document).ready(function () {
 
     if(typeof ol !== 'undefined'){
-        var ep_maps = [];
-        var ep_vectorSources = [];
-        var ep_pop_elements = [];
-        var ep_popups = [];
-        var ep_icons = [];
+        ep_maps = [];
+        ep_vectorSources = [];
+        ep_pop_elements = [];
+        ep_popups = [];
+        ep_icons = [];
         ep_proj_source = new ol.proj.Projection({code: 'EPSG:4326'});
         ep_proj_destination = new ol.proj.Projection({code: 'EPSG:900913'});
+        ep_interactions = eventpost_params.map_interactions;
 
 
         /* ------------------------------------------------------------------------------------------------------------------
@@ -51,6 +52,7 @@ jQuery(document).ready(function () {
                         })
                     });
                     ep_maps[map_id].addControl(new ol.control.Zoom());
+                    ep_maps[map_id].addControl(new ol.control.Zoom());
                     var ep_feature = new ol.Feature({
                         geometry: new ol.geom.Point(position)
                     });
@@ -93,6 +95,7 @@ jQuery(document).ready(function () {
             var width = jQuery(this).data('width');
             var height = jQuery(this).data('height');
             var maptile = jQuery(this).data('tile');
+            var disabled_integrations = jQuery(this).data('disabled-interactions');
 
             // Add html elements for map and popup
             jQuery(this).append('<div id="' + map_id + '" class="event_map map"></div><div id="' + map_id + '-popup" class="event_map_popup"></div>');
@@ -118,7 +121,7 @@ jQuery(document).ready(function () {
             });
 
             // Initialize map
-            ep_maps[map_id] = new ol.Map({
+            map_settings = {
                 target: map_id,
                 layers: [
                     new ol.layer.Tile({
@@ -136,7 +139,9 @@ jQuery(document).ready(function () {
                     maxZoom: 18
                 }),
                 overlays: [ep_popups[map_id]]
-            });
+            };
+            
+            ep_maps[map_id] = new ol.Map(map_settings);
             ep_maps[map_id].addControl(new ol.control.ZoomSlider());
 
             //Add action for each markers
@@ -213,7 +218,17 @@ jQuery(document).ready(function () {
             });
 
             //Center the map to show all markers
-            ep_maps[map_id].getView().fitExtent(ep_vectorSources[map_id].getExtent(), ep_maps[map_id].getSize());
+            ep_maps[map_id].getView().fit(ep_vectorSources[map_id].getExtent(), ep_maps[map_id].getSize());
+            
+            m_i=0;
+            for(int_key in ep_interactions){
+                console.log(ep_interactions[int_key]);
+                if(disabled_integrations.indexOf(int_key+',')>-1){
+                    ep_maps[map_id].getInteractions().getArray()[m_i].setActive(false);
+                }
+                m_i++;
+            }
+            
 
         });
     }
@@ -239,7 +254,6 @@ jQuery(document).ready(function () {
                 calcont.append('<div class="eventpost_cal_list"><button class="eventpost_cal_close">x</button>' + data + '</div>');
                 calcont.find('.eventpost_cal_list').hide(1).fadeIn(500);
                 calcont.find('.eventpost_cal_close').click(function () {
-                    console.log('ggg');
                     jQuery(this).parent().hide(500).remove();
                 });
             });
