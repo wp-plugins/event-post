@@ -16,7 +16,6 @@ jQuery(document).ready(function () {
          * show it in a tiny map instead of following the link
          */
         jQuery('a.event_link.gps').click(function () {
-            //console.log(jQuery(this).data('latitude'));
             if (jQuery(this).parent().data('latitude') !== undefined && jQuery(this).parent().data('longitude') !== undefined) {
                 var lat = jQuery(this).parent().data('latitude');
                 var lon = jQuery(this).parent().data('longitude');
@@ -95,6 +94,9 @@ jQuery(document).ready(function () {
             var width = jQuery(this).data('width');
             var height = jQuery(this).data('height');
             var maptile = jQuery(this).data('tile');
+            if(maptile==''){
+                maptile = eventpost_params.defaulttile;
+            }
             var disabled_integrations = jQuery(this).data('disabled-interactions');
 
             // Add html elements for map and popup
@@ -222,7 +224,6 @@ jQuery(document).ready(function () {
             
             m_i=0;
             for(int_key in ep_interactions){
-                console.log(ep_interactions[int_key]);
                 if(disabled_integrations.indexOf(int_key+',')>-1){
                     ep_maps[map_id].getInteractions().getArray()[m_i].setActive(false);
                 }

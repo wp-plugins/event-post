@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Event post\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-15 16:32+0100\n"
-"PO-Revision-Date: 2015-09-15 16:32+0100\n"
+"POT-Creation-Date: 2015-09-22 17:26+0100\n"
+"PO-Revision-Date: 2015-09-22 17:26+0100\n"
 "Last-Translator: Bastien Ho <bastienho@urbancube.fr>\n"
 "Language-Team: bastho <bastienho@eelv.fr>\n"
 "Language: fr_FR\n"
@@ -96,7 +96,7 @@ msgstr "Vendredi"
 msgid "Saturday"
 msgstr "Samedi"
 
-#: ../eventpost.php:116 ../eventpost.php:395
+#: ../eventpost.php:116 ../eventpost.php:399
 msgid "yy-mm-dd"
 msgstr "dd/mm/yy"
 
@@ -144,443 +144,447 @@ msgstr "Ajoute des méta-données d'agenda ou de géolocalisation aux articles"
 msgid "Event Post"
 msgstr "Article Événement"
 
-#: ../eventpost.php:394
+#: ../eventpost.php:398
 msgid "Choose"
 msgstr "Choisir"
 
-#: ../eventpost.php:396
+#: ../eventpost.php:400
 msgid "More icons"
 msgstr "Plus d'icones"
 
-#: ../eventpost.php:397 ../eventpost.php:1398 ../eventpost.php:1413
+#: ../eventpost.php:401 ../eventpost.php:1404 ../eventpost.php:1419
 msgid "Pick a date"
 msgstr "Sélectionner une date"
 
-#: ../eventpost.php:460
+#: ../eventpost.php:464
 msgid "today"
 msgstr "aujourd'hui"
 
-#: ../eventpost.php:462
+#: ../eventpost.php:466
 msgid "tomorrow"
 msgstr "demain"
 
-#: ../eventpost.php:464
+#: ../eventpost.php:468
 msgid "yesterday"
 msgstr "hier"
 
-#: ../eventpost.php:494 ../eventpost.php:505
-msgid "from:"
-msgstr "de :"
+#: ../eventpost.php:498 ../eventpost.php:509
+msgid "from"
+msgstr "de"
 
-#: ../eventpost.php:496 ../eventpost.php:507
-msgid "to:"
-msgstr "à :"
+#: ../eventpost.php:500 ../eventpost.php:511
+msgid "to"
+msgstr "à"
 
-#: ../eventpost.php:499
-msgid "at:"
-msgstr "à  :"
+#: ../eventpost.php:503
+msgid "at"
+msgstr "à"
 
-#: ../eventpost.php:538
+#: ../eventpost.php:543
 msgid "Download ICS file"
 msgstr "Télécharger au format ICS"
 
-#: ../eventpost.php:539
+#: ../eventpost.php:544
 msgid "Add to Google calendar"
 msgstr "Ajouter à Google agenda"
 
-#: ../eventpost.php:540
+#: ../eventpost.php:545
 msgid "Add to Outlook"
 msgstr "Ajouter à Outlook"
 
-#: ../eventpost.php:575 ../eventpost.php:1469
+#: ../eventpost.php:581 ../eventpost.php:1475
 msgid "Map"
 msgstr "Carte"
 
-#: ../eventpost.php:1169
+#: ../eventpost.php:1175
 msgid "Events list"
 msgstr "Liste des événements"
 
-#: ../eventpost.php:1174 ../eventpost.php:1475 ../widget.map.php:101
+#: ../eventpost.php:1180 ../eventpost.php:1481 ../widget.map.php:101
 #: ../widget.php:104
 msgid "Number of posts"
 msgstr "Nombre d'articles"
 
-#: ../eventpost.php:1177
+#: ../eventpost.php:1183
 msgid "-1 is for: no limit"
 msgstr "(-1 est illimité)"
 
-#: ../eventpost.php:1180 ../eventpost.php:1301
+#: ../eventpost.php:1186 ../eventpost.php:1307
 msgid "Categories"
 msgstr "Catégories"
 
-#: ../eventpost.php:1185
+#: ../eventpost.php:1191
 msgid "Tags"
 msgstr "Étiquettes"
 
-#: ../eventpost.php:1190 ../eventpost.php:1500
+#: ../eventpost.php:1196 ../eventpost.php:1506
 msgid "Future events:"
 msgstr "Événements futurs"
 
-#: ../eventpost.php:1194 ../eventpost.php:1203 ../eventpost.php:1212
-#: ../eventpost.php:1221 ../eventpost.php:1502 ../eventpost.php:1509
-#: ../eventpost.php:1519 ../eventpost.php:2019 ../widget.cal.php:114
+#: ../eventpost.php:1200 ../eventpost.php:1209 ../eventpost.php:1218
+#: ../eventpost.php:1227 ../eventpost.php:1508 ../eventpost.php:1515
+#: ../eventpost.php:1525 ../eventpost.php:2032 ../widget.cal.php:114
 msgid "Yes"
 msgstr "Oui"
 
-#: ../eventpost.php:1195 ../eventpost.php:1204 ../eventpost.php:1213
-#: ../eventpost.php:1222 ../eventpost.php:1503 ../eventpost.php:1508
-#: ../eventpost.php:1518 ../eventpost.php:2021 ../widget.cal.php:113
+#: ../eventpost.php:1201 ../eventpost.php:1210 ../eventpost.php:1219
+#: ../eventpost.php:1228 ../eventpost.php:1509 ../eventpost.php:1514
+#: ../eventpost.php:1524 ../eventpost.php:2034 ../widget.cal.php:113
 msgid "No"
 msgstr "Non"
 
-#: ../eventpost.php:1199 ../eventpost.php:1506
+#: ../eventpost.php:1205 ../eventpost.php:1512
 msgid "Past events:"
 msgstr "Événements passés"
 
-#: ../eventpost.php:1208 ../eventpost.php:1516
+#: ../eventpost.php:1214 ../eventpost.php:1522
 msgid "Only geotagged events:"
 msgstr "Seulement les événements géotagués"
 
-#: ../eventpost.php:1217
+#: ../eventpost.php:1223
 msgid "Thumbnail:"
 msgstr "Vignettes :"
 
-#: ../eventpost.php:1226
+#: ../eventpost.php:1232
 msgid "Thumbnail size:"
 msgstr "Taille des vignettes :"
 
-#: ../eventpost.php:1230
+#: ../eventpost.php:1236
 msgid "Thumbnail"
 msgstr "Vignettes"
 
-#: ../eventpost.php:1231
+#: ../eventpost.php:1237
 msgid "Medium"
 msgstr "Moyen"
 
-#: ../eventpost.php:1232
+#: ../eventpost.php:1238
 msgid "Large"
 msgstr "Large"
 
-#: ../eventpost.php:1236
+#: ../eventpost.php:1242
 msgid "Order by:"
 msgstr "Trier par :"
 
-#: ../eventpost.php:1240 ../widget.cal.php:90
+#: ../eventpost.php:1246 ../widget.cal.php:90
 msgid "Date"
 msgstr "Date"
 
-#: ../eventpost.php:1241 ../widget.cal.php:71 ../widget.map.php:95
+#: ../eventpost.php:1247 ../widget.cal.php:71 ../widget.map.php:95
 #: ../widget.php:98
 msgid "Title"
 msgstr "Titre"
 
-#: ../eventpost.php:1245
+#: ../eventpost.php:1251
 msgid "Order:"
 msgstr "Ordre :"
 
-#: ../eventpost.php:1249
+#: ../eventpost.php:1255
 msgid "Asc."
 msgstr "Asc."
 
-#: ../eventpost.php:1250
+#: ../eventpost.php:1256
 msgid "Desc."
 msgstr "Desc."
 
-#: ../eventpost.php:1264 ../eventpost.php:1551
+#: ../eventpost.php:1270 ../eventpost.php:1557
 msgid "Width"
 msgstr "Largeur"
 
-#: ../eventpost.php:1269 ../eventpost.php:1556
+#: ../eventpost.php:1275 ../eventpost.php:1562
 msgid "Height"
 msgstr "Hauteur"
 
-#: ../eventpost.php:1274 ../widget.map.php:8
+#: ../eventpost.php:1280 ../widget.map.php:8
 msgid "Events map"
 msgstr "Carte des événements"
 
-#: ../eventpost.php:1278
+#: ../eventpost.php:1284
 #, php-format
 msgid "Disable %s interaction"
 msgstr "Désactiver l'interaction %s"
 
-#: ../eventpost.php:1290 ../widget.cal.php:6
+#: ../eventpost.php:1296 ../widget.cal.php:6
 msgid "Events calendar"
 msgstr "Calendrier d'événements"
 
-#: ../eventpost.php:1295
+#: ../eventpost.php:1301
 msgid "Default date"
 msgstr "Date par défaut :"
 
-#: ../eventpost.php:1306
+#: ../eventpost.php:1312
 msgid "Monday first"
 msgstr "Lundi en premier"
 
-#: ../eventpost.php:1311
+#: ../eventpost.php:1317
 msgid "Date selector"
 msgstr "Sélecteur de date"
 
-#: ../eventpost.php:1322
+#: ../eventpost.php:1328
 msgid "Event details"
 msgstr "Données d'événement"
 
-#: ../eventpost.php:1326
+#: ../eventpost.php:1332
 msgid "Attribute"
 msgstr "Attribut"
 
-#: ../eventpost.php:1330
+#: ../eventpost.php:1336
 msgid "Full details"
 msgstr "Tous les détails"
 
-#: ../eventpost.php:1331
+#: ../eventpost.php:1337
 msgid "Full date"
 msgstr "Date complète"
 
-#: ../eventpost.php:1332
+#: ../eventpost.php:1338
 msgid "Begin date"
 msgstr "Date de début"
 
-#: ../eventpost.php:1333
+#: ../eventpost.php:1339
 msgid "End date"
 msgstr "Date de fin"
 
-#: ../eventpost.php:1334
+#: ../eventpost.php:1340
 msgid "Address text"
 msgstr "Texte de l'adresse "
 
-#: ../eventpost.php:1335 ../eventpost.php:1790
+#: ../eventpost.php:1341 ../eventpost.php:1796
 msgid "Location"
 msgstr "Localisation"
 
-#: ../eventpost.php:1349
+#: ../eventpost.php:1355
 msgid "Event date"
 msgstr "Date de l'événement"
 
-#: ../eventpost.php:1350
+#: ../eventpost.php:1356
 msgid "Event location"
 msgstr "Lieu de l'événement"
 
-#: ../eventpost.php:1353
+#: ../eventpost.php:1359
 msgid "Events Shortcode editor"
 msgstr "Editeur de shortcodes événements"
 
-#: ../eventpost.php:1375
+#: ../eventpost.php:1381
 msgid "Color:"
 msgstr "Couleur : "
 
-#: ../eventpost.php:1391
+#: ../eventpost.php:1397
 msgid "Begin:"
 msgstr "Début : "
 
-#: ../eventpost.php:1406
+#: ../eventpost.php:1412
 msgid "End:"
 msgstr "Fin :"
 
-#: ../eventpost.php:1432
+#: ../eventpost.php:1438
 msgid "Look for event's GPS coordinates:"
 msgstr "Recherchez les coordonnées GPS de l'événement :"
 
-#: ../eventpost.php:1437
+#: ../eventpost.php:1443
 msgid "Event address, as it will be displayed:"
 msgstr "Adresse de l'événement telle qu'elle sera affichée :"
 
-#: ../eventpost.php:1444
+#: ../eventpost.php:1450
 msgid "Latitude:"
 msgstr "Latitude : "
 
-#: ../eventpost.php:1450
+#: ../eventpost.php:1456
 msgid "Longitude:"
 msgstr "Longitude : "
 
-#: ../eventpost.php:1466
+#: ../eventpost.php:1472
 msgid "Type :"
 msgstr "Type :"
 
-#: ../eventpost.php:1468
+#: ../eventpost.php:1474
 msgid "List"
 msgstr "Liste"
 
-#: ../eventpost.php:1477 ../eventpost.php:1484 ../widget.cal.php:79
+#: ../eventpost.php:1483 ../eventpost.php:1490 ../widget.cal.php:79
 msgid "All"
 msgstr "Toutes"
 
-#: ../eventpost.php:1482 ../widget.cal.php:77 ../widget.map.php:123
+#: ../eventpost.php:1488 ../widget.cal.php:77 ../widget.map.php:123
 #: ../widget.map.php:138 ../widget.php:126 ../widget.php:149
 msgid "Only in :"
 msgstr "Uniquement dans :"
 
-#: ../eventpost.php:1526 ../eventpost.php:1953 ../widget.map.php:166
+#: ../eventpost.php:1532 ../eventpost.php:1966 ../widget.map.php:166
 msgid "Map background"
 msgstr "Fond de carte"
 
-#: ../eventpost.php:1563
+#: ../eventpost.php:1569
 msgid "Insert shortcode"
 msgstr "Insérer le shortcode"
 
-#: ../eventpost.php:1693
+#: ../eventpost.php:1699
 msgid "Today"
 msgstr "aujourd'hui"
 
-#: ../eventpost.php:1789
+#: ../eventpost.php:1795
 msgid "Event"
 msgstr "Événement"
 
-#: ../eventpost.php:1828
+#: ../eventpost.php:1834
 msgid "Security error"
 msgstr "Erreur de sécurité"
 
-#: ../eventpost.php:1863 ../eventpost.php:1888 ../eventpost.php:1895
+#: ../eventpost.php:1869 ../eventpost.php:1894 ../eventpost.php:1901
 msgid "Event settings"
 msgstr "Réglages d'événement"
 
-#: ../eventpost.php:1871
+#: ../eventpost.php:1877
 #, php-format
 msgid "%d Events"
 msgstr "%d Événements"
 
-#: ../eventpost.php:1872
+#: ../eventpost.php:1878
 #, php-format
 msgid "%d Geolocalized events"
 msgstr "%d Événements géolocalisés"
 
-#: ../eventpost.php:1881
+#: ../eventpost.php:1887
 msgid "Event settings saved !"
 msgstr "Réglages d'événements sauvegardés !"
 
-#: ../eventpost.php:1900
+#: ../eventpost.php:1906
 msgid "Date format"
 msgstr "Format de date"
 
-#: ../eventpost.php:1907
+#: ../eventpost.php:1913
+msgid "Time format"
+msgstr "Format de date"
+
+#: ../eventpost.php:1920
 msgid "Show export buttons on:"
 msgstr "Afficher les boutons d'exportation sur :"
 
-#: ../eventpost.php:1912
+#: ../eventpost.php:1925
 msgid "List only"
 msgstr "Liste seulement"
 
-#: ../eventpost.php:1915
+#: ../eventpost.php:1928
 msgid "Single only"
 msgstr "Article seulement"
 
-#: ../eventpost.php:1918
+#: ../eventpost.php:1931
 msgid "Both"
 msgstr "Les deux"
 
-#: ../eventpost.php:1921
+#: ../eventpost.php:1934
 msgid "None"
 msgstr "Aucun"
 
-#: ../eventpost.php:1926
+#: ../eventpost.php:1939
 msgid "List settings"
 msgstr "Réglages de la liste"
 
-#: ../eventpost.php:1931
+#: ../eventpost.php:1944
 msgid "Container shema"
 msgstr "Schéma du contenant :"
 
-#: ../eventpost.php:1934 ../eventpost.php:1943
+#: ../eventpost.php:1947 ../eventpost.php:1956
 msgid "default:"
 msgstr "défaut :"
 
-#: ../eventpost.php:1940
+#: ../eventpost.php:1953
 msgid "Item shema"
 msgstr "Schéma d'item"
 
-#: ../eventpost.php:1948
+#: ../eventpost.php:1961
 msgid "Map settings"
 msgstr "Réglages de carte"
 
-#: ../eventpost.php:1968
+#: ../eventpost.php:1981
 msgid "Makers custom directory (leave empty for default settings)"
 msgstr ""
 "Répertoire personnalisé pour les marqueurs (laissez vide pour les réglages "
 "par défaut)"
 
-#: ../eventpost.php:1972
+#: ../eventpost.php:1985
 msgid "Root path:"
 msgstr "Chemin racine : "
 
-#: ../eventpost.php:1976
+#: ../eventpost.php:1989
 msgid "URL:"
 msgstr "URL : "
 
-#: ../eventpost.php:1982
+#: ../eventpost.php:1995
 msgid "Global settings"
 msgstr "Réglages généraux"
 
-#: ../eventpost.php:1987
+#: ../eventpost.php:2000
 msgid "Print link for empty posts"
 msgstr "Afficher des liens pour les articles vides"
 
-#: ../eventpost.php:1992
+#: ../eventpost.php:2005
 msgid "Link all posts"
 msgstr "Lier tous les articles"
 
-#: ../eventpost.php:1995
+#: ../eventpost.php:2008
 msgid "Do not link posts with empty content"
 msgstr "Ne pas lier les articles avec du contenu vide"
 
-#: ../eventpost.php:2001
+#: ../eventpost.php:2014
 msgid "Event bar position for single posts"
 msgstr "Position de la barre d'événement sur les pages d'article"
 
-#: ../eventpost.php:2006
+#: ../eventpost.php:2019
 msgid "Before the content"
 msgstr "Avant le contenu"
 
-#: ../eventpost.php:2009
+#: ../eventpost.php:2022
 msgid "After the content"
 msgstr "Après le contenu"
 
-#: ../eventpost.php:2015
+#: ../eventpost.php:2028
 msgid "Add icons for events in the loop"
 msgstr "Ajouter des icônes dans la boucle"
 
-#: ../eventpost.php:2026
+#: ../eventpost.php:2039
 msgid "Position of event details boxes"
 msgstr "Position des données d'événement"
 
-#: ../eventpost.php:2030
+#: ../eventpost.php:2043
 msgid "Side"
 msgstr "Barre latérale"
 
-#: ../eventpost.php:2032
+#: ../eventpost.php:2045
 msgid "Under the text"
 msgstr "Sous le texte"
 
-#: ../eventpost.php:2037
+#: ../eventpost.php:2050
 msgid "Admin UI settings"
 msgstr "Réglages de l'interface d'administration"
 
-#: ../eventpost.php:2042
+#: ../eventpost.php:2055
 msgid "Wich post types can be events ?"
 msgstr "Quels post-types peuvent être des événements ?"
 
-#: ../eventpost.php:2055
+#: ../eventpost.php:2068
 msgid "Datepicker style"
 msgstr "Style du sélectionneur de date"
 
-#: ../eventpost.php:2062
+#: ../eventpost.php:2075
 msgid "Dual"
 msgstr "Duo"
 
-#: ../eventpost.php:2071
+#: ../eventpost.php:2084
 msgid "Separate"
 msgstr "Séparé"
 
-#: ../eventpost.php:2080
+#: ../eventpost.php:2093
 msgid "Browser's style"
 msgstr "Style du navigateur"
 
-#: ../eventpost.php:2088
+#: ../eventpost.php:2101
 msgid "Performances settings"
 msgstr "Réglages de performances"
 
-#: ../eventpost.php:2095
+#: ../eventpost.php:2108
 msgid "Use cache for results"
 msgstr "Mettre les résultats en cache"
 
-#: ../eventpost.php:2100
+#: ../eventpost.php:2113
 msgid "Apply settings"
 msgstr "Appliquer les changements"
 
@@ -692,6 +696,15 @@ msgstr "Antéchronologique"
 #: ../widget.php:180
 msgid "Chronological"
 msgstr "Chronologique"
+
+#~ msgid "from:"
+#~ msgstr "de :"
+
+#~ msgid "to:"
+#~ msgstr "à :"
+
+#~ msgid "at:"
+#~ msgstr "à  :"
 
 #~ msgid "Date:"
 #~ msgstr "Date :"

@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.7.0
+  Version: 3.8.0
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -31,8 +31,8 @@ class EventPost {
     public $settings;
     public $dateformat;
 
-    public $version = '3.7.0';
-    
+    public $version = '3.8.0';
+
     public $map_interactions;
 
     public function __construct() {
@@ -95,16 +95,16 @@ class EventPost {
 
         $this->maps = $this->get_maps();
 	$this->settings = $this->get_settings();
-        
-        
+
+
         // Edit
         add_action('add_meta_boxes', array(&$this, 'add_custom_box'));
         foreach($this->settings['posttypes'] as $posttype){
             add_filter('manage_'.$posttype.'_posts_columns', array(&$this, 'columns_head'), 2);
             add_action('manage_'.$posttype.'_posts_custom_column', array(&$this, 'columns_content'), 10, 2);
         }
-        
-        
+
+
         if (!empty($this->settings['markpath']) && !empty($this->settings['markurl'])) {
             $this->markpath = ABSPATH.'/'.$this->settings['markpath'];
             $this->markurl = $this->settings['markurl'];
@@ -133,7 +133,7 @@ class EventPost {
 		      </%child%>'
         );
 	$this->list_shema = apply_filters('eventpost_list_shema',$this->default_list_shema);
-        
+
         $this->map_interactions=array(
             'DragRotate'=>__('Drag Rotate', 'eventpost'),
             'DoubleClickZoom'=>__('Double Click Zoom', 'eventpost'),
@@ -147,14 +147,14 @@ class EventPost {
         );
 
     }
-    
+
     /**
      * PHP4 constructor
      */
     public function EventPost(){
         $this->__construct();
     }
-    
+
     /**
      * Call functions when WP is ready
      */
@@ -200,6 +200,10 @@ class EventPost {
             $ep_settings['dateformat'] = get_option('date_format');
             $reg_settings=true;
         }
+        if (!isset($ep_settings['timeformat']) || empty($ep_settings['timeformat'])) {
+            $ep_settings['timeformat'] = get_option('time_format');
+            $reg_settings=true;
+        }
         if (!isset($ep_settings['tile']) || empty($ep_settings['tile']) || !isset($this->maps[$ep_settings['tile']])) {
             $maps = array_keys($this->maps);
             $ep_settings['tile'] = $this->maps[$maps[0]]['id'];
@@ -242,12 +246,12 @@ class EventPost {
             $ep_settings['item_shema'] = '';
             $reg_settings=true;
         }
-        
+
         if(!isset($ep_settings['datepicker'])){
             $ep_settings['datepicker']='dual';
             $reg_settings=true;
         }
-        
+
         if(!isset($ep_settings['posttypes']) || !is_array($ep_settings['posttypes'])){
             $ep_settings['posttypes']=array('post');
             $reg_settings=true;
@@ -259,9 +263,9 @@ class EventPost {
         }
         return $ep_settings;
     }
-    
+
     /**
-     * 
+     *
      * @param array $shema
      * @return array
      */
@@ -274,9 +278,9 @@ class EventPost {
 	}
 	return $shema;
     }
-    
+
     /**
-     * 
+     *
      * @return array
      */
     public function get_maps() {
@@ -299,7 +303,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @return array
      */
     public function get_colors() {
@@ -316,7 +320,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param string $color
      * @return sring
      */
@@ -337,7 +341,7 @@ class EventPost {
         wp_enqueue_style('openlayers', plugins_url('/css/openlayers.css', __FILE__), false,  $this->version);
         wp_enqueue_style('dashicons-css', includes_url('/css/dashicons.min.css'));
     }
-    
+
     /**
      * Enqueue JS files
      */
@@ -427,7 +431,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param string $str
      * @return boolean
      */
@@ -436,7 +440,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param string $date
      * @param string $sep
      * @return string
@@ -450,7 +454,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param mixed $date
      * @param string $format
      * @return type
@@ -467,7 +471,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param WP_Post object $post
      * @param mixed $links
      * @return string
@@ -489,27 +493,27 @@ class EventPost {
             $dates.='<div class="event_date" data-start="' . $this->human_date($event->time_start) . '" data-end="' . $this->human_date($event->time_end) . '">';
             if (date('d/m/Y', $event->time_start) == date('d/m/Y', $event->time_end)) {
                 $dates.= '<time itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">'
-                        . '<span class="date">' . $this->human_date($event->time_end) . "</span>";
+                        . '<span class="date date-single">' . $this->human_date($event->time_end, $this->settings['dateformat']) . "</span>";
                 if (date('H:i', $event->time_start) != date('H:i', $event->time_end) && date('H:i', $event->time_start) != '00:00' && date('H:i', $event->time_end) != '00:00') {
-                    $dates.='<span class="linking_word">, ' . __('from:', 'eventpost') . '</span>
-					<span class="time">' . date('H:i', $event->time_start) . '</span>
-					<span class="linking_word">' . __('to:', 'eventpost') . '</span>
-					<span class="time">' . date('H:i', $event->time_end) . '</span>';
+                    $dates.=' <span class="linking_word linking_word-from">' . __('from', 'eventpost') . '</span>
+					<span class="time time-start">' . date($this->settings['timeformat'], $event->time_start) . '</span>
+					<span class="linking_word linking_word-t">' . __('to', 'eventpost') . '</span>
+					<span class="time time-end">' . date($this->settings['timeformat'], $event->time_end) . '</span>';
                 } elseif (date('H:i', $event->time_start) != '00:00') {
-                    $dates.='<span class="linking_word">,' . __('at:', 'eventpost') . '</span>
-					<span class="time" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . date('H:i', $event->time_start) . '</span>';
+                    $dates.=' <span class="linking_word">' . __('at', 'eventpost') . '</span>
+					<span class="time time-single" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . date($this->settings['timeformat'], $event->time_start) . '</span>';
                 }
                         $dates.='</time>';
             } else {
                 $dates.= '
-		<span class="linking_word">' . __('from:', 'eventpost') . '</span>
-		<span class="date" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . $this->human_date($event->time_start, $this->settings['dateformat']) . '</span>
-		<span class="linking_word">' . __('to:', 'eventpost') . '</span>
-		<span class="date" itemprop="dtend" datetime="' . date('c', $event->time_end) . '">' . $this->human_date($event->time_end, $this->settings['dateformat']) . '</span>
+		<span class="linking_word linking_word-from">' . __('from', 'eventpost') . '</span>
+		<span class="date date-start" itemprop="dtstart" datetime="' . date('c', $event->time_start) . '">' . $this->human_date($event->time_start, $this->settings['dateformat']) . '</span>
+		<span class="linking_word linking_word-to">' . __('to', 'eventpost') . '</span>
+		<span class="date date-end" itemprop="dtend" datetime="' . date('c', $event->time_end) . '">' . $this->human_date($event->time_end, $this->settings['dateformat']) . '</span>
 		';
             }
 
-            if (!is_admin() && $event->time_end > time() && (
+            if (!is_admin() && $event->time_end > current_time('timestamp') && (
                     $this->settings['export'] == 'both' ||
                     ($this->settings['export'] == 'single' && is_single() ) ||
                     ($this->settings['export'] == 'list' && !is_single() )
@@ -535,10 +539,12 @@ class EventPost {
                 $vcs_url = plugins_url('export/vcs.php', __FILE__) . '?t=' . $title . '&amp;u=' . $uid . '&amp;sd=' . $d_s . '&amp;ed=' . $d_e . '&amp;a=' . $address . '&amp;d=' . $url . '&amp;tz=%3BTZID%3D' . urlencode($timezone_string);
 
                 $dates.='
-		<a href="' . $ics_url . '" class="event_link ics" target="_blank" title="' . __('Download ICS file', 'eventpost') . '">ical</a>
-		<a href="' . $google_url . '" class="event_link gcal" target="_blank" title="' . __('Add to Google calendar', 'eventpost') . '">Google</a>
-		<a href="' . $vcs_url . '" class="event_link vcs" target="_blank" title="' . __('Add to Outlook', 'eventpost') . '">outlook</a>
-		<a class=" dashicons-before dashicons-calendar"></a>';
+                    <span class="eventpost-date-export">
+                        <a href="' . $ics_url . '" class="event_link ics" target="_blank" title="' . __('Download ICS file', 'eventpost') . '">ical</a>
+                        <a href="' . $google_url . '" class="event_link gcal" target="_blank" title="' . __('Add to Google calendar', 'eventpost') . '">Google</a>
+                        <a href="' . $vcs_url . '" class="event_link vcs" target="_blank" title="' . __('Add to Outlook', 'eventpost') . '">outlook</a>
+                        <i class=" dashicons-before dashicons-calendar"></i>
+                    </span>';
             }
             $dates.='</div>';
         }
@@ -546,7 +552,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param WP_Post object $post
      * @return string
      */
@@ -581,7 +587,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param WP_Post object $post
      * @return string
      */
@@ -632,7 +638,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param WP_Post object $post
      * @param string $class
      * @return string
@@ -642,7 +648,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param WP_Post object $post
      * @param string $class
      * @return string
@@ -652,7 +658,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param WP_Post object $post
      * @param string $class
      * @return string
@@ -662,7 +668,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param string $content
      * @return string
      */
@@ -688,7 +694,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param WP_Post object $post
      * @echoes string
      * @return void
@@ -696,7 +702,7 @@ class EventPost {
     public function print_single($post = null) {
         echo $this->get_single($post);
     }
-    
+
     /**
      * the_title
      * @desc alter the post title in order to add icons if needed
@@ -743,7 +749,7 @@ class EventPost {
 		return $this->get_single($event);
 	}
     }
-    
+
     /**
      * @desc Shortcode to display a list of events
      * @param array $atts
@@ -789,7 +795,7 @@ class EventPost {
      */
     public function shortcode_map($atts) {
         $ep_settings = $this->settings;
-        
+
         $defaults = array(
             // Display
             'width' => '',
@@ -818,7 +824,7 @@ class EventPost {
         foreach($this->map_interactions as $int_key=>$int_name){
             $defaults['disable_'.strtolower($int_key)]=false;
         }
-        
+
         $atts = shortcode_atts(apply_filters('eventpost_params', $defaults, 'shortcode_map'), $atts);
             // UI options
         foreach($this->map_interactions as $int_key=>$int_name){
@@ -855,6 +861,7 @@ class EventPost {
      * @desc Return an HTML list of events
      * @param array $atts
      * @filter eventpost_params
+     * @filter eventpost_listevents
      * @return string
      */
     public function list_events($atts, $id = 'event_list') {
@@ -910,7 +917,7 @@ class EventPost {
 
             foreach ($events as $post) { //$post=get_post($item_id);
                 $item_id = $post->ID;
-                $class_item = ($post->time_end >= time()) ? 'event_future' : 'event_past';
+                $class_item = ($post->time_end >= current_time('timestamp')) ? 'event_future' : 'event_past';
                 if ($ep_settings['emptylink'] == 0 && empty($post->post_content)) {
                     $post->permalink = '#' . $id . $this->list_id;
                 }
@@ -968,7 +975,7 @@ class EventPost {
                     ), $container_schema
             );
         }
-        return $ret;
+        return apply_filters('eventpost_listevents', $ret, $id.$this->list_id, $atts, $events);
     }
 
     /**
@@ -1049,14 +1056,14 @@ class EventPost {
         } elseif ($future == 1 && $past == 0) {
             $meta_query[] = array(
                 'key' => $this->META_END,
-                'value' => date('Y-m-d H:i:s'),
+                'value' => current_time(),
                 'compare' => '>=',
                     //'type'=>'DATETIME'
             );
         } elseif ($future == 0 && $past == 1) {
             $meta_query[] = array(
                 'key' => $this->META_END,
-                'value' => date('Y-m-d H:i:s'),
+                'value' => current_time(),
                 'compare' => '<=',
                     //'type'=>'DATETIME'
             );
@@ -1122,7 +1129,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param object $event
      * @return object
      */
@@ -1155,7 +1162,7 @@ class EventPost {
     }
 
     /** ADMIN ISSUES * */
-    
+
     /**
      * set_shortcode_ui
      * needs Shortcake (shortcode UI) plugin
@@ -1340,7 +1347,7 @@ class EventPost {
 	shortcode_ui_register_for_shortcode('event_details', apply_filters('eventpost_shortcodeui_details',$shortcodes_details_atts));
 
     }
-    
+
     /**
      * @desc add custom boxes in posts edit page
      */
@@ -1453,7 +1460,7 @@ class EventPost {
         </div>
         <?php
     }
-    
+
     /**
      * @desc display custombox containing shortcode wizard
      */
@@ -1619,7 +1626,7 @@ class EventPost {
     }
 
     /**
-     * 
+     *
      * @param string $date
      * @param string $cat
      * @param boolean $display
@@ -1650,7 +1657,7 @@ class EventPost {
         }
     }
 
-    
+
     /**
      * @param array $atts
      * @filter eventpost_params
@@ -1815,7 +1822,7 @@ class EventPost {
     }
 
     /** ADMIN PAGES **/
-    
+
     /**
      * @desc save settings end redirect
      * @return void
@@ -1838,9 +1845,9 @@ class EventPost {
 	foreach ($this->settings as $item_name=>$item_value){
 	    $valid_post['ep_settings'][$item_name] = FILTER_SANITIZE_STRING;
 	}
-        
+
         $post_types=(array) $_POST['ep_settings']['posttypes'];
-        $posttypes = get_post_types(); 
+        $posttypes = get_post_types();
         foreach($post_types as $posttype){
             if(!in_array($posttype, $posttypes)){
                 unset($post_types[$posttype]);
@@ -1900,6 +1907,13 @@ class EventPost {
                                     <?php _e('Date format', 'eventpost') ?>
                                 </label></th>
                             <td><input type="text" name="ep_settings[dateformat]" id="ep_dateformat" value="<?php echo $ep_settings['dateformat']; ?>"  class="widefat">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="ep_timeformatformat">
+                                    <?php _e('Time format', 'eventpost') ?>
+                                </label></th>
+                            <td><input type="text" name="ep_settings[timeformat]" id="ep_dateformat" value="<?php echo $ep_settings['timeformat']; ?>"  class="widefat">
                             </td>
                         </tr>
                         <tr>
@@ -2009,7 +2023,7 @@ class EventPost {
 					<?php _e('After the content', 'eventpost'); ?>
 				    </option>
                                 </select></td>
-                        </tr>                        
+                        </tr>
                         <tr>
                             <th><label for="ep_loopicons">
         <?php _e('Add icons for events in the loop', 'eventpost') ?>
@@ -2054,7 +2068,7 @@ class EventPost {
                             <th>
         <?php _e('Datepicker style', 'eventpost') ?>
                                 <?php $now = date('Y-m-d H:i:s'); ?>
-                                <?php $human_date = $this->human_date(time()) . date(' H:i'); ?>
+                                <?php $human_date = $this->human_date(current_time('timestamp')) . date(' H:i'); ?>
                             </th>
                             <td>
                                 <p>
@@ -2080,10 +2094,10 @@ class EventPost {
                                         <?php _e('Browser\'s style', 'eventpost'); ?></option>
                                     </label>
                                     <input type="datetime" class="eventpost-datepicker-browser" value="<?php echo $now; ?>">
-                                </p>                                
+                                </p>
                             </td>
                         </tr>
-                        
+
                         <tr><td colspan="2">
                                 <h3><?php _e('Performances settings', 'eventpost'); ?></h3>
                             </td>
@@ -2110,16 +2124,16 @@ class EventPost {
      * feed
      * generate ICS or VCS files from a category
      */
-    
+
     /**
-     * 
+     *
      * @param timestamp $timestamp
      * @return string
      */
     public function ics_date($timestamp){
 	return date("Ymd",$timestamp).'T'.date("His",$timestamp).'Z';
     }
-    
+
     /**
      * @desc outputs an RSS document
      */

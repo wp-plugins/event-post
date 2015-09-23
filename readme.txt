@@ -3,7 +3,7 @@ Contributors: bastho, n4thaniel, ecolosites
 Donate link: http://ba.stienho.fr/#don
 Tags: Post,posts,event,date,geolocalization,gps,widget,map,openstreetmap,calendar,agenda
 Requires at least: 3.8
-Tested up to: 4.3
+Tested up to: 4.3.1
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -128,14 +128,15 @@ example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 
 = Hooks =
 #### Filters
-* eventpost_printdate
-* eventpost_printlocation
-* eventpost_params
 * eventpost_get
-* eventpost_retreive
+* eventpost_list_shema
+* eventpost_listevents
 * eventpost_multisite_get
 * eventpost_multisite_blogids
-* eventpost_list_shema
+* eventpost_params
+* eventpost_printdate
+* eventpost_printlocation
+* eventpost_retreive
 
 #### Actions
 * before_eventpost_generator
@@ -160,6 +161,22 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 3. Map
 
 == Changelog ==
+
+= 3.8.1 =
+release date: sept. 23 2015
+
+* Fix time zone issue
+* Add filter hook to list_events()
+* Add some explicit CSS classes to elements
+
+= 3.8.0 =
+release date: sept. 22 2015
+
+* Some wording
+* Add an option for time format
+* wrap export buttons in event list
+* Fix javascript bug in map when no  default tile is set
+* Remove dummy javascript debug infos
 
 = 3.7.0 =
 release date: sept. 15 2015
