@@ -162,6 +162,11 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= 3.8.2 =
+
+* fix bug in past events fetching
+
+
 = 3.8.1 =
 release date: sept. 23 2015
 
