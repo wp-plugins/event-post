@@ -3,7 +3,7 @@
   Plugin Name: Event Post
   Plugin URI: http://ecolosites.eelv.fr/articles-evenement-eventpost/
   Description: Add calendar and/or geolocation metadata on posts
-  Version: 3.8.2
+  Version: 3.9.0
   Author: bastho
   Contributors: n4thaniel, ecolosites
   Author URI: http://ecolosites.eelv.fr/
@@ -177,6 +177,19 @@ class EventPost {
         $tbl_color['B'] = hexdec(substr($color, 5, 2));
         return $tbl_color;
     }
+    /**
+     *
+     * @global array $_wp_additional_image_sizes
+     * @return array
+     */
+    function get_thumbnail_sizes(){
+        global $_wp_additional_image_sizes;
+        $sizes = array('thumbnail', 'medium', 'large', 'full');
+        foreach($_wp_additional_image_sizes as $size=>$attrs){
+            $sizes[]=$size;
+        }
+        return $sizes;
+    }
 
     /**
      * Just for localisation
@@ -188,6 +201,8 @@ class EventPost {
 
     /**
      * @desc get blog settings, load and saves default settings id needed
+     * @action eventpost_getsettings
+     * @filter eventpost_getsettings
      * @return array
      */
     public function get_settings() {
@@ -257,11 +272,13 @@ class EventPost {
             $reg_settings=true;
         }
 
+        do_action('eventpost_getsettings');
+
         //Save settings  not changed
         if($reg_settings===true){
            update_option('ep_settings', $ep_settings);
         }
-        return $ep_settings;
+        return apply_filters('eventpost_getsettings', $ep_settings);
     }
 
     /**
@@ -784,7 +801,7 @@ class EventPost {
             $atts['container_schema'] = html_entity_decode($atts['container_schema']);
         if ($atts['item_schema'] != $this->list_shema['item'])
             $atts['item_schema'] = html_entity_decode($atts['item_schema']);
-        return $this->list_events($atts);
+        return $this->list_events($atts, 'event_list', 'shortcode');
     }
 
     /**
@@ -806,6 +823,7 @@ class EventPost {
             'after_title' => '</h3>',
             'style' => '',
             'thumbnail' => '',
+            'thumbnail_size' => '',
             'excerpt' => '',
             // Filters
             'nb' => 0,
@@ -835,7 +853,7 @@ class EventPost {
         }
         $atts['geo'] = 1;
         $atts['type'] = 'div';
-        return $this->list_events($atts, 'event_geolist'); //$nb,'div',$future,$past,1,'event_geolist');
+        return $this->list_events($atts, 'event_geolist', 'shortcode'); //$nb,'div',$future,$past,1,'event_geolist');
     }
 
     /**
@@ -862,9 +880,11 @@ class EventPost {
      * @param array $atts
      * @filter eventpost_params
      * @filter eventpost_listevents
+     * @filter eventpost_item_scheme_entities
+     * @filter eventpost_item_scheme_values
      * @return string
      */
-    public function list_events($atts, $id = 'event_list') {
+    public function list_events($atts, $id = 'event_list', $context='') {
 	$ep_settings = $this->settings;
         $defaults = array(
             'nb' => 0,
@@ -922,7 +942,7 @@ class EventPost {
                     $post->permalink = '#' . $id . $this->list_id;
                 }
                 $list.=str_replace(
-                        array(
+                        apply_filters('eventpost_item_scheme_entities', array(
                     '%child%',
                     '%class%',
                     '%color%',
@@ -933,7 +953,7 @@ class EventPost {
                     '%event_cat%',
                     '%event_location%',
                     '%event_excerpt%'
-                        ), array(
+                        )), apply_filters('eventpost_item_scheme_values', array(
                     $child,
                     $class_item,
                     $post->color,
@@ -944,7 +964,7 @@ class EventPost {
                     $this->get_singlecat($post),
                     $this->get_singleloc($post),
                     $excerpt == true && $post->post_excerpt!='' ? '<span class="event_exerpt">'.$post->post_excerpt.'</span>' : '',
-                        ), $item_schema
+                        )), $item_schema
                 );
             }
             $attributes = '';
@@ -975,7 +995,7 @@ class EventPost {
                     ), $container_schema
             );
         }
-        return apply_filters('eventpost_listevents', $ret, $id.$this->list_id, $atts, $events);
+        return apply_filters('eventpost_listevents', $ret, $id.$this->list_id, $atts, $events, $context);
     }
 
     /**
@@ -1632,7 +1652,7 @@ class EventPost {
      * @param boolean $display
      * @return boolean
      */
-    public function display_caldate($date, $cat = '', $display = false) {
+    public function display_caldate($date, $cat = '', $display = false, $colored=true, $thumbnail='') {
         $events = $this->get_events(array('nb' => -1, 'date' => $date, 'cat' => $cat, 'retreive' => true));
         $nb = count($events);
         if ($display) {
@@ -1642,18 +1662,20 @@ class EventPost {
 		    if ($this->settings['emptylink'] == 0 && empty($event->post_content)) {
 			$event->guid = '#';
 		    }
-                    $ret.='<li>';
-                    $ret.='<a href="' . $event->guid . '">';
-                    $ret.='<h4>' . $event->post_title . '</h4>';
-                    $ret.=$this->get_single($event);
-                    $ret.='</a></li>';
+                    $ret.='<li>'
+                            . '<a href="' . $event->guid . '">'
+                            . '<h4>' . $event->post_title . '</h4>'
+                            .$this->get_single($event)
+                            . (!empty($thumbnail) ? '<span class="event_thumbnail_wrap">' . get_the_post_thumbnail($event->ID, $thumbnail) . '</span>' : '')
+                            .'</a>'
+                            . '</li>';
                 }
                 $ret.='</ul>';
                 return $ret;
             }
             return'';
         } else {
-            return $nb > 0 ? '<a data-date="' . date('Y-m-d', $date) . '" class="eventpost_cal_link">' . date('j', $date) . '</a>' : date('j', $date);
+            return $nb > 0 ? '<a data-date="' . date('Y-m-d', $date) . '" class="eventpost_cal_link"'.($colored?' style="background-color:#'.$events[0]->color.'"':'').'>' . date('j', $date) . '</a>' : date('j', $date);
         }
     }
 
@@ -1668,7 +1690,9 @@ class EventPost {
             'date' => date('Y-n'),
             'cat' => '',
             'mondayfirst' => 0, //1 : weeks starts on monday
-            'datepicker' => 1
+            'datepicker' => 1,
+            'colored' => 1,
+            'thumbnail'=>'',
             ), 'calendar'), $atts));
 
         $annee = substr($date, 0, 4);
@@ -1719,7 +1743,7 @@ class EventPost {
                     }
                     $ret.=$td;
 
-                    $ret.= $this->display_caldate(mktime(0, 0, 0, $mois, $NoJour, $annee), $cat);
+                    $ret.= $this->display_caldate(mktime(0, 0, 0, $mois, $NoJour, $annee), $cat, false, $colored, $thumbnail);
                     $ret.='</td>';
                 } else {
                     $ret.='<td></td>';
@@ -1737,10 +1761,12 @@ class EventPost {
      */
     public function ajaxcal() {
         echo $this->calendar(array(
-            'date' => $_REQUEST['date'],
-            'cat' => $_REQUEST['cat'],
-            'mondayfirst' => $_REQUEST['mf'],
-            'datepicker' => $_REQUEST['dp']
+            'date' => esc_attr(FILTER_INPUT(INPUT_GET, 'date')),
+            'cat' => esc_attr(FILTER_INPUT(INPUT_GET, 'cat')),
+            'mondayfirst' => esc_attr(FILTER_INPUT(INPUT_GET, 'mf')),
+            'datepicker' => esc_attr(FILTER_INPUT(INPUT_GET, 'dp')),
+            'colored' => esc_attr(FILTER_INPUT(INPUT_GET, 'color')),
+            'thumbnail' => esc_attr(FILTER_INPUT(INPUT_GET, 'thumbnail')),
         ));
         exit();
     }
@@ -1749,7 +1775,7 @@ class EventPost {
      * @desc echoes the date of the calendar in ajax context
      */
     public function ajaxdate() {
-        echo $this->display_caldate(strtotime($_REQUEST['date']), $_REQUEST['cat'], true);
+        echo $this->display_caldate(strtotime(esc_attr(FILTER_INPUT(INPUT_GET, 'date'))), esc_attr(FILTER_INPUT(INPUT_GET, 'cat')), true, esc_attr(FILTER_INPUT(INPUT_GET, 'color')), esc_attr(FILTER_INPUT(INPUT_GET, 'thumbnail')));
         exit();
     }
 
@@ -2113,11 +2139,13 @@ class EventPost {
                         <tr>
                             <td colspan="2"><p class="submit"><input type="submit" value="<?php _e('Apply settings', 'eventpost'); ?>" class="button button-primary" id="submit" name="submit">			</p></td>
                         </tr>
+                        <?php do_action('eventpost_settings_form'); ?>
                     </tbody>
                 </table>
             </form>
         </div>
         <?php
+        do_action('eventpost_after_settings_form');
     }
 
     /*

@@ -51,7 +51,6 @@ jQuery(document).ready(function () {
                         })
                     });
                     ep_maps[map_id].addControl(new ol.control.Zoom());
-                    ep_maps[map_id].addControl(new ol.control.Zoom());
                     var ep_feature = new ol.Feature({
                         geometry: new ol.geom.Point(position)
                     });
@@ -221,7 +220,7 @@ jQuery(document).ready(function () {
 
             //Center the map to show all markers
             ep_maps[map_id].getView().fit(ep_vectorSources[map_id].getExtent(), ep_maps[map_id].getSize());
-            
+
             m_i=0;
             for(int_key in ep_interactions){
                 if(disabled_integrations.indexOf(int_key+',')>-1){
@@ -241,22 +240,45 @@ jQuery(document).ready(function () {
     function eventpost_cal_links() {
         jQuery('.eventpost_cal_bt').click(function () {
             var calcont = jQuery(this).parent().parent().parent().parent().parent();
-            jQuery.get(eventpost_params.ajaxurl, {action: 'EventPostCalendar', date: jQuery(this).data('date'), cat: calcont.data('cat'), mf: calcont.data('mf'), dp: calcont.data('dp')}, function (data) {
-                calcont.html(data);
-                eventpost_cal_links();
-            });
-        });
+            jQuery.get(
+                    eventpost_params.ajaxurl, 
+                    {
+                        action: 'EventPostCalendar', 
+                        date: jQuery(this).data('date'), 
+                        cat: calcont.data('cat'), 
+                        mf: calcont.data('mf'), 
+                        dp: calcont.data('dp'), 
+                        color: calcont.data('color'), 
+                        thumbnail: calcont.data('thumbnail'),
+                    }, 
+                    function (data) {
+                        calcont.html(data);
+                        eventpost_cal_links();
+                    });
+                    }
+                );
         jQuery('.eventpost_cal_link').click(function () {
             var calcont = jQuery(this).parent().parent().parent().parent().parent();
             calcont.find('.eventpost_cal_list').fadeOut(function () {
                 jQuery(this).remove();
             });
-            jQuery.get(eventpost_params.ajaxurl, {action: 'EventPostCalendarDate', date: jQuery(this).data('date'), cat: calcont.data('cat'), mf: calcont.data('mf'), dp: calcont.data('dp')}, function (data) {
-                calcont.append('<div class="eventpost_cal_list"><button class="eventpost_cal_close">x</button>' + data + '</div>');
-                calcont.find('.eventpost_cal_list').hide(1).fadeIn(500);
-                calcont.find('.eventpost_cal_close').click(function () {
-                    jQuery(this).parent().hide(500).remove();
-                });
+            jQuery.get(
+                    eventpost_params.ajaxurl, 
+                    {
+                        action: 'EventPostCalendarDate', 
+                        date: jQuery(this).data('date'), 
+                        cat: calcont.data('cat'), 
+                        mf: calcont.data('mf'), 
+                        dp: calcont.data('dp'),
+                        color: calcont.data('color'), 
+                        thumbnail: calcont.data('thumbnail'),
+                    }, 
+                    function (data) {
+                        calcont.append('<div class="eventpost_cal_list"><button class="eventpost_cal_close">x</button>' + data + '</div>');
+                        calcont.find('.eventpost_cal_list').hide(1).fadeIn(500);
+                        calcont.find('.eventpost_cal_close').click(function () {
+                            jQuery(this).parent().hide(500).remove();
+                    });
             });
         });
 
@@ -264,10 +286,21 @@ jQuery(document).ready(function () {
     jQuery('.eventpost_calendar').each(function () {
         var calcont = jQuery(this);
         calcont.html('<img src="' + eventpost_params.imgpath + 'cal-loader.gif" class="eventpost_cal_loader"/>');
-        jQuery.get(eventpost_params.ajaxurl, {action: 'EventPostCalendar', date: jQuery(this).data('date'), cat: jQuery(this).data('cat'), mf: jQuery(this).data('mf'), dp: jQuery(this).data('dp')}, function (data) {
-            calcont.html(data);
-            eventpost_cal_links();
-        });
+        jQuery.get(
+                eventpost_params.ajaxurl, 
+                {
+                    action: 'EventPostCalendar', 
+                    date: jQuery(this).data('date'), 
+                    cat: jQuery(this).data('cat'), 
+                    mf: jQuery(this).data('mf'), 
+                    dp: jQuery(this).data('dp'),
+                    color: jQuery(this).data('color'), 
+                    thumbnail: jQuery(this).data('thumbnail'),
+                }, 
+                function (data) {
+                    calcont.html(data);
+                    eventpost_cal_links();
+                });
     });
 
 });

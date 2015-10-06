@@ -127,8 +127,12 @@ example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 
 
 = Hooks =
+<a id="hooks"></a>
 #### Filters
 * eventpost_get
+* eventpost_getsettings
+* eventpost_item_scheme_entities
+* eventpost_item_scheme_values
 * eventpost_list_shema
 * eventpost_listevents
 * eventpost_multisite_get
@@ -141,6 +145,9 @@ example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 #### Actions
 * before_eventpost_generator
 * after_eventpost_generator
+* eventpost_getsettings
+* eventpost_settings_form
+* eventpost_after_settings_form
 
 == Installation ==
 
@@ -162,10 +169,19 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 == Changelog ==
 
+= Comming =
+* Support of OpenWeatherMap
+
+= 3.9.0 =
+release date: oct. 6 2015
+
+* Add width and height options in map widget
+* Add thumbnail + size option in both list, map and calendar widgets
+* Add some [hooks](https://wordpress.org/plugins/event-post/other_notes/#hooks)
+* Code cleanup
+
 = 3.8.2 =
-
 * fix bug in past events fetching
-
 
 = 3.8.1 =
 release date: sept. 23 2015
