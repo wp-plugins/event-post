@@ -1,0 +1,715 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Event post\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-22 17:28+0100\n"
+"PO-Revision-Date: 2015-09-22 17:29+0100\n"
+"Last-Translator: P. E.\n"
+"Language-Team: P. E.\n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.7.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPath-2: ..\n"
+"X-Poedit-SearchPath-3: .\n"
+"X-Poedit-SearchPathExcluded-0: ../js/jquery.datetimepicker.js\n"
+"X-Poedit-SearchPathExcluded-1: ../js/OpenLayers.js\n"
+
+#: ../eventpost.php:93
+msgid "Jan"
+msgstr "Jan"
+
+#: ../eventpost.php:93
+msgid "Feb"
+msgstr "Feb"
+
+#: ../eventpost.php:93
+msgid "Mar"
+msgstr "Mar"
+
+#: ../eventpost.php:93
+msgid "Apr"
+msgstr "Apr"
+
+#: ../eventpost.php:93
+msgid "May"
+msgstr "Maj"
+
+#: ../eventpost.php:93
+msgid "Jun"
+msgstr "Jun"
+
+#: ../eventpost.php:93
+msgid "Jul"
+msgstr "Jul"
+
+#: ../eventpost.php:93
+msgid "Aug"
+msgstr "Aug"
+
+#: ../eventpost.php:93
+msgid "Sept"
+msgstr "Sept"
+
+#: ../eventpost.php:93
+msgid "Oct"
+msgstr "Okt"
+
+#: ../eventpost.php:93
+msgid "Nov"
+msgstr "Nov"
+
+#: ../eventpost.php:93
+msgid "Dec"
+msgstr "Dec"
+
+#: ../eventpost.php:94 ../widget.cal.php:104
+msgid "Sunday"
+msgstr "Söndag"
+
+#: ../eventpost.php:94 ../widget.cal.php:105
+msgid "Monday"
+msgstr "Måndag"
+
+#: ../eventpost.php:94
+msgid "Tuesday"
+msgstr "Tisdag"
+
+#: ../eventpost.php:94
+msgid "Wednesday"
+msgstr "Onsdag"
+
+#: ../eventpost.php:94
+msgid "Thursday"
+msgstr "Torsdag"
+
+#: ../eventpost.php:94
+msgid "Friday"
+msgstr "Fredag"
+
+#: ../eventpost.php:94
+msgid "Saturday"
+msgstr "Lördag"
+
+#: ../eventpost.php:116 ../eventpost.php:399
+msgid "yy-mm-dd"
+msgstr "åå-mm-dd"
+
+#: ../eventpost.php:138
+msgid "Drag Rotate"
+msgstr ""
+
+#: ../eventpost.php:139
+msgid "Double Click Zoom"
+msgstr ""
+
+#: ../eventpost.php:140
+msgid "Drag Pan"
+msgstr ""
+
+#: ../eventpost.php:141
+msgid "Pinch Rotate"
+msgstr ""
+
+#: ../eventpost.php:142
+msgid "Pinch Zoom"
+msgstr ""
+
+#: ../eventpost.php:143
+msgid "Keyboard Pan"
+msgstr ""
+
+#: ../eventpost.php:144
+msgid "Keyboard Zoom"
+msgstr ""
+
+#: ../eventpost.php:145
+msgid "Mouse Wheel Zoom"
+msgstr ""
+
+#: ../eventpost.php:146
+msgid "Drag Zoom"
+msgstr ""
+
+#: ../eventpost.php:185
+msgid "Add calendar and/or geolocation metadata on posts"
+msgstr "Lägg till kalender- och/eller platsmetadata till inlägg"
+
+#: ../eventpost.php:186
+msgid "Event Post"
+msgstr "Event Post"
+
+#: ../eventpost.php:398
+msgid "Choose"
+msgstr "Välj"
+
+#: ../eventpost.php:400
+msgid "More icons"
+msgstr "Fler ikoner"
+
+#: ../eventpost.php:401 ../eventpost.php:1404 ../eventpost.php:1419
+msgid "Pick a date"
+msgstr "Välj ett datum"
+
+#: ../eventpost.php:464
+msgid "today"
+msgstr "idag"
+
+#: ../eventpost.php:466
+msgid "tomorrow"
+msgstr "imorgon"
+
+#: ../eventpost.php:468
+msgid "yesterday"
+msgstr "igår"
+
+#: ../eventpost.php:498 ../eventpost.php:509
+msgid "from"
+msgstr "från"
+
+#: ../eventpost.php:500 ../eventpost.php:511
+msgid "to"
+msgstr "till"
+
+#: ../eventpost.php:503
+msgid "at"
+msgstr "plats"
+
+#: ../eventpost.php:543
+msgid "Download ICS file"
+msgstr "Ladda ned ICS-fil"
+
+#: ../eventpost.php:544
+msgid "Add to Google calendar"
+msgstr "Lägg till i Google Kalender"
+
+#: ../eventpost.php:545
+msgid "Add to Outlook"
+msgstr "Lägg till i Outlook"
+
+#: ../eventpost.php:581 ../eventpost.php:1475
+msgid "Map"
+msgstr "Karta"
+
+#: ../eventpost.php:1175
+msgid "Events list"
+msgstr "Händelselista"
+
+#: ../eventpost.php:1180 ../eventpost.php:1481 ../widget.map.php:101
+#: ../widget.php:104
+msgid "Number of posts"
+msgstr "Antal inlägg"
+
+#: ../eventpost.php:1183
+msgid "-1 is for: no limit"
+msgstr "-1 för: ingen begränsning"
+
+#: ../eventpost.php:1186 ../eventpost.php:1307
+msgid "Categories"
+msgstr "Kategorier"
+
+#: ../eventpost.php:1191
+msgid "Tags"
+msgstr "Etiketter"
+
+#: ../eventpost.php:1196 ../eventpost.php:1506
+msgid "Future events:"
+msgstr "Kommande händelser:"
+
+#: ../eventpost.php:1200 ../eventpost.php:1209 ../eventpost.php:1218
+#: ../eventpost.php:1227 ../eventpost.php:1508 ../eventpost.php:1515
+#: ../eventpost.php:1525 ../eventpost.php:2032 ../widget.cal.php:114
+msgid "Yes"
+msgstr "Ja"
+
+#: ../eventpost.php:1201 ../eventpost.php:1210 ../eventpost.php:1219
+#: ../eventpost.php:1228 ../eventpost.php:1509 ../eventpost.php:1514
+#: ../eventpost.php:1524 ../eventpost.php:2034 ../widget.cal.php:113
+msgid "No"
+msgstr "Nej"
+
+#: ../eventpost.php:1205 ../eventpost.php:1512
+msgid "Past events:"
+msgstr "Tidigare händelser:"
+
+#: ../eventpost.php:1214 ../eventpost.php:1522
+msgid "Only geotagged events:"
+msgstr "Endast geotaggade händelser:"
+
+#: ../eventpost.php:1223
+msgid "Thumbnail:"
+msgstr "Miniatyr:"
+
+#: ../eventpost.php:1232
+msgid "Thumbnail size:"
+msgstr "Miniatyrstorlek:"
+
+#: ../eventpost.php:1236
+msgid "Thumbnail"
+msgstr "Miniatyr"
+
+#: ../eventpost.php:1237
+msgid "Medium"
+msgstr "Medium"
+
+#: ../eventpost.php:1238
+msgid "Large"
+msgstr "Stor"
+
+#: ../eventpost.php:1242
+msgid "Order by:"
+msgstr "Sortera efter:"
+
+#: ../eventpost.php:1246 ../widget.cal.php:90
+msgid "Date"
+msgstr "Datum"
+
+#: ../eventpost.php:1247 ../widget.cal.php:71 ../widget.map.php:95
+#: ../widget.php:98
+msgid "Title"
+msgstr "Titel"
+
+#: ../eventpost.php:1251
+msgid "Order:"
+msgstr "Sortering:"
+
+#: ../eventpost.php:1255
+msgid "Asc."
+msgstr "Stigande"
+
+#: ../eventpost.php:1256
+msgid "Desc."
+msgstr "Fallande"
+
+#: ../eventpost.php:1270 ../eventpost.php:1557
+msgid "Width"
+msgstr "Bredd"
+
+#: ../eventpost.php:1275 ../eventpost.php:1562
+msgid "Height"
+msgstr "Höjd"
+
+#: ../eventpost.php:1280 ../widget.map.php:8
+msgid "Events map"
+msgstr "Händelsekarta"
+
+#: ../eventpost.php:1284
+#, php-format
+msgid "Disable %s interaction"
+msgstr ""
+
+#: ../eventpost.php:1296 ../widget.cal.php:6
+msgid "Events calendar"
+msgstr "Händelsekalender"
+
+#: ../eventpost.php:1301
+msgid "Default date"
+msgstr "Standarddatum"
+
+#: ../eventpost.php:1312
+msgid "Monday first"
+msgstr "Måndag först"
+
+#: ../eventpost.php:1317
+msgid "Date selector"
+msgstr "Datumväljare"
+
+#: ../eventpost.php:1328
+msgid "Event details"
+msgstr "Händelsedetaljer"
+
+#: ../eventpost.php:1332
+msgid "Attribute"
+msgstr "Attribut"
+
+#: ../eventpost.php:1336
+msgid "Full details"
+msgstr "Kompletta detaljer"
+
+#: ../eventpost.php:1337
+msgid "Full date"
+msgstr "Komplett datum"
+
+#: ../eventpost.php:1338
+msgid "Begin date"
+msgstr "Startdatum"
+
+#: ../eventpost.php:1339
+msgid "End date"
+msgstr "Slutdatum"
+
+#: ../eventpost.php:1340
+msgid "Address text"
+msgstr "Adresstext"
+
+#: ../eventpost.php:1341 ../eventpost.php:1796
+msgid "Location"
+msgstr "Plats"
+
+#: ../eventpost.php:1355
+msgid "Event date"
+msgstr "Händelsedatum"
+
+#: ../eventpost.php:1356
+msgid "Event location"
+msgstr "Händelseplats"
+
+#: ../eventpost.php:1359
+msgid "Events Shortcode editor"
+msgstr "Kortkodsredigerare för händelser"
+
+#: ../eventpost.php:1381
+msgid "Color:"
+msgstr "Färg:"
+
+#: ../eventpost.php:1397
+msgid "Begin:"
+msgstr "Börjar:"
+
+#: ../eventpost.php:1412
+msgid "End:"
+msgstr "Slutar:"
+
+#: ../eventpost.php:1438
+msgid "Look for event's GPS coordinates:"
+msgstr "Sök efter GPS-koordinater för platsen där händelsen äger rum:"
+
+#: ../eventpost.php:1443
+msgid "Event address, as it will be displayed:"
+msgstr "Adress där händelsen äger rum, så som den kommer visas:"
+
+#: ../eventpost.php:1450
+msgid "Latitude:"
+msgstr "Latitud:"
+
+#: ../eventpost.php:1456
+msgid "Longitude:"
+msgstr "Longitud:"
+
+#: ../eventpost.php:1472
+msgid "Type :"
+msgstr "Typ:"
+
+#: ../eventpost.php:1474
+msgid "List"
+msgstr "Lista"
+
+#: ../eventpost.php:1483 ../eventpost.php:1490 ../widget.cal.php:79
+msgid "All"
+msgstr "Alla"
+
+#: ../eventpost.php:1488 ../widget.cal.php:77 ../widget.map.php:123
+#: ../widget.map.php:138 ../widget.php:126 ../widget.php:149
+msgid "Only in :"
+msgstr "Endast i:"
+
+#: ../eventpost.php:1532 ../eventpost.php:1966 ../widget.map.php:166
+msgid "Map background"
+msgstr "Kartbakgrund"
+
+#: ../eventpost.php:1569
+msgid "Insert shortcode"
+msgstr "Infoga kortkod"
+
+#: ../eventpost.php:1699
+msgid "Today"
+msgstr "Idag"
+
+#: ../eventpost.php:1795
+msgid "Event"
+msgstr "Händelse"
+
+#: ../eventpost.php:1834
+msgid "Security error"
+msgstr "Säkerhetsfel"
+
+#: ../eventpost.php:1869 ../eventpost.php:1894 ../eventpost.php:1901
+msgid "Event settings"
+msgstr "Händelseinställningar"
+
+#: ../eventpost.php:1877
+#, php-format
+msgid "%d Events"
+msgstr "%d Händelser"
+
+#: ../eventpost.php:1878
+#, php-format
+msgid "%d Geolocalized events"
+msgstr "%d Geolokaliserade händelser"
+
+#: ../eventpost.php:1887
+msgid "Event settings saved !"
+msgstr "Händelseinställningar sparade!"
+
+#: ../eventpost.php:1906
+msgid "Date format"
+msgstr "Datumformat"
+
+#: ../eventpost.php:1913
+msgid "Time format"
+msgstr ""
+
+#: ../eventpost.php:1920
+msgid "Show export buttons on:"
+msgstr "Visa exporteringsknappar på:"
+
+#: ../eventpost.php:1925
+msgid "List only"
+msgstr "Endast lista"
+
+#: ../eventpost.php:1928
+msgid "Single only"
+msgstr "Endast enstaka"
+
+#: ../eventpost.php:1931
+msgid "Both"
+msgstr "Båda"
+
+#: ../eventpost.php:1934
+msgid "None"
+msgstr "Inga"
+
+#: ../eventpost.php:1939
+msgid "List settings"
+msgstr "Listinställningar"
+
+#: ../eventpost.php:1944
+msgid "Container shema"
+msgstr "Behållarschema"
+
+#: ../eventpost.php:1947 ../eventpost.php:1956
+msgid "default:"
+msgstr "standard:"
+
+#: ../eventpost.php:1953
+msgid "Item shema"
+msgstr "Objektschema"
+
+#: ../eventpost.php:1961
+msgid "Map settings"
+msgstr "Kartinställningar"
+
+#: ../eventpost.php:1981
+msgid "Makers custom directory (leave empty for default settings)"
+msgstr "Skaparens anpassade katalog (lämnas tomt för standardinställning)"
+
+#: ../eventpost.php:1985
+msgid "Root path:"
+msgstr "Rotsökväg:"
+
+#: ../eventpost.php:1989
+msgid "URL:"
+msgstr "URL:"
+
+#: ../eventpost.php:1995
+msgid "Global settings"
+msgstr "Globala inställningar"
+
+#: ../eventpost.php:2000
+msgid "Print link for empty posts"
+msgstr "Skriv ut länk för tomma inlägg"
+
+#: ../eventpost.php:2005
+msgid "Link all posts"
+msgstr "Länka alla inlägg"
+
+#: ../eventpost.php:2008
+msgid "Do not link posts with empty content"
+msgstr "Länka inte tomma inlägg"
+
+#: ../eventpost.php:2014
+msgid "Event bar position for single posts"
+msgstr "Händelsefältets position i enskilda inlägg"
+
+#: ../eventpost.php:2019
+msgid "Before the content"
+msgstr "Före innehållet"
+
+#: ../eventpost.php:2022
+msgid "After the content"
+msgstr "Efter innehållet"
+
+#: ../eventpost.php:2028
+msgid "Add icons for events in the loop"
+msgstr "Lägg till ikoner för händelser i 'the loop'"
+
+#: ../eventpost.php:2039
+msgid "Position of event details boxes"
+msgstr "Plats för rutor med händelsedetaljer"
+
+#: ../eventpost.php:2043
+msgid "Side"
+msgstr "Vid sidan"
+
+#: ../eventpost.php:2045
+msgid "Under the text"
+msgstr "Under texten"
+
+#: ../eventpost.php:2050
+msgid "Admin UI settings"
+msgstr "Inställningar för administrativt gränssnitt"
+
+#: ../eventpost.php:2055
+msgid "Wich post types can be events ?"
+msgstr ""
+
+#: ../eventpost.php:2068
+msgid "Datepicker style"
+msgstr ""
+
+#: ../eventpost.php:2075
+msgid "Dual"
+msgstr ""
+
+#: ../eventpost.php:2084
+msgid "Separate"
+msgstr ""
+
+#: ../eventpost.php:2093
+msgid "Browser's style"
+msgstr ""
+
+#: ../eventpost.php:2101
+msgid "Performances settings"
+msgstr "Prestandainställningar"
+
+#: ../eventpost.php:2108
+msgid "Use cache for results"
+msgstr ""
+
+#: ../eventpost.php:2113
+msgid "Apply settings"
+msgstr "Tillämpa inställningar"
+
+#: ../multisite.php:22
+msgid "Extends Event post to multisite networks"
+msgstr "Utökar Event Post med stöd för webbplatsnätverk"
+
+#: ../multisite.php:23
+msgid "Event Post multisite support"
+msgstr "Stöd för webbplatsnätverk i Event Post"
+
+#: ../multisite.php:31
+msgid "Blogs"
+msgstr "Bloggar"
+
+#: ../multisite.php:34
+msgid "Blog's id, separated by comma. \"all\" for all blogs"
+msgstr "Bloggarnas ID:n, separerade med komma. \"all\" för alla bloggar"
+
+#: ../widget.cal.php:6
+msgid "Calendar presentation of events posts"
+msgstr "Kalendervisning av händelseinlägg "
+
+#: ../widget.cal.php:92
+msgid "Current"
+msgstr "Aktuellt"
+
+#: ../widget.cal.php:93
+msgid "-1 Month"
+msgstr "-1 Månad"
+
+#: ../widget.cal.php:94
+msgid "-2 Months"
+msgstr "-2 Månader"
+
+#: ../widget.cal.php:95
+msgid "+1 Month"
+msgstr "+1 Månad"
+
+#: ../widget.cal.php:96
+msgid "+2 Months"
+msgstr "+2 Månader"
+
+#: ../widget.cal.php:102
+msgid "Weeks start on"
+msgstr "Veckan börjar med"
+
+#: ../widget.cal.php:111
+msgid "Date picker"
+msgstr "Datumväljare"
+
+#: ../widget.map.php:8
+msgid "Map of events posts"
+msgstr "Karta över händelseinlägg"
+
+#: ../widget.map.php:103 ../widget.php:106
+msgid "(-1 is no limit)"
+msgstr "(-1 för ingen begränsning)"
+
+#: ../widget.map.php:110 ../widget.php:113
+msgid "Display future events"
+msgstr "Visa kommande händelser"
+
+#: ../widget.map.php:116 ../widget.php:119
+msgid "Display past events"
+msgstr "Visa tidigare händelser"
+
+#: ../widget.map.php:125 ../widget.php:128
+msgid "All categories"
+msgstr "Alla kategorier"
+
+#: ../widget.map.php:140 ../widget.php:151
+msgid "All tags"
+msgstr "Alla etiketter"
+
+#: ../widget.map.php:154 ../widget.php:165
+msgid "Show thumbnails"
+msgstr "Visa miniatyrer"
+
+#: ../widget.map.php:160 ../widget.php:171
+msgid "Show excerpt"
+msgstr "Visa utdrag"
+
+#: ../widget.map.php:195
+#, php-format
+msgid "Activate %s interaction"
+msgstr ""
+
+#: ../widget.php:6
+msgid "Events"
+msgstr "Händelser"
+
+#: ../widget.php:6
+msgid "List of future events posts"
+msgstr "Lista över kommande händelseinlägg"
+
+#: ../widget.php:141
+msgid "Show category ICS link"
+msgstr "Visa kategori ICS-länk"
+
+#: ../widget.php:177
+msgid "Order :"
+msgstr "Ordning :"
+
+#: ../widget.php:179
+msgid "Reverse chronological"
+msgstr "Omvänd kronologisk"
+
+#: ../widget.php:180
+msgid "Chronological"
+msgstr "Kronologisk"
+
+#~ msgid "from:"
+#~ msgstr "från:"
+
+#~ msgid "to:"
+#~ msgstr "till:"
+
+#~ msgid "at:"
+#~ msgstr "plats:"
+
+#~ msgid "Cache results"
+#~ msgstr "Cacha resultat"
+
+#~ msgid "Date:"
+#~ msgstr "Datum:"
+
+#~ msgid "Location:"
+#~ msgstr "Plats:"
