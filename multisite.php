@@ -19,8 +19,8 @@ class EventPostMU{
         $this->__construct();
     }
     function no_use(){
-        __('Extends Event post to multisite networks','eventpost');
-        __('Event Post multisite support','eventpost');
+        __('Extends Event post to multisite networks','event-post');
+        __('Event Post multisite support','event-post');
     }
     function params($param,$context){
         $param['blogs']='';
@@ -28,10 +28,10 @@ class EventPostMU{
     }
     function shortcode_ui($param){
 	$param['attrs'][]=array(
-                    'label'       => __('Blogs','eventpost'),
+                    'label'       => __('Blogs','event-post'),
                     'attr'        => 'blogs',
                     'type'        => 'text',
-		    'description' => __('Blog\'s id, separated by comma. "all" for all blogs','eventpost')
+		    'description' => __('Blog\'s id, separated by comma. "all" for all blogs','event-post')
                 );
 	return $param;
     }

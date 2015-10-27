@@ -4,7 +4,7 @@
 class eventpostcal_widget extends WP_Widget {
     var $defaults;
    function __construct() {
-  	  parent::__construct(false, __( 'Events calendar', 'eventpost' ),array('description'=>__( 'Calendar presentation of events posts', 'eventpost' )));
+  	  parent::__construct(false, __( 'Events calendar', 'event-post' ),array('description'=>__( 'Calendar presentation of events posts', 'event-post' )));
            $this->defaults = array(
             'title' => '',
             'cat'   => '',
@@ -62,15 +62,15 @@ class eventpostcal_widget extends WP_Widget {
        ?>
        <input type="hidden" id="<?php echo $this->get_field_id('title'); ?>-title" value="<?php echo $instance['title']; ?>">
        <p>
-       <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title','event-post'); ?>
        <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $instance['title']; ?>" />
        </label>
        </p>
 
        <p>
-       	<label for="<?php echo $this->get_field_id('cat'); ?>"><?php _e('Only in :','eventpost'); ?>
+       	<label for="<?php echo $this->get_field_id('cat'); ?>"><?php _e('Only in :','event-post'); ?>
        	<select  id="<?php echo $this->get_field_id('cat'); ?>" name="<?php echo $this->get_field_name('cat'); ?>">
-       		<option value=''><?php _e('All','eventpost') ?></option>
+       		<option value=''><?php _e('All','event-post') ?></option>
        <?php foreach($cats as $cat){ ?>
        	<option value="<?php echo $cat->slug; ?>" <?php selected($cat->slug, $instance['cat'], true); ?>><?php echo $cat->cat_name; ?></option>
        <?php  }  ?>
@@ -79,40 +79,40 @@ class eventpostcal_widget extends WP_Widget {
        </p>
 
         <p>
-       <label for="<?php echo $this->get_field_id('date'); ?>"><?php _e('Date','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('date'); ?>"><?php _e('Date','event-post'); ?>
        <select id="<?php echo $this->get_field_id('date'); ?>"  name="<?php echo $this->get_field_name('date'); ?>">
-       	<option value='' <?php selected($instance['date'], '', true); ?>><?php _e('Current','eventpost'); ?></option>
-       	<option value='-1 Month' <?php selected($instance['date'], '-1 Month', true); ?>><?php _e('-1 Month','eventpost'); ?></option>
-       	<option value='-2 Months' <?php selected($instance['date'], '-2 Months', true); ?>><?php _e('-2 Months','eventpost'); ?></option>
-       	<option value='+1 Month' <?php selected($instance['date'],'+1 Month', true); ?>><?php _e('+1 Month','eventpost'); ?></option>
-       	<option value='+2 Months' <?php selected($instance['date'], '+2 Months', true); ?>><?php _e('+2 Months','eventpost'); ?></option>
+       	<option value='' <?php selected($instance['date'], '', true); ?>><?php _e('Current','event-post'); ?></option>
+       	<option value='-1 Month' <?php selected($instance['date'], '-1 Month', true); ?>><?php _e('-1 Month','event-post'); ?></option>
+       	<option value='-2 Months' <?php selected($instance['date'], '-2 Months', true); ?>><?php _e('-2 Months','event-post'); ?></option>
+       	<option value='+1 Month' <?php selected($instance['date'],'+1 Month', true); ?>><?php _e('+1 Month','event-post'); ?></option>
+       	<option value='+2 Months' <?php selected($instance['date'], '+2 Months', true); ?>><?php _e('+2 Months','event-post'); ?></option>
        </select>
        </label>
        </p>
 
        <p>
-       <label for="<?php echo $this->get_field_id('mf'); ?>"><?php _e('Weeks start on','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('mf'); ?>"><?php _e('Weeks start on','event-post'); ?>
        <select id="<?php echo $this->get_field_id('mf'); ?>" name="<?php echo $this->get_field_name('mf'); ?>">
-       	<option value="0" <?php selected($instance['mf'], 0, true); ?>><?php _e('Sunday','eventpost'); ?></option>
-       	<option value="1" <?php selected($instance['mf'], 1, true); ?>><?php _e('Monday','eventpost'); ?></option>
+       	<option value="0" <?php selected($instance['mf'], 0, true); ?>><?php _e('Sunday','event-post'); ?></option>
+       	<option value="1" <?php selected($instance['mf'], 1, true); ?>><?php _e('Monday','event-post'); ?></option>
        </select>
        </label>
        </p>
 
        <p>
-       <label for="<?php echo $this->get_field_id('choose'); ?>"><?php _e('Date picker','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('choose'); ?>"><?php _e('Date picker','event-post'); ?>
        <select id="<?php echo $this->get_field_id('choose'); ?>" name="<?php echo $this->get_field_name('choose'); ?>">
-       	<option value="0" <?php selected($instance['choose'], 0, true); ?>><?php _e('No','eventpost'); ?></option>
-       	<option value="1" <?php selected($instance['choose'], 1, true); ?>><?php _e('Yes','eventpost'); ?></option>
+       	<option value="0" <?php selected($instance['choose'], 0, true); ?>><?php _e('No','event-post'); ?></option>
+       	<option value="1" <?php selected($instance['choose'], 1, true); ?>><?php _e('Yes','event-post'); ?></option>
        </select>
        </label>
        </p>
 
        <p>
-       <label for="<?php echo $this->get_field_id('colored'); ?>"><?php _e('Colored days','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('colored'); ?>"><?php _e('Colored days','event-post'); ?>
        <select id="<?php echo $this->get_field_id('colored'); ?>" name="<?php echo $this->get_field_name('colored'); ?>">
-       	<option value="0" <?php selected($instance['colored'], 0, true); ?>><?php _e('No','eventpost'); ?></option>
-       	<option value="1" <?php selected($instance['colored'], 1, true); ?>><?php _e('Yes','eventpost'); ?></option>
+       	<option value="0" <?php selected($instance['colored'], 0, true); ?>><?php _e('No','event-post'); ?></option>
+       	<option value="1" <?php selected($instance['colored'], 1, true); ?>><?php _e('Yes','event-post'); ?></option>
        </select>
        </label>
        </p>
@@ -120,12 +120,12 @@ class eventpostcal_widget extends WP_Widget {
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('thumbnail'); ?>">
        <input id="<?php echo $this->get_field_id('thumbnail'); ?>" name="<?php echo $this->get_field_name('thumbnail'); ?>" type="checkbox" value="1" <?php checked($instance['thumbnail'], true , true); ?>/>
-       <?php _e('Show thumbnails','eventpost'); ?>
+       <?php _e('Show thumbnails','event-post'); ?>
        </label>
        </p>
        <p>
        	<label for="<?php echo $this->get_field_id('thumbnail_size'); ?>">
-            <?php _e('Thumbnail size:','eventpost'); ?>
+            <?php _e('Thumbnail size:','event-post'); ?>
        	<select  class="widefat" id="<?php echo $this->get_field_id('thumbnail_size'); ?>" name="<?php echo $this->get_field_name('thumbnail_size'); ?>">
        		<option value=''></option>
        <?php foreach($thumbnail_sizes as $size){?>

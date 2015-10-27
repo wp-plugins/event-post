@@ -108,7 +108,7 @@ item_schema default value :
 * **title=''** *(string (default )*
 * **before_title="&lt;h3&gt;"** *(string (default &lt;h3&gt;)*
 * **after_title="&lt;/h3&gt;"** *(string (default &lt;/h3&gt;)** **thumbnail=""** * (Bool, default:false, used to display posts thumbnails)*
-* **excerpt=""** * (Bool, default:false, used to display posts excerpts)*
+* **excerpt=""** *(Bool, default:false, used to display posts excerpts)*
 
 example: `[events_map future=1 past=1 cat="actuality" nb="-1"]`
 
@@ -123,7 +123,7 @@ example: `[events_cal cat="actuality" date="-2 months" mondayfirst=1]`
 
 ####[event_details]
 
-* **attribute** string (date, start, end, address, location). The default value is NULL adn displays the full event bar
+* **attribute** *string (date, start, end, address, location). The default value is NULL adn displays the full event bar*
 
 
 = Hooks =
@@ -171,6 +171,19 @@ Yes, and it uses only open-sources : openstreetmap, openlayer, jquery
 
 = Comming =
 * Support of OpenWeatherMap
+* Search form
+* Position preview in admin
+
+= 4.0.0 =
+release date: oct. 27 2015
+
+* Make replacement by "today" optional (prevent cache plugins issues)
+* More standard setting page
+* Only show events on dashboard right now if they're more than 0
+* Date and time foramts harmonization
+* Add `.pot` file and make match text-domain to plugin slug
+* Only displays expandable map in the content of the current single
+* Rename some js and css files
 
 = 3.9.0 =
 release date: oct. 6 2015

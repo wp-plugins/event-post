@@ -5,7 +5,7 @@ class eventpostmap_widget extends WP_Widget {
     var $defaults;
    function __construct() {
         global $EventPost;
-        parent::__construct(false, __( 'Events map', 'eventpost' ),array('description'=>__( 'Map of events posts', 'eventpost' )));
+        parent::__construct(false, __( 'Events map', 'event-post' ),array('description'=>__( 'Map of events posts', 'event-post' )));
         $this->defaults = array(
             'numberposts'   => '',
             'widgettitle'   => '',
@@ -100,37 +100,37 @@ class eventpostmap_widget extends WP_Widget {
        ?>
        <input type="hidden" id="<?php echo $this->get_field_id('widgettitle'); ?>-title" value="<?php echo $instance['widgettitle']; ?>">
        <p>
-       <label for="<?php echo $this->get_field_id('widgettitle'); ?>"><?php _e('Title','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('widgettitle'); ?>"><?php _e('Title','event-post'); ?>
        <input class="widefat" id="<?php echo $this->get_field_id('widgettitle'); ?>" name="<?php echo $this->get_field_name('widgettitle'); ?>" type="text" value="<?php echo $instance['widgettitle']; ?>" />
        </label>
        </p>
 
        <p style="margin-top:10px;">
-       <label for="<?php echo $this->get_field_id('numberposts'); ?>"><?php _e('Number of posts','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('numberposts'); ?>"><?php _e('Number of posts','event-post'); ?>
        <input id="<?php echo $this->get_field_id('numberposts'); ?>" name="<?php echo $this->get_field_name('numberposts'); ?>" type="number" value="<?php echo $instance['numberposts']; ?>" />
-       </label> <?php _e('(-1 is no limit)','eventpost'); ?>
+       </label> <?php _e('(-1 is no limit)','event-post'); ?>
        </p>
 
 
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('future'); ?>">
        <input id="<?php echo $this->get_field_id('future'); ?>" name="<?php echo $this->get_field_name('future'); ?>" type="checkbox" value="1" <?php checked($instance['future'], true , true); ?> />
-       <?php _e('Display future events','eventpost'); ?>
+       <?php _e('Display future events','event-post'); ?>
        </label>
        </p>
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('past'); ?>">
        <input id="<?php echo $this->get_field_id('past'); ?>" name="<?php echo $this->get_field_name('past'); ?>" type="checkbox" value="1" <?php checked($instance['past'], true , true); ?> />
-       <?php _e('Display past events','eventpost'); ?>
+       <?php _e('Display past events','event-post'); ?>
        </label>
        </p>
 
        <p>
        	<label for="<?php echo $this->get_field_id('cat'); ?>">
             <span class="dashicons dashicons-category"></span>
-                <?php _e('Only in :','eventpost'); ?>
+                <?php _e('Only in :','event-post'); ?>
        	<select  class="widefat" id="<?php echo $this->get_field_id('cat'); ?>" name="<?php echo $this->get_field_name('cat'); ?>">
-       		<option value=''><?php _e('All categories','eventpost') ?></option>
+       		<option value=''><?php _e('All categories','event-post') ?></option>
        <?php
 	   	$cats = get_categories();
 		foreach($cats as $_cat){ ?>
@@ -143,9 +143,9 @@ class eventpostmap_widget extends WP_Widget {
        <p>
        	<label for="<?php echo $this->get_field_id('tag'); ?>">
             <span class="dashicons dashicons-tag"></span>
-            <?php _e('Only in :','eventpost'); ?>
+            <?php _e('Only in :','event-post'); ?>
        	<select  class="widefat" id="<?php echo $this->get_field_id('tag'); ?>" name="<?php echo $this->get_field_name('tag'); ?>">
-       		<option value=''><?php _e('All tags','eventpost') ?></option>
+       		<option value=''><?php _e('All tags','event-post') ?></option>
        <?php
 	   	$tags = get_tags();
 		foreach($tags as $_tag){?>
@@ -157,12 +157,12 @@ class eventpostmap_widget extends WP_Widget {
 
        <hr>
        <p style="margin-top:10px;">
-       <label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width','event-post'); ?>
        <input id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" value="<?php echo $instance['width']; ?>" />
        </label> (px, %)
        </p>
        <p style="margin-top:10px;">
-       <label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height','eventpost'); ?>
+       <label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height','event-post'); ?>
        <input id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" value="<?php echo $instance['height']; ?>" />
        </label> (px, %)
        </p>
@@ -170,12 +170,12 @@ class eventpostmap_widget extends WP_Widget {
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('thumbnail'); ?>">
        <input id="<?php echo $this->get_field_id('thumbnail'); ?>" name="<?php echo $this->get_field_name('thumbnail'); ?>" type="checkbox" value="1" <?php checked($instance['thumbnail'], true , true); ?>/>
-       <?php _e('Show thumbnails','eventpost'); ?>
+       <?php _e('Show thumbnails','event-post'); ?>
        </label>
        </p>
        <p>
        	<label for="<?php echo $this->get_field_id('thumbnail_size'); ?>">
-            <?php _e('Thumbnail size:','eventpost'); ?>
+            <?php _e('Thumbnail size:','event-post'); ?>
        	<select  class="widefat" id="<?php echo $this->get_field_id('thumbnail_size'); ?>" name="<?php echo $this->get_field_name('thumbnail_size'); ?>">
        		<option value=''></option>
        <?php foreach($thumbnail_sizes as $size){?>
@@ -184,17 +184,16 @@ class eventpostmap_widget extends WP_Widget {
        </select>
        </label>
        </p>
-
        <p style="margin-top:10px;">
        <label for="<?php echo $this->get_field_id('excerpt'); ?>">
        <input id="<?php echo $this->get_field_id('excerpt'); ?>" name="<?php echo $this->get_field_name('excerpt'); ?>" type="checkbox" value="1" <?php checked($instance['excerpt'], true , true); ?> />
-       <?php _e('Show excerpt','eventpost'); ?>
+       <?php _e('Show excerpt','event-post'); ?>
        </label>
        </p>
 
        <p style="margin-top:10px;">
         <label for="<?php echo $this->get_field_id('tile'); ?>">
-            <?php _e('Map background', 'eventpost'); ?>
+            <?php _e('Map background', 'event-post'); ?>
                         <select id="<?php echo $this->get_field_id('tile'); ?>"  name="<?php echo $this->get_field_name('tile'); ?>">
                                     <?php
                                     foreach ($EventPost->maps as $id => $map):
@@ -223,7 +222,7 @@ class eventpostmap_widget extends WP_Widget {
         <p>
             <label for="<?php echo $this->get_field_id($int_key); ?>">
             <input id="<?php echo $this->get_field_id($int_key); ?>" name="<?php echo $this->get_field_name($int_key); ?>" type="checkbox" value="1" <?php checked($instance[$int_key], true , true); ?>/>
-            <?php printf(__('Activate %s interaction','eventpost'), $int_name); ?>
+            <?php printf(__('Activate %s interaction','event-post'), $int_name); ?>
             </label>
         </p>
        <?php  endforeach; ?>

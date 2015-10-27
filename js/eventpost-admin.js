@@ -1,5 +1,5 @@
 function eventpost_apply(addr,lat,lon){
-    if(jQuery('#geo_address').val()==''){
+    if(jQuery('#geo_address').val()===''){
         jQuery('#geo_address').val(addr);
     }
     jQuery('#geo_latitude').val(lat);
@@ -38,7 +38,7 @@ function eventpost_chkdate(){
         jQuery('#'+eventpost.META_END+'_date').parent().find('.human_date').html(jQuery('#'+eventpost.META_START+'_date').parent().find('.human_date').html());
         date_end=date_start;
     }
-    console.log(date_start);
+    //console.log(date_start);
     // UI
     if(date_start===0){
         jQuery('.event-post-event_begin_date-remove').hide();
@@ -55,11 +55,11 @@ function eventpost_chkdate(){
 }
 function eventpost_edit(){
     sctype = jQuery('#ep_sce_type').val();
-    if(sctype=='list'){
+    if(sctype==='list'){
         jQuery('#ep_sce_maponly').hide();
         jQuery('#ep_sce_listonly').show();
     }
-    if(sctype=='map'){
+    if(sctype==='map'){
         jQuery('#ep_sce_maponly').show();
         jQuery('#ep_sce_listonly').hide();
     }
@@ -69,7 +69,7 @@ function eventpost_edit(){
             var pc = jQuery(this).parent().parent().parent().attr('class');
             var att = jQuery(this).data('att');
             var val = jQuery(this).val();
-            if(att!=null && val!='' && (pc=='all' || pc==sctype)){
+            if(att!==null && val!=='' && (pc==='all' || pc===sctype)){
                 ep_sce+=' '+att+'="'+val+'"';
             }
         }
@@ -126,7 +126,7 @@ jQuery(document).ready(function(){
         jQuery('#event_address_search_bt').click(function(){
 
             var addr = jQuery('#event_address_search_txt').attr('value');
-            console.log(addr);
+            //console.log(addr);
             var data = {
                 action: 'EventPostGetLatLong',
                 q: addr
@@ -192,7 +192,7 @@ jQuery(document).ready(function(){
               eventpost_chkdate();
             }
         };
-        console.log(datepick);
+        //console.log(datepick);
         jQuery(this).datetimepicker(datepick);
     }).css({
         visibility:'hidden',
@@ -226,7 +226,7 @@ jQuery(document).ready(function(){
     jQuery(".eventpost-datepicker-separate").each(function(){
         current_date = jQuery(this).val();
         current_id = jQuery(this).attr('id');
-        jQuery(this).wrap('<span class="eventpost-datepicker-separate-wrap">');
+        jQuery(this).wrap('<span class="eventpost-datepicker-separate-wrap" id="eventpost-datepicker-separate-wrap-'+current_id+'">');
         jQuery(this).after('<input class="eventpost-datepicker-separate-date" value="'+current_date.substr(0, 10)+'" data-id="'+current_id+'">'
                 +'<select class="eventpost-datepicker-separate-hour" data-id="'+current_id+'"></select>'
                 +'<select class="eventpost-datepicker-separate-time" data-id="'+current_id+'"></select>');
@@ -236,23 +236,23 @@ jQuery(document).ready(function(){
             h0h = h0;
             if(eventpost.lang==='en'){
                 if(h<=12){
-                    h0h = h+' AM'
+                    h0h = h+' AM';
                 }
                 else{
-                    h0h = (h-12)+' PM'
+                    h0h = (h-12)+' PM';
                 }
             }
-            jQuery(".eventpost-datepicker-separate-hour").append('<option value="'+h0+'"'+(h===parseInt(current_date.substr(11, 2))?' selected':'')+'>'+h0h+'</option>');
+            jQuery("#eventpost-datepicker-separate-wrap-"+current_id+" .eventpost-datepicker-separate-hour").append('<option value="'+h0+'"'+(h===parseInt(current_date.substr(11, 2))?' selected':'')+'>'+h0h+'</option>');
         }
         m_sel=false;
-        for(m=0 ; m<60 ; m+=15){
+        for(m=0 ; m<60 ; m+=5){
             m0 = m>9 ? m : '0'+m;
             selected = '';
-            if(!m_sel && Math.abs(m-parseInt(current_date.substr(14, 2)))<=7){
+            if(!m_sel && Math.abs(m-parseInt(current_date.substr(14, 2)))<=3){
                 selected=' selected';
                 m_sel=true;
             }
-            jQuery(".eventpost-datepicker-separate-time").append('<option value="'+m0+'"'+selected+'>'+m0+'</option>');
+            jQuery("#eventpost-datepicker-separate-wrap-"+current_id+" .eventpost-datepicker-separate-time").append('<option value="'+m0+'"'+selected+'>'+m0+'</option>');
         }
     });
     if (jQuery.datepicker) {
@@ -269,7 +269,7 @@ jQuery(document).ready(function(){
         }).change(function () {
             var date_id = jQuery(this).attr('id').replace('_date', '');
             var hd = jQuery('#' + date_id + '_date_human');
-            if (jQuery(this).val() != '') {
+            if (jQuery(this).val() !== '') {
                 jQuery.post(ajaxurl, {action: 'EventPostHumanDate', date: eventpost_getdate_sql(date_id)}, function (data) {
                     hd.html(data);
                     eventpost_chkdate();
@@ -281,7 +281,7 @@ jQuery(document).ready(function(){
         eventpost_concat_time();
         var date_id = jQuery(this).data('id').replace('_date','');
         var hd = jQuery('#' + date_id + '_date_human');
-        if (jQuery(this).val() != '') {
+        if (jQuery(this).val() !== '') {
             jQuery.post(ajaxurl, {action: 'EventPostHumanDate', date: eventpost_getdate_sql(date_id)}, function (data) {
                 hd.html(data);
                 eventpost_chkdate();
