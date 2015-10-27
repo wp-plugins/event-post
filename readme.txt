@@ -180,7 +180,7 @@ release date: oct. 27 2015
 * Make replacement by "today" optional (prevent cache plugins issues)
 * More standard setting page
 * Only show events on dashboard right now if they're more than 0
-* Date and time foramts harmonization
+* Date and time formats harmonization
 * Add `.pot` file and make match text-domain to plugin slug
 * Only displays expandable map in the content of the current single
 * Rename some js and css files
