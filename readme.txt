@@ -377,11 +377,11 @@ release date: aug. 14 2015
 
 = 2.8.0 =
 * Add : attributes to events_list shortcode :
-* * thumbnail=(true/false)
-* * thumbnail_size=thumbnail
-* * excertp=(true/false)
-* * container_schema (documentation comming soon)
-* * item_schema (documentation comming soon)
+   * thumbnail=(true/false)
+   * thumbnail_size=thumbnail
+   * excertp=(true/false)
+   * container_schema (documentation comming soon)
+   * item_schema (documentation comming soon)
 * Add : Usage of the event color for single details
 * Enhance : Event information form UI
 * Fix : Re-check if end date is after begin date
